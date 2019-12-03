@@ -146,6 +146,12 @@ CLI：Command Line Interface、shell程序
 
 **whereis command: 列出命令目录**
 
+**whatis：查看命令是什么**
+
+**type command**
+
+**man [章节] keyword:keyword的帮助文档**
+
 **id 或者 id -u : 查看用户**
 
 **sudo -i：切换用户**
@@ -154,7 +160,7 @@ CLI：Command Line Interface、shell程序
 
 **free -h:查看内存使用情况**
 
-
+**clock -s:读取硬件时间，修改系统时间**
 
 ##  执行缓存表
 
@@ -252,13 +258,13 @@ Hash缓存表
 
   + date 显示和设置系统时间
 
-    date + %s
+    date  +%s
 
     date -d @ 1509536033
 
   + hwclock， clock:显示硬件时钟
 
-    -s, --hctosys 以硬件时钟为准，校正系统时钟
+    clock -s, --hctosys 以硬件时钟为准，校正系统时钟
 
     -w，--systohc 以系统时钟为准，校正硬件时钟
 
@@ -281,3 +287,131 @@ Hash缓存表
   + /usr/share/doc/
   + Red Hat documentation
   + 其他网站搜索
+
+### 命令帮助
+
+type 查看命令是不是内部命令
+
++ 内部命令： help command 或 man bash
+
++ 外部命令：
+
+  （1）COMMAND --help 或 COMMAND -h
+
+  （2）使用手册（manual）：man COMMAND
+
+  （3）信息页：info COMMAND
+
+  （4）程序自身的帮助文档：README、INSTALL、ChangeLog
+
+  （5）程序官方文档： 官方站点：Documentation
+
+  （6）发行版的官方文档
+
+  （7）Google
+
+### man命令
+
+1.提供命令帮助的文件
+
+2.手册页存放在/usr/share/man
+
+3.几乎每个命令都有man的“页面”
+
+4.man页面分组为不同的“章节”
+
+​	/usr/share/man 目录下的man1~man9
+
+	* 1: 用户命令
+	* 2：系统调用
+	* 3：C库调用
+	* 4：设备文件及特殊格式
+	* 5：配置文件格式
+	* 6：游戏
+	* 7：杂项
+	* 8：管理类的命令
+	* 9：Linux内核API
+
+5.统称为Linux手册
+
+7.man命令的配置文件：/etc/man.config | main_db.config
+
+​		MANPATH /PATH/TO/SOMEWHERE:指明man文件搜索位置
+
+8.man -M /PATH/TO/SOMEWHERE COMMAND：到指定位置下搜索COMMAND命令的手册并显示
+
+9.中文man需要安装包man-pages-zh-CN
+
+10.man命令的操作方法：使用less命令实现
+
+​	space，^v,^f,^F:向文件尾翻屏；
+
+​	b,^b:向文件搜捕翻屏；
+
+​	d,^d:向文件尾部翻半屏;
+
+​	u,^u:向文件首部翻半屏;
+
+​	ENTERN,^N,e,^E or j or ^j:向文件尾部翻一行;
+
+​	y or ^Y or ^P or k or ^K:向文件首部翻一行;
+
+​	q:退出；
+
+​	#:跳转至第#行；
+
+​	1G:回到文件首部；
+
+​	G：翻至文件尾部；
+
+### man帮助
+
++ man keyword passwd：keyword 章节1~9，默认查询是最小的章节
+
++ 查看man手册页：man [章节] keyword
+
+
+
++ 列出所有帮助：man -a keyword
+
++ 搜索man手册：man -k keyword 列出所有匹配的页面；使用whatis 数据库![1575381476129](C:\Users\msi\AppData\Roaming\Typora\typora-user-images\1575381476129.png)
+
+  1代表就是man中的章节
+
++ 相当于whatis：man -f keyword
+
++ 打印man帮助文件的路径：man -w [章节] keyword （类似whereis keyword）
+
+### man搜索
+
++ /KEYWORD：以KEYWORD指定的字符串为关键字，从当前位置向文件尾部搜索；不区分字符大小写； 键入n:下一个；键入N：上一个
++ ?KEYWORD：以KEYWORD指定的字符串为关键字，从当前位置向文件首部搜索；不区分字符大小写；n下一个；N上一个
+
+### man帮助段落说明
+
++ NAME：名称及简要说明
++ SYNOPSIS 用法格式说明：
+   + []	    可选内容
+   + <>      必选内容
+   + a|b    二选一
+   + {}        分组
+   + ...         同一内容可出现多次
+
++ DESCRIPTION 详细说明
++ OPTIONS 选项说明
++ EXAMPLES 示例
++ FILES 相关文件
++ AUTHOR 作者
++ COPYRIGHT 版本信息
++ REPORITNG BUGS bug信息
++ SEE ALSO 其他帮助参考
+
+### info
+
++ man常用于命令参考，GNU工具info适合通用文档参考
++ 没有参数，列出所有的页面
++ info 页面的结构就像一个网站
++ 每一页分为“节点”
++ 链接结点之前 *，ENTER进入链接
++ info 【命令】
+
