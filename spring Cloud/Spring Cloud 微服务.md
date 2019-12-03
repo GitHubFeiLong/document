@@ -1,0 +1,435 @@
+# Spring Cloud 微服务
+
+创建一个maven项目，在pom.xml中引入依赖
+
+```xml
+<!--spring-boot-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.4</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Greenwich.SR3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+```
+
+## 新建服务提供者 product-service
+
+在该项目中新建一个maven 的module。在这个子模块中pom.xml引入：mysql和spring data jpa两个依赖
+
+``` xml
+<dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+    </dependencies>
+```
+
+* application.yml文件：配置数据库和jpa
+
+```yaml
+server:
+  port: 9001
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring-cloud?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC
+    username: root
+    password: 123456
+  jpa:
+    database: mysql
+    show-sql: true
+    open-in-view: true
+  application:
+    name: product-service #服务名称
+```
+
+* 启动类ProductServiceApplication:
+
+```java
+@SpringBootApplication
+@EntityScan("com.mf.bean")
+public class ProductServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ProductServiceApplication.class, args);
+    }
+}
+```
+
+
+
+* 实体类
+
+```java
+@Data // Lombok注解
+@Entity
+@Table(name="user") // 对应数据库的user表名
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}) // 避免controller返回json时报错
+public class User {
+     @Id // 主键id
+     private Integer id;
+     private String name;
+}
+```
+
+* dao 继承JpaRepository<User,Integer>,User是需要操作的实体类，Integer是主键id声明的java类型
+
+```java
+import com.mf.bean.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserDao extends JpaRepository<User,Integer> {
+
+}
+```
+
+* service
+
+```java
+@Service
+public class UserService {
+    @Autowired
+    private UserDao userDao;
+	// 查询数据
+    public User selectUserById(Integer id){
+        return userDao.getOne(id);
+    }
+}
+
+```
+
+* controller
+
+```java
+@RestController
+@RequestMapping(value="/product", method = RequestMethod.GET)
+public class UserController {
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(value="/{id}")
+    public User getUserById(@PathVariable Integer id){
+        User user = userService.selectUserById(id);
+        return user;
+    }
+}
+```
+
+## 新建服务消费者 order-service
+
+pom.xml使用父工程中的依赖就够了
+
+* yam:
+
+``` yaml
+server:
+  port: 9002
+spring:
+  application:
+    name: order-service
+  jpa:
+    database: mysql
+    open-in-view: true
+    show-sql: true
+
+```
+
++ 启动类
+
+```java
+@SpringBootApplication
+@EntityScan("com.mf.bean")
+public class OrderApplication extends SpringBootServletInitializer {
+
+    /**
+     * 使用spring提供的RestTemplate发送http请求到商品服务
+     *  1.创建RestTemplate对象交给容器管理
+     *  2.在使用的时候，调用其方法完成操作
+     */
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+    public static void main(String[] args) {
+        SpringApplication.run(OrderApplication.class, args);
+    }
+```
+
++ 实体类：
+
+```java
+@Data
+public class User {
+    private Integer id;
+    private String name;
+}
+```
+
++ 控制器
+
+```java
+@RestController
+@RequestMapping(value="/order")
+public class UserController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @RequestMapping(value="/{id}")
+    public User getUserById(@PathVariable Integer id){
+        User user = 
+            restTemplate.getForObject("http://127.0.0.1:9001/product/1", User.class);
+        return user;
+    }
+}
+```
+
+## 新建服务注册 eureka-server
+
+pom.xml:
+
+```xml
+<dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+    </dependencies>
+```
+
+application.yml:
+
+```yaml
+#模拟两个EurekaServer
+#端口9000，8000
+#两个server需要相互注册
+eureka:
+  client:
+    fetch-registry: false #是否从eureka中获取注册信息
+    register-with-eureka: false #是否将自己注册到注册中心
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:9000/eureka/
+  instance:
+    hostname: localhost
+  server:
+    enable-self-preservation: false #关闭自我保护机制
+    eviction-interval-timer-in-ms: 5000 #测试使用，设置剔除的服务间隔单位ms
+server:
+  port: 9000
+spring:
+  application:
+    name: eureka-server-v1
+```
+
+启动类：
+
+```java
+@SpringBootApplication
+// 激活eurekaserver
+@EnableEurekaServer
+public class EurekaServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServiceApplication.class, args);
+    }
+}
+```
+
+### 修改服务提供者product-service：
+
+pom.xml
+
+```xml
+ <!--引入EurekaClient-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <!-- spring cloud 客户端依赖 -->
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+```
+
+application.yml:
+
+```yaml
+eureka:
+  instance:
+    prefer-ip-address: true #使用IP地址注册
+    hostname: localhost # 实例主机名，如果不配置，服务名转host:port格式时host为系统生成的ASUS_PC，无法访问
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向注册中心注册id（ip 和端口）
+    lease-renewal-interval-in-seconds: 5 #发送心跳的间隔
+    lease-expiration-duration-in-seconds: 10 #续约到期的时间
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka/ #,http://localhost:8000/eureka/ # 将服务注册到两个注册中心时用逗号隔开
+```
+
+启动类 添加注解：
+
+```java
+// 激活eurekaClient
+@EnableEurekaClient
+/// @EnableDiscoveryClient
+```
+
+### 修改服务消费者 order-server
+
+pom.xml
+
+```xml
+ <!--引入EurekaClient-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <!-- spring cloud 客户端依赖 -->
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+```
+
+application.yml
+
+```yaml
+
+eureka:
+  instance:
+    prefer-ip-address: true #使用IP地址注册
+    hostname: localhost # 实例主机名，如果不配置，服务名转host:port格式时host为系统生成的ASUS_PC，无法访问
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} #向注册中心注册id（ip 和端口）
+    lease-renewal-interval-in-seconds: 5 #发送心跳的间隔
+    lease-expiration-duration-in-seconds: 10 #续约到期的时间
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka/,http://localhost:9000/eureka/ # 将服务注册到两个注册中心时用逗号隔开
+```
+
+controller:
+
+```java
+ /**
+  * 注入DiscoveryClient
+  * springCloud 提供的获取原数组的工具类
+  * 调用方法获取服务的元数据信息
+  */
+  @Autowired
+  private DiscoveryClient discoveryClient;
+
+@RequestMapping(value="/{id}")
+public User selectUserById(@PathVariable String id){
+        // 调用discoverClient方法
+        // 获取指定的服务名称的获取的元数据
+        List<ServiceInstance> instances = 
+            discoveryClient.getInstances("service-product");
+
+        for (ServiceInstance instance: instances) {
+            System.out.println("instance = " + instance);
+        }
+    	// 目前只有一个服务提供者
+        ServiceInstance instance = instances.get(0);
+
+        return restTemplate.getForObject
+            ("http://"+instance.getHost()+":"+instance.getPort()
+             	+"/product/1",User.class);
+}
+```
+
+## 负载均衡Ribbon
+
+### 修改服务消费者
+
+pom.xml
+
+```xml
+<!--引入ribbon重试机制-->
+<dependency>
+	<groupId>org.springframework.retry</groupId>
+	<artifactId>spring-retry</artifactId>
+</dependency>
+```
+
+
+
+
+
+application.yml
+
+```yaml
+#修改ribbon的负载均衡策略,默认是轮询 
+#服务名.ribbon.NFLoadBalancerRuleClassName.策略类
+product-service:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #随机
+#配置ribbon重试
+product-service:
+  ribbon:
+    ConnectTimeout: 250 #ribbon的连接超时时间
+    ReadTimeout: 1000 #Ribbon的读取数据超时时间
+    OkTORetryOnAllOperations: true #是否对所有操作都重试
+    MaxAutoRetriesNextServer: 1 #切换实例的重试次数
+    MaxAutoRetries: 1 #对当前实例的重试次数      
+```
+
+启动类：
+
+```java
+ /**
+     * 使用spring提供的RestTemplate发送http请求到商品服务
+     *  1.创建RestTemplate对象交给容器管理
+     *  2.在使用的时候，调用其方法完成操作
+     *
+     * @LoadBalanced：是ribbon提供的负载均衡的注解
+     */
+    @LoadBalanced
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+
+```
+
+controller:
+
+```java
+	/**
+     * 基于ribbon的形式调用远程微服务
+     * 1.使用@LoadBalanced声明RestTemplate
+     * 2.使用服务名替换ip地址
+     * @param id
+     * @return
+     */
+    @RequestMapping(value="/{id}")
+    public User selectUserById(@PathVariable Integer id){
+        User user = 
+            restTemplate.getForObject("http://product-service/user/"+id,User.class);
+        return user;
+    }
+```
+
+
+
