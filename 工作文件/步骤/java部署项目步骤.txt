@@ -1,0 +1,24 @@
+第一步：
+	找到tomcat的解压目录。
+第二步：
+	进入目录下的bin文件下，双击shutdown.bat。
+第三步：
+	到tomcat解压目录下的webapps目录中。将jiwei文件夹，和jiwei.war删除
+第四步：
+	将U盘中的jiwei.war复制webapps目录中。
+第五步：
+	进入bin目录下，双击startup.bat，这时会打开一个窗口。
+第六步：
+	等待窗口末尾出现 start Server startup in xxxx ms。这时项目部署成功
+第七步：
+	进入tomcat的解压目录，找到conf文件夹，点击进去。找到server.xml文件。使用记事本打开，然后搜索
+	Connector， 找到没有被注释的Connector标签后，里面有个属性是 port=“XXXX”。
+	这里XXXX就是JAVA项目的端口号
+	<Connector port="8015" protocol="HTTP/1.1"  connectionTimeout="20000" redirectPort="8443" />
+第八步：
+	可以使用服务器ip和上面看到的端口+/jiwei/QueryProject.jsp
+	例如：http://183.230.71.65:8015/jiwei/QueryProject.jsp
+	测试能否访问java项目。
+第九步：
+	修改你们那边的项目查询地址就能正常访问：@/jiwei/QueryProject.jsp
+	
