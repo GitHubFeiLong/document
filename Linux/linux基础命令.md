@@ -138,7 +138,7 @@ CLI：Command Line Interface、shell程序
 
 **nano filename:编辑文件**
 
-**sleep sencord：修庙**
+**sleep sencord：休眠**
 
 **hostname:显示主机名**
 
