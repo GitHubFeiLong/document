@@ -1,8 +1,8 @@
-##  Feign组件
+## Feign组件
 
 #### Feign组件入门
 
-1.导入依赖
+##### 导入依赖
 
 ```xml
  <!--springcloud整合的openFeign-->
@@ -14,7 +14,7 @@
 
 
 
-2.配置调用接口
+##### 配置调用接口
 
 ```java
 /**
@@ -33,10 +33,10 @@ public interface Prouduct {
 }
 ```
 
-+ 定义各种类型的参数，可以接受springmvc中的注解（@PathVariable，@RequestParam，@RequestHeader）不能省略value的配置
-+ @FeignClien：通过name指定需要调用的微服务的名称，会创建ribbon的负载均衡器。会通过动态代理的形式创建ProductFeignClient接口的实现类
+- 定义各种类型的参数，可以接受springmvc中的注解（@PathVariable，@RequestParam，@RequestHeader）不能省略value的配置
+- @FeignClien：通过name指定需要调用的微服务的名称，会创建ribbon的负载均衡器。会通过动态代理的形式创建ProductFeignClient接口的实现类
 
-3.启动类上激活feign
+##### 启动类上激活feign
 
 ```java
 @SpringBootApplication
@@ -49,7 +49,7 @@ public class OrderApplication extends SpringBootServletInitializer {
 
 
 
-4.通过自动的接口调用远程微服务
+##### 通过自动的接口调用远程微服务
 
 ```java
    @Autowired
@@ -62,7 +62,7 @@ public class OrderApplication extends SpringBootServletInitializer {
     }
 ```
 
-5.Feign配置：
+##### Feign配置：
 
 ```yaml
 #配置feign日志的输出
@@ -88,8 +88,6 @@ Ribbon是一个客户端的负载均衡器
 Feign是在ribbon的基础上进行了封装
 
 Feign源码分析	
-
-
 
 ## Hystrix组件
 
@@ -224,7 +222,6 @@ public class ProuductFeignClientCallBack implements ProuductFeignClient {
 修改feignClient接口，添加降级方法的支持
 
 ```java
-
 /**
  * 声明需要调用的微服务名称
  * @FeignClient
@@ -350,6 +347,32 @@ management:
         include: "*"
 ```
 
+#### 熔断器的隔离策略
 
+微服务使用Hystrix熔断器实现了服务的自动降级，让微服务具备自我保护的能力，提高了系统的稳定性，也较好的解决了雪崩效应。其使用方式目前支持两种策略：
 
-##  Sentinel组件
+​	1.线程池隔离策略：使用一个线程池来存储当前的请求，线程池对请求作处理，设置任务返回处理超时时间，堆积的请求堆积入线程池队列。这种方式需要为每个以来的服务申请线程池，有一定的资源消耗，好处是可以应对突发流量（流量洪峰来临时，处理不完可将数据存储到线程池队里慢慢处理）
+
+​	2.信号量隔离策略：使用一个原子计数器（或信号量）来记录当前有多少个线程在运行，请求来先判断计数器的数值，若超过设置的最大线程个数则丢弃该类型的新请求，若不超过则执行计数操作，请求来计数器+1，请求返回计数器-1。这种方式是严格的控制线程且立即返回模式，无法应对突发流量（流量洪峰来临时，处理的线程超过数量，其他的请求会直接返回，不继续请求依赖的服务）
+
+![1574595163963](C:\Users\msi\AppData\Roaming\Typora\typora-user-images\1574595163963.png)
+
+## Sentinel组件
+
+1.管理控制台：
+
+```scheme
+java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar
+```
+
+启动成功：localhost:8080/
+
+访问的用户名/密码：sentinel/sentinel
+
+2.将所有的服务交给控制台管理
+
+客户端介入Sentinel管理控制台
+
+在客户端（需要管理微服务上）引入坐标
+
+在客户端配置启动参数
