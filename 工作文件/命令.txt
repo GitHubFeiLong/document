@@ -1,0 +1,7 @@
+CONFIG SET requirepass "123456"
+--jdk 目录生成jre
+bin\jlink.exe --module-path jmods --add-modules java.desktop --output jre
+--开机启动目录
+shell:startup
+--登录不需要密码
+netplwiz
