@@ -269,8 +269,18 @@ Hash缓存表
     -w，--systohc 以系统时钟为准，校正硬件时钟
 
 + 时区：/etc/localtime
+
 + 显示日历：cal -y
+
 + 设置时间为远程计算机时间：ntpdate 192.168.1.168
+
++ **timedatectl查看时间各种状态：**
+
++ timedatectl list-timezones: 列出所有时区
+
++ timedatectl set-local-rtc 1 将硬件时钟调整为与本地时钟一致, 0 为设置为 UTC 时间
+
++ timedatectl set-timezone Asia/Shanghai 设置系统时区为上海
 
 ### 获得帮助
 
