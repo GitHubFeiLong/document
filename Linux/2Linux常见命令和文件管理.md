@@ -38,21 +38,18 @@ man ascii
 
 + screen命令(安装**rpm -ivh** /run/media/centos7/CentOS\ 7\ x86_64/**Packages/screen-4.1.0-0.25.20120314git3c2946.el7.x86_64.rpm**  )：
 
-  + 创建新screen会话
+  + 查看screen有哪些会话
+    + screen -r
++ 创建新screen会话
     + screen -S [SESSION]
-
   + 加入screen会话
-    + screen -x [SESSION]
-
+  + screen -x [SESSION]
   + 退出并关闭screen会话
     + exit
-
-  + 剥离当前screen会话
++ 剥离当前screen会话
     + Ctrl +a,d
-
   + 显示所有以经打开的screen会话
-    + screen -ls
-
+  + screen -ls
   + 恢复某screen会话
     + screen -r [SESSION]
 
@@ -175,7 +172,7 @@ man ascii
 + Ctrl + z 挂起命令
 + Ctrl + a 光标移到命令行首，相当于Home
 + Ctrl + e 光标移到命令行尾，相当于End
-+ Ctrl + f 光标向有移动一个字符
++ Ctrl + f 光标向右移动一个字符
 + Ctrl + b 光标向左移动一个字符
 + Alt + f 光标向右移动一个单词尾
 + Alt + b 光标向左移动一个单词首
