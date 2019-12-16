@@ -63,7 +63,7 @@ CLI：Command Line Interface、shell程序
 
   
 
-  ![1574686539072](C:\Users\msi\AppData\Roaming\Typora\typora-user-images\1574686539072.png)
+  ![1574686539072](..\typora-user-images\1574686539072.png)
 
 ### bash shell
 
@@ -384,7 +384,7 @@ type 查看命令是不是内部命令
 
 + 列出所有帮助：man -a keyword
 
-+ 搜索man手册：man -k keyword 列出所有匹配的页面；使用whatis 数据库![1575381476129](C:\Users\msi\AppData\Roaming\Typora\typora-user-images\1575381476129.png)
++ 搜索man手册：man -k keyword 列出所有匹配的页面；使用whatis 数据库![..\typora-user-images\1575381476129.png)
 
   1代表就是man中的章节
 
