@@ -8,6 +8,14 @@ tail -f file
 
 /dev/null 用来删除东西
 
+seq 1 10: 输出1到10用回车隔开
+
+seq -s+ 1 10 : 1+..10
+
+mail -s title username : 发送邮件
+
+cat /etc/centos-release : 查看操作系统版本
+
 ## 标准输入和输出
 
 + 程序：指令+数据
@@ -80,8 +88,9 @@ tail -f file
   + 该命令会把/etc/issue中的小写字符都转换成大写字符
 
 + tr -d abc < /etc/fstab
-  + 删除fstab文件中的所有abc中任意字符
-
+  
++ 删除fstab文件中的所有abc中任意字符
+  
 + cat > file
 
   + hello cat
@@ -91,9 +100,11 @@ tail -f file
   + 按ctrl +d 离开，可以使用文件来代替键盘的输入
 
 + cat < file1 > file2
-  + 将file1的内容复制到file2
-
+  
++ 将file1的内容复制到file2
+  
 + cat < file1 >> file1
+  
   + 循环追加。
 
 ### 把多行发送给STDIN
@@ -119,3 +130,38 @@ tail -f file
     `>END`
 
     当文本出现END就结束了，然后多行重定向
+
+### 管道
+
++ 管道（使用符号“|”表示）用来连接命令
+
+  + 命令1 | 命令2 | 命令3|...
+  + 将命令1的STDOUT发送给命令2的 STDIN，命令2的STDOUT发送到命令3的STDIN
+  + STDERR默认不能通过管道转发，可利用2>&1 或|& 实现
+  + 最后一个命令会在当前shell进程的子shell进程种执行
+  + 组合多种工具的功能
+    + ls | tr 'a-z' 'A-Z'
+
+  + less : 一页一页的查看输入
+    + ls -l /etc/ | less
+
+  + mail: 通过电子邮件发送输入
+    + echo "test email" | mail -s "test" wang@example.com
+  + bc : 算数运算
+    + echo "2 ^ 3" | bc
+
++ 管道中 - 符号
+  + 示例：
+  + 将 /home 里面的文件打包，但打包的数据不是记录到文件，而是传送到stdout，经过管道后，将tar -cvf - /home 传送给后面的 tar -xvf -，后面的这个 - 则是取前一个命令的stdout，因此，就不需要使用临时file了
+  + tar -cvf - /home | tar -xvf -
+
+### 重定向到多个目标（tee）
+
++ 命令1 | tee [-a] 文件名|命令2
+  + 把命令1的STDOUT保存在文件中，作为命令2的输入
+  + -a 追加
+
++ 使用：
+  + 保存不桶阶段的输出
+  + 复杂管道的故障排除
+  + 同时查看和记录输出

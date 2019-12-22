@@ -1,4 +1,4 @@
-https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892657709828991&vid=5285890794147766701
+https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892666299763583&vid=5285890794147807399
 
 **2019-12-14	4.1**
 
@@ -18,3 +18,6 @@ https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892657
 
 4.6看完输入输出
 
+**2019-12-22 20点11分**
+
+5.2用户和组管理51分钟看完
