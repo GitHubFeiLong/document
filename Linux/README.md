@@ -1,5 +1,3 @@
-https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892666299763583&vid=5285890794147807399
-
 **2019-12-14	4.1**
 
 **2019-12-16    13点32分**
@@ -27,3 +25,10 @@ https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892666
 ​	5.3用户组管理和权限管理
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892670594730879&vid=5285890794147827721
+
+**2019-12-27 20点42分**
+
+​	5.4 文件的特殊权限
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892674889698175&vid=5285890794147868866
+
