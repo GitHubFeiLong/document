@@ -32,3 +32,8 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892674889698175&vid=5285890794147868866
 
+**2019-12-28 14点49分**
+
+​	5.6 FACL实现灵活权限控制
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892683479632767&vid=5285890794147899449
