@@ -37,3 +37,9 @@
 ​	5.6 FACL实现灵活权限控制
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892683479632767&vid=5285890794147899449
+
+**2019-12-30 21点13分**
+
+​	6.1 常见文本处理工具
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892687774600063&vid=5285890794147950642
