@@ -67,8 +67,9 @@ cat /etc/centos-release : 查看操作系统版本
   + -c -C --complement：取字符集的补集
   + -d --delete：删除所有属于第一字符集的字符
   + -s --squeeze-repeats：把连续重复的字符以单独一个字符表示
-  + -t --truncate-set1：将第一个字符集对应字符转化为第二字符集对应的字符
-
+    + 例如：tr -s " " 将连续的空格用一个空格表示
++ -t --truncate-set1：将第一个字符集对应字符转化为第二字符集对应的字符
+  
 + [:alnum:]：字母和数字
 + [:alpha:] : 字母
 + [:cntrl:] ：控制（非打印）字符 
