@@ -43,3 +43,9 @@
 ​	6.1 常见文本处理工具
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892687774600063&vid=5285890794147950642
+
+**2019-12-31 22点06分**
+
+​	6.2 文本三剑客之grep和正则表达式。。。
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892692069567359&vid=5285890794147970906
