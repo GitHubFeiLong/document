@@ -1,15 +1,3 @@
-## 额外学习到的命令
-
-查看系统字符编码
-
-echo $LANG
-
-查看ASCII表
-
-man ascii
-
-创建文件：touch file
-
 # 常见命令
 
 ## 简单命令

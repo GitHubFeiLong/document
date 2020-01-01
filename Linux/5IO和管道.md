@@ -1,21 +1,3 @@
-tty
-
-pidof：查看进程号例如 pidof java
-
-/proc : 该目录放的进程信息
-
-tail -f file
-
-/dev/null 用来删除东西
-
-seq 1 10: 输出1到10用回车隔开
-
-seq -s+ 1 10 : 1+..10
-
-mail -s title username : 发送邮件
-
-cat /etc/centos-release : 查看操作系统版本
-
 ## 标准输入和输出
 
 + 程序：指令+数据
