@@ -49,3 +49,9 @@
 ​	6.2 文本三剑客之grep和正则表达式。。。
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892692069567359&vid=5285890794147970906
+
+**2020-01-01 20点20分**
+
+​	6.3 基本和扩展正则表达式
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892696364534655&vid=5285890794147971232
