@@ -25,7 +25,7 @@ man ascii
   + -h：halt 关机
   + -c：cancel 取消
   + TIME：无指定，默认相当于+1（CentOS7）
-    + now：l立刻，相当于+0
+    + now：立刻，相当于+0
     + +m：相对时间表示法，几分钟之后；
     + hh:mm：绝对时间表示，指明具体时间
 
