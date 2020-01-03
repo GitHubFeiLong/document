@@ -55,3 +55,10 @@
 ​	6.3 基本和扩展正则表达式
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892696364534655&vid=5285890794147971232
+
+**2020-01-03 20点43分**
+
+​	6.3 shell编程脚本基础
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892700659501951&vid=5285890794147991607
+
