@@ -62,3 +62,9 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892700659501951&vid=5285890794147991607
 
+**2020-01-04 13点57分**
+
+​	6.5 shell编程脚本基础
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892704954469247&vid=5285890794148021854
+
