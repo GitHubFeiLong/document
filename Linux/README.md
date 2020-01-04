@@ -68,3 +68,9 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892704954469247&vid=5285890794148021854
 
+**2020-01-04 21点27分**
+
+​	7.2 算数逻辑运算和条件测试
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892713544403839&vid=5285890794148053023
+
