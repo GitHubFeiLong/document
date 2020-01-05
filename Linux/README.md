@@ -74,3 +74,9 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892713544403839&vid=5285890794148053023
 
+**2020-01-05 13点51分**
+
+​	7.4 脚本编程中的算数运算和read
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892722134338431&vid=5285890794148083605
+
