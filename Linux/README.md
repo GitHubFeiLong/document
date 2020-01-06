@@ -80,3 +80,8 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892722134338431&vid=5285890794148083605
 
+**2020-01-06 22点09分**
+
+​	7.5脚本条件分支和安全
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892726429305727&vid=5285890794148103698
