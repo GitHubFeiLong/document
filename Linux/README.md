@@ -85,3 +85,10 @@
 ​	7.5脚本条件分支和安全
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892726429305727&vid=5285890794148103698
+
+**2020-01-08 21点41分**
+
+​	8.1文件查找工具locate ,find
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892730724273023&vid=5285890794148267056
+
