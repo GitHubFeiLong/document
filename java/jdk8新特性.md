@@ -263,3 +263,500 @@ Supplier<Person> personSupplier = Person::new;
 personSupplier.get();   // new Person
 ```
 
+### Consumers
+
+Consumers表示要在单个输入参数上执行的操作。
+
+```java
+Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
+greeter.accept(new Person("Luke", "Skywalker"));
+```
+
+### Comparators
+
+Comparators在较早的Java版本中非常有名。Java 8向接口添加了各种默认方法。
+
+```java
+Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName);
+
+Person p1 = new Person("John", "Doe");
+Person p2 = new Person("Alice", "Wonderland");
+
+comparator.compare(p1, p2);             // > 0
+comparator.reversed().compare(p1, p2);  // < 0
+```
+
+## Optionals
+
+Optionals不是功能接口，而是防止NullPointerException的实用工具。这是下一节的一个重要概念，因此让我们快速了解一下选项是如何工作的。
+
+Optionals是一个简单的值容器，它可以是null或非null。考虑一个可能返回非空结果但有时什么也不返回的方法。在Java 8中，不是返回null，而是返回一个可选的值。
+
+```java
+Optional<String> optional = Optional.of("bam");
+
+optional.isPresent();           // true
+optional.get();                 // "bam"
+optional.orElse("fallback");    // "bam"
+
+optional.ifPresent((s) -> System.out.println(s.charAt(0)));     // "b"
+```
+
+## Streams
+
+```
+A java.util.Stream represents a sequence of elements on which one or more operations can be performed. Stream operations are either intermediate or terminal. While terminal operations return a result of a certain type, intermediate operations return the stream itself so you can chain multiple method calls in a row. Streams are created on a source, e.g. a java.util.Collection like lists or sets (maps are not supported). Stream operations can either be executed sequentially or parallely.
+
+Streams are extremely powerful, so I wrote a separate Java 8 Streams Tutorial. You should also check out Sequency as a similiar library for the web.
+
+Let's first look how sequential streams work. First we create a sample source in form of a list of strings:
+
+译文：
+java.util。流表示可以在其上执行一个或多个操作的元素序列。流操作可以是中间操作，也可以是终端操作。终端操作返回特定类型的结果，而中间操作返回流本身，因此可以在一行中链接多个方法调用。流是在一个源上创建的，例如java.util。列表或集合之类的集合(不支持映射)。流操作可以顺序执行，也可以并行执行。
+流是非常强大的，所以我编写了一个单独的Java 8流教程。你也应该检查出作为一个类似的图书馆为网络。
+让我们首先看看顺序流是如何工作的。首先，我们创建一个字符串列表形式的样本源:
+```
+
+```java
+List<String> stringCollection = new ArrayList<>();
+stringCollection.add("ddd2");
+stringCollection.add("aaa2");
+stringCollection.add("bbb1");
+stringCollection.add("aaa1");
+stringCollection.add("bbb3");
+stringCollection.add("ccc");
+stringCollection.add("bbb2");
+stringCollection.add("ddd1");
+```
+
+Java 8中的集合得到了扩展，因此您可以通过调用Collection.stream()或Collection.parallelStream()来创建流。下面几节解释最常见的流操作。
+
+### Filter
+
+Filter接受一个谓词来过滤流的所有元素。这个操作是中间的，它使我们能够对结果调用另一个流操作(forEach)。ForEach接受为过滤后的流中的每个元素执行使用者。ForEach是一个终端操作。它是空的，所以我们不能调用另一个流操作。
+
+```java
+stringCollection
+    .stream()
+    .filter((s) -> s.startsWith("a"))
+    .forEach(System.out::println);
+
+// "aaa2", "aaa1"
+```
+
+### Sorted
+
+Sorted是返回已排序的流视图的中间操作。元素按自然顺序排序，除非传递自定义比较器。
+
+```java
+stringCollection
+    .stream()
+    .sorted()
+    .filter((s) -> s.startsWith("a"))
+    .forEach(System.out::println);
+
+// "aaa1", "aaa2"
+```
+
+请记住，已排序只创建已排序的流视图，而不需要操作已备份集合的排序。stringCollection的顺序没有改变:
+
+```java
+System.out.println(stringCollection);
+// ddd2, aaa2, bbb1, aaa1, bbb3, ccc, bbb2, ddd1
+```
+
+### Map
+
+中间操作map通过给定的函数将每个元素转换成另一个对象。下面的示例将每个字符串转换为大写字符串。但是您也可以使用map将每个对象转换成另一种类型。结果流的泛型类型取决于传递给map的函数的泛型类型。
+
+```java
+stringCollection
+    .stream()
+    .map(String::toUpperCase)
+    .sorted((a, b) -> b.compareTo(a))
+    .forEach(System.out::println);
+
+// "DDD2", "DDD1", "CCC", "BBB3", "BBB2", "AAA2", "AAA1"
+```
+
+### Match
+
+可以使用各种匹配操作来检查某个谓词是否与stream匹配。所有这些操作都是终端操作，并返回一个布尔结果。
+
+```java
+boolean anyStartsWithA =
+    stringCollection
+        .stream()
+        .anyMatch((s) -> s.startsWith("a"));
+
+System.out.println(anyStartsWithA);      // true
+
+boolean allStartsWithA =
+    stringCollection
+        .stream()
+        .allMatch((s) -> s.startsWith("a"));
+
+System.out.println(allStartsWithA);      // false
+
+boolean noneStartsWithZ =
+    stringCollection
+        .stream()
+        .noneMatch((s) -> s.startsWith("z"));
+
+System.out.println(noneStartsWithZ);      // true
+```
+
+#### Count
+
+Count是一个终端操作，返回流中元素的长度。
+
+```java
+long startsWithB =
+    stringCollection
+        .stream()
+        .filter((s) -> s.startsWith("b"))
+        .count();
+
+System.out.println(startsWithB);    // 3
+```
+
+### Reduce
+
+这个终端操作使用给定的函数对流的元素进行约简。结果是一个可选的持有减少的值。
+
+```java
+Optional<String> reduced =
+    stringCollection
+        .stream()
+        .sorted()
+        .reduce((s1, s2) -> s1 + "#" + s2);
+
+reduced.ifPresent(System.out::println);
+// "aaa1#aaa2#bbb1#bbb2#bbb3#ccc#ddd1#ddd2"
+```
+
+## Parallel Streams
+
+如上所述，流可以是顺序的，也可以是并行的。对顺序流的操作在单个线程上执行，而对并行流的操作在多个线程上并发执行。
+
+下面的示例演示了通过使用并行流来提高性能是多么容易。
+
+首先，我们创建一个大的独特元素列表:
+
+```java
+int max = 1000000;
+List<String> values = new ArrayList<>(max);
+for (int i = 0; i < max; i++) {
+    UUID uuid = UUID.randomUUID();
+    values.add(uuid.toString());
+}
+```
+
+现在我们测量排序这个集合流所花费的时间。
+
+### Sequential Sort
+
+```java
+long t0 = System.nanoTime();
+
+long count = values.stream().sorted().count();
+System.out.println(count);
+
+long t1 = System.nanoTime();
+
+long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+System.out.println(String.format("sequential sort took: %d ms", millis));
+
+// sequential sort took: 899 ms
+```
+
+### Parallel Sort
+
+```java
+long t0 = System.nanoTime();
+
+long count = values.parallelStream().sorted().count();
+System.out.println(count);
+
+long t1 = System.nanoTime();
+
+long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+System.out.println(String.format("parallel sort took: %d ms", millis));
+
+// parallel sort took: 472 ms
+```
+
+正如您所看到的，这两个代码段几乎相同，但是并行排序大约快50%。您所要做的就是将stream()更改为parallelStream()。
+
+## Maps
+
+如前所述，映射不直接支持流。Map接口本身没有stream()方法，但是您可以通过`map.keySet().stream()`, `map.values().stream()` and `map.entrySet().stream()`在Map的键、值或条目上创建专门的流。
+
+此外，映射支持用于执行常见任务的各种新方法。
+
+```java
+Map<Integer, String> map = new HashMap<>();
+
+for (int i = 0; i < 10; i++) {
+    map.putIfAbsent(i, "val" + i);
+}
+
+map.forEach((id, val) -> System.out.println(val));
+```
+
+上面的代码应该是自我解释的:putIfAbsent防止我们写额外的如果null检查;forEach接受使用者对映射的每个值执行操作。
+
+
+
+这个例子展示了如何利用函数在map上计算代码:
+
+```java
+map.computeIfPresent(3, (num, val) -> val + num);
+map.get(3);             // val33
+
+map.computeIfPresent(9, (num, val) -> null);
+map.containsKey(9);     // false
+
+map.computeIfAbsent(23, num -> "val" + num);
+map.containsKey(23);    // true
+
+map.computeIfAbsent(3, num -> "bam");
+map.get(3);             // val33
+```
+
+接下来，我们学习如何删除一个给定键的条目，只有当它当前映射到一个给定的值:
+
+```java
+map.remove(3, "val3");
+map.get(3);             // val33
+
+map.remove(3, "val33");
+map.get(3);             // null
+```
+
+另一个有用的方法:
+
+```java
+map.getOrDefault(42, "not found");  // not found
+```
+
+map的合并条目非常简单:
+
+```java
+map.merge(9, "val9", (value, newValue) -> value.concat(newValue));
+map.get(9);             // val9
+
+map.merge(9, "concat", (value, newValue) -> value.concat(newValue));
+map.get(9);             // val9concat
+```
+
+如果键不存在，则将键/值放入映射中，否则将调用合并函数来更改现有的值。
+
+## Date API
+
+Java 8在包“Java .time”下包含一个全新的日期和时间API。新的Date API可以与[Joda-Time]库相媲美，但是它是[不一样的]。下面的示例涵盖了这个新API的最重要部分。
+
+### Clock
+
+Clock 提供对当前日期和时间的访问。Clock知道一个时区，可以使用它而不是' System.currentTimeMillis() '来检索当前时间(从Unix纪元算起，单位为毫秒)。在时间线上的这样一个瞬时点也由“瞬时”类表示。可以使用in创建遗留的 `java.util.Date` 对象。
+
+```
+Clock clock = Clock.systemDefaultZone();
+long millis = clock.millis();
+
+Instant instant = clock.instant();
+Date legacyDate = Date.from(instant);   // legacy java.util.Date
+```
+
+### Timezones
+
+时区由“ZoneId”表示。可以通过静态工厂方法轻松地访问它们。Timezones 定义了偏移量，这对于在瞬间和本地日期和时间之间进行转换非常重要。
+
+```
+System.out.println(ZoneId.getAvailableZoneIds());
+// prints all available timezone ids
+
+ZoneId zone1 = ZoneId.of("Europe/Berlin");
+ZoneId zone2 = ZoneId.of("Brazil/East");
+System.out.println(zone1.getRules());
+System.out.println(zone2.getRules());
+
+// ZoneRules[currentStandardOffset=+01:00]
+// ZoneRules[currentStandardOffset=-03:00]
+```
+
+### LocalTime
+
+LocalTime represents a time without a timezone, e.g. 10pm or 17:30:15. The following example creates two local times for the timezones defined above. Then we compare both times and calculate the difference in hours and minutes between both times.
+
+```
+LocalTime now1 = LocalTime.now(zone1);
+LocalTime now2 = LocalTime.now(zone2);
+
+System.out.println(now1.isBefore(now2));  // false
+
+long hoursBetween = ChronoUnit.HOURS.between(now1, now2);
+long minutesBetween = ChronoUnit.MINUTES.between(now1, now2);
+
+System.out.println(hoursBetween);       // -3
+System.out.println(minutesBetween);     // -239
+```
+
+LocalTime comes with various factory methods to simplify the creation of new instances, including parsing of time strings.
+
+```
+LocalTime late = LocalTime.of(23, 59, 59);
+System.out.println(late);       // 23:59:59
+
+DateTimeFormatter germanFormatter =
+    DateTimeFormatter
+        .ofLocalizedTime(FormatStyle.SHORT)
+        .withLocale(Locale.GERMAN);
+
+LocalTime leetTime = LocalTime.parse("13:37", germanFormatter);
+System.out.println(leetTime);   // 13:37
+```
+
+### LocalDate
+
+LocalDate represents a distinct date, e.g. 2014-03-11. It's immutable and works exactly analog to LocalTime. The sample demonstrates how to calculate new dates by adding or subtracting days, months or years. Keep in mind that each manipulation returns a new instance.
+
+```
+LocalDate today = LocalDate.now();
+LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
+LocalDate yesterday = tomorrow.minusDays(2);
+
+LocalDate independenceDay = LocalDate.of(2014, Month.JULY, 4);
+DayOfWeek dayOfWeek = independenceDay.getDayOfWeek();
+System.out.println(dayOfWeek);    // FRIDAY
+```
+
+Parsing a LocalDate from a string is just as simple as parsing a LocalTime:
+
+```
+DateTimeFormatter germanFormatter =
+    DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.MEDIUM)
+        .withLocale(Locale.GERMAN);
+
+LocalDate xmas = LocalDate.parse("24.12.2014", germanFormatter);
+System.out.println(xmas);   // 2014-12-24
+```
+
+### LocalDateTime
+
+LocalDateTime represents a date-time. It combines date and time as seen in the above sections into one instance. `LocalDateTime` is immutable and works similar to LocalTime and LocalDate. We can utilize methods for retrieving certain fields from a date-time:
+
+```
+LocalDateTime sylvester = LocalDateTime.of(2014, Month.DECEMBER, 31, 23, 59, 59);
+
+DayOfWeek dayOfWeek = sylvester.getDayOfWeek();
+System.out.println(dayOfWeek);      // WEDNESDAY
+
+Month month = sylvester.getMonth();
+System.out.println(month);          // DECEMBER
+
+long minuteOfDay = sylvester.getLong(ChronoField.MINUTE_OF_DAY);
+System.out.println(minuteOfDay);    // 1439
+```
+
+With the additional information of a timezone it can be converted to an instant. Instants can easily be converted to legacy dates of type `java.util.Date`.
+
+```
+Instant instant = sylvester
+        .atZone(ZoneId.systemDefault())
+        .toInstant();
+
+Date legacyDate = Date.from(instant);
+System.out.println(legacyDate);     // Wed Dec 31 23:59:59 CET 2014
+```
+
+Formatting date-times works just like formatting dates or times. Instead of using pre-defined formats we can create formatters from custom patterns.
+
+```
+DateTimeFormatter formatter =
+    DateTimeFormatter
+        .ofPattern("MMM dd, yyyy - HH:mm");
+
+LocalDateTime parsed = LocalDateTime.parse("Nov 03, 2014 - 07:13", formatter);
+String string = formatter.format(parsed);
+System.out.println(string);     // Nov 03, 2014 - 07:13
+```
+
+Unlike `java.text.NumberFormat` the new `DateTimeFormatter` is immutable and **thread-safe**.
+
+For details on the pattern syntax read [here](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html).
+
+## Annotations
+
+Annotations in Java 8 are repeatable. Let's dive directly into an example to figure that out.
+
+First, we define a wrapper annotation which holds an array of the actual annotations:
+
+```
+@interface Hints {
+    Hint[] value();
+}
+
+@Repeatable(Hints.class)
+@interface Hint {
+    String value();
+}
+```
+
+Java 8 enables us to use multiple annotations of the same type by declaring the annotation `@Repeatable`.
+
+### Variant 1: Using the container annotation (old school)
+
+```
+@Hints({@Hint("hint1"), @Hint("hint2")})
+class Person {}
+```
+
+### Variant 2: Using repeatable annotations (new school)
+
+```
+@Hint("hint1")
+@Hint("hint2")
+class Person {}
+```
+
+Using variant 2 the java compiler implicitly sets up the `@Hints` annotation under the hood. That's important for reading annotation information via reflection.
+
+```
+Hint hint = Person.class.getAnnotation(Hint.class);
+System.out.println(hint);                   // null
+
+Hints hints1 = Person.class.getAnnotation(Hints.class);
+System.out.println(hints1.value().length);  // 2
+
+Hint[] hints2 = Person.class.getAnnotationsByType(Hint.class);
+System.out.println(hints2.length);          // 2
+```
+
+Although we never declared the `@Hints` annotation on the `Person` class, it's still readable via `getAnnotation(Hints.class)`. However, the more convenient method is `getAnnotationsByType` which grants direct access to all annotated `@Hint` annotations.
+
+Furthermore the usage of annotations in Java 8 is expanded to two new targets:
+
+```
+@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@interface MyAnnotation {}
+```
+
+## Where to go from here?
+
+My programming guide to Java 8 ends here. If you want to learn more about all the new classes and features of the JDK 8 API, check out my [JDK8 API Explorer](http://winterbe.com/projects/java8-explorer/). It helps you figuring out all the new classes and hidden gems of JDK 8, like `Arrays.parallelSort`, `StampedLock` and `CompletableFuture` - just to name a few.
+
+I've also published a bunch of follow-up articles on my [blog](http://winterbe.com/) that might be interesting to you:
+
+- [Java 8 Stream Tutorial](http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/)
+- [Java 8 Nashorn Tutorial](http://winterbe.com/posts/2014/04/05/java8-nashorn-tutorial/)
+- [Java 8 Concurrency Tutorial: Threads and Executors](http://winterbe.com/posts/2015/04/07/java8-concurrency-tutorial-thread-executor-examples/)
+- [Java 8 Concurrency Tutorial: Synchronization and Locks](http://winterbe.com/posts/2015/04/30/java8-concurrency-tutorial-synchronized-locks-examples/)
+- [Java 8 Concurrency Tutorial: Atomic Variables and ConcurrentMap](http://winterbe.com/posts/2015/05/22/java8-concurrency-tutorial-atomic-concurrent-map-examples/)
+- [Java 8 API by Example: Strings, Numbers, Math and Files](http://winterbe.com/posts/2015/03/25/java8-examples-string-number-math-files/)
+- [Avoid Null Checks in Java 8](http://winterbe.com/posts/2015/03/15/avoid-null-checks-in-java/)
+- [Fixing Java 8 Stream Gotchas with IntelliJ IDEA](http://winterbe.com/posts/2015/03/05/fixing-java-8-stream-gotchas-with-intellij-idea/)
+- [Using Backbone.js with Java 8 Nashorn](http://winterbe.com/posts/2014/04/07/using-backbonejs-with-nashorn/)
+
+You should [follow me on Twitter](https://twitter.com/winterbe_). Thanks for reading!
