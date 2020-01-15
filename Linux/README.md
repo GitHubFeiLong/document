@@ -92,10 +92,14 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892730724273023&vid=5285890794148267056
 
-
-
 **2020-01-11 21点41分**
 
 ​	8.2文件压缩和解压缩工具
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892735019240319&vid=5285890794148267175
+
+**2020-01-15 20点03分**
+
+​	8.4文本处理三剑客之sed
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892743609174911&vid=5285890794148317773
