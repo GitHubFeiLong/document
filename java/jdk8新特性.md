@@ -470,7 +470,7 @@ System.out.println(String.format("sequential sort took: %d ms", millis));
 // sequential sort took: 899 ms
 ```
 
-### Parallel Sort
+### Parallel Sort 并行排序
 
 ```java
 long t0 = System.nanoTime();
@@ -587,7 +587,7 @@ System.out.println(zone2.getRules());
 
 ### LocalTime
 
-LocalTime represents a time without a timezone, e.g. 10pm or 17:30:15. The following example creates two local times for the timezones defined above. Then we compare both times and calculate the difference in hours and minutes between both times.
+LocalTime表示没有时区的时间，例如晚上10点或17:30:15。下面的示例为上面定义的时区创建两个本地时间。然后我们比较两个时间，并计算两个时间之间的小时和分钟的差异。
 
 ```
 LocalTime now1 = LocalTime.now(zone1);
@@ -602,7 +602,7 @@ System.out.println(hoursBetween);       // -3
 System.out.println(minutesBetween);     // -239
 ```
 
-LocalTime comes with various factory methods to simplify the creation of new instances, including parsing of time strings.
+LocalTime提供了各种工厂方法来简化新实例的创建，包括时间字符串的解析。
 
 ```
 LocalTime late = LocalTime.of(23, 59, 59);
@@ -619,7 +619,7 @@ System.out.println(leetTime);   // 13:37
 
 ### LocalDate
 
-LocalDate represents a distinct date, e.g. 2014-03-11. It's immutable and works exactly analog to LocalTime. The sample demonstrates how to calculate new dates by adding or subtracting days, months or years. Keep in mind that each manipulation returns a new instance.
+LocalDate表示一个不同的日期，例如2014-03-11。它是不可变的，工作方式完全类似于LocalTime。该示例演示了如何通过加减天数、月份或年份来计算新的日期。请记住，每个操作都返回一个新实例。
 
 ```
 LocalDate today = LocalDate.now();
@@ -631,7 +631,7 @@ DayOfWeek dayOfWeek = independenceDay.getDayOfWeek();
 System.out.println(dayOfWeek);    // FRIDAY
 ```
 
-Parsing a LocalDate from a string is just as simple as parsing a LocalTime:
+从字符串解析LocalDate与解析LocalTime一样简单:
 
 ```
 DateTimeFormatter germanFormatter =
@@ -645,7 +645,7 @@ System.out.println(xmas);   // 2014-12-24
 
 ### LocalDateTime
 
-LocalDateTime represents a date-time. It combines date and time as seen in the above sections into one instance. `LocalDateTime` is immutable and works similar to LocalTime and LocalDate. We can utilize methods for retrieving certain fields from a date-time:
+LocalDateTime表示日期时间。它将上面几节中看到的日期和时间合并到一个实例中。' LocalDateTime '是不可变的，其工作方式类似于LocalTime和LocalDate。我们可以利用方法检索某些字段从日期时间:
 
 ```
 LocalDateTime sylvester = LocalDateTime.of(2014, Month.DECEMBER, 31, 23, 59, 59);
@@ -660,7 +660,7 @@ long minuteOfDay = sylvester.getLong(ChronoField.MINUTE_OF_DAY);
 System.out.println(minuteOfDay);    // 1439
 ```
 
-With the additional information of a timezone it can be converted to an instant. Instants can easily be converted to legacy dates of type `java.util.Date`.
+有了时区的附加信息，它可以转换成一个瞬间。瞬间可以很容易地转换为类型的遗留日期`java.util.Date`.
 
 ```
 Instant instant = sylvester
@@ -671,7 +671,7 @@ Date legacyDate = Date.from(instant);
 System.out.println(legacyDate);     // Wed Dec 31 23:59:59 CET 2014
 ```
 
-Formatting date-times works just like formatting dates or times. Instead of using pre-defined formats we can create formatters from custom patterns.
+格式化date-times就像格式化dates or times一样。我们可以从自定义模式创建格式化器，而不是使用预定义的格式。
 
 ```
 DateTimeFormatter formatter =
@@ -683,15 +683,15 @@ String string = formatter.format(parsed);
 System.out.println(string);     // Nov 03, 2014 - 07:13
 ```
 
-Unlike `java.text.NumberFormat` the new `DateTimeFormatter` is immutable and **thread-safe**.
+Unlike `java.text.NumberFormat` the new `DateTimeFormatter` 是不可变的，并且是线程安全的。
 
-For details on the pattern syntax read [here](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html).
+有关模式语法的详细信息，请阅读 [here](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html).
 
 ## Annotations
 
-Annotations in Java 8 are repeatable. Let's dive directly into an example to figure that out.
+Java 8中的注释是可重复的。让我们直接来看一个例子。
 
-First, we define a wrapper annotation which holds an array of the actual annotations:
+首先，我们定义一个包装器注释，它包含一个实际注释的数组:
 
 ```
 @interface Hints {
@@ -704,7 +704,7 @@ First, we define a wrapper annotation which holds an array of the actual annotat
 }
 ```
 
-Java 8 enables us to use multiple annotations of the same type by declaring the annotation `@Repeatable`.
+Java 8允许我们通过声明注释来使用同一类型的多个注释`@Repeatable`.
 
 ### Variant 1: Using the container annotation (old school)
 
@@ -721,7 +721,7 @@ class Person {}
 class Person {}
 ```
 
-Using variant 2 the java compiler implicitly sets up the `@Hints` annotation under the hood. That's important for reading annotation information via reflection.
+使用variant 2,java编译器隐式地设置了“@ hint”注释。这对于通过反射读取注释信息非常重要。
 
 ```
 Hint hint = Person.class.getAnnotation(Hint.class);
@@ -734,9 +734,9 @@ Hint[] hints2 = Person.class.getAnnotationsByType(Hint.class);
 System.out.println(hints2.length);          // 2
 ```
 
-Although we never declared the `@Hints` annotation on the `Person` class, it's still readable via `getAnnotation(Hints.class)`. However, the more convenient method is `getAnnotationsByType` which grants direct access to all annotated `@Hint` annotations.
+虽然我们从未在“Person”类中声明“@ hint”注释，但它仍然可以通过“getAnnotation(Hints.class)”来读取。但是，更方便的方法是'getAnnotationsByType '，它允许直接访问所有带注释的' @Hint '注释。
 
-Furthermore the usage of annotations in Java 8 is expanded to two new targets:
+此外，Java 8中注释的使用扩展到两个新目标:
 
 ```
 @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
