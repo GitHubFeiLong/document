@@ -103,3 +103,9 @@
 ​	8.4文本处理三剑客之sed
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892743609174911&vid=5285890794148317773
+
+**2020-01-21 20点07分**
+
+​	9.1rpm包管理器管理软件
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892752199109503&vid=5285890794148318012
