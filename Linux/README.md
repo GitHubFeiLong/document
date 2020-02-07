@@ -109,3 +109,10 @@
 ​	9.1rpm包管理器管理软件
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892752199109503&vid=5285890794148318012
+
+**2020-02-07 21点35分**
+
+​	9.3实现yum源仓库和使用yum管... (78分钟)
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892760789044095&vid=5285890794148338407
+
