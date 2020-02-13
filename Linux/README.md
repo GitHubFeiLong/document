@@ -116,3 +116,9 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892760789044095&vid=5285890794148338407
 
+**2020-02-13 21点59分**
+
+​	9.4实现基于网络的yum源和dnf(78分钟)
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892765084011391&vid=5285890794148348591
+
