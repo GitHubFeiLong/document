@@ -128,3 +128,9 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892769378978687&vid=5285890794148348584
 
+**2020-03-18 22点07分 **
+
+​	10.1 C源码编译安装过程详解
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892773673945983&vid=5285890797895907921
+
