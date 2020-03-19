@@ -134,3 +134,11 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892773673945983&vid=5285890797895907921
 
+**2020-03-19 20点56分 **
+
+​	10.2 httpd编译安装与脚本安装
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892777968913279&vid=5285890797895907944
+
+
+
