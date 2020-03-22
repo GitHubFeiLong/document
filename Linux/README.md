@@ -140,5 +140,9 @@
 
 ​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892777968913279&vid=5285890797895907944
 
+**2020-03-20 22点53分 **
 
+​	10.4 磁盘结构与分区方式MBR和GPT
+
+​	链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892786558847871&vid=5285890797895990073
 
