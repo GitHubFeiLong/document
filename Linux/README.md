@@ -152,3 +152,10 @@
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892795148782463&vid=5285890797896000320
 
+
+
+**2020-03-27 19点37分 **
+
+​	11.4 逻辑卷管理和快照
+
+​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892808033684351&vid=5285890797896031294
