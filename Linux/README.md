@@ -159,3 +159,10 @@
 ​	11.4 逻辑卷管理和快照
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892808033684351&vid=5285890797896031294
+
+**2020-04-09 23点14分 **
+
+​	11.5 脚本进阶for循环
+
+​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892812328651647&vid=5285890797896031377
+
