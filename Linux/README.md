@@ -166,3 +166,8 @@
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892812328651647&vid=5285890797896031377
 
+**2020-04-11 16点00分 **
+
+​	12.1 脚本进阶for、while、until循环
+
+​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892820918586239&vid=5285890797896092780
