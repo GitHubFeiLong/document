@@ -171,3 +171,11 @@
 ​	12.1 脚本进阶for、while、until循环
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892820918586239&vid=5285890797896092780
+
+
+
+**2020-04-11 22点15分 **
+
+​	12.2 脚本进阶continue、break、shift
+
+​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892825213553535&vid=5285890797896318893
