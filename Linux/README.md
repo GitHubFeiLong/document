@@ -179,3 +179,9 @@
 ​	12.2 脚本进阶continue、break、shift
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892825213553535&vid=5285890797896318893
+
+**2020-04-12  11点57分 **
+
+​	12.3 脚本进阶while和read及select
+
+​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892829508520831&vid=5285890799486898594
