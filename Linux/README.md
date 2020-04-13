@@ -185,3 +185,11 @@
 ​	12.3 脚本进阶while和read及select
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892829508520831&vid=5285890799486898594
+
+
+
+**2020-04-12  22点33分**
+
+​	12.4 脚本进阶之函数使用
+
+​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892833803488127&vid=5285890799486898753
