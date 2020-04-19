@@ -201,3 +201,9 @@
 ​	12.4 脚本进阶之函数递归使用
 
 ​		链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892838098455423&vid=5285890799486908860
+
+2020年4月19日 12点02分
+
+12.5 脚本进阶信号捕捉trap、mktemp、install、expect工具
+
+链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892842393422719&vid=5285890799486909044
