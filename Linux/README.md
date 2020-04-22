@@ -207,3 +207,9 @@
 13.1 脚本进阶信号捕捉trap、mktemp、install、expect工具
 
 链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892842393422719&vid=5285890799486909044
+
+2020年4月22日 13点04分
+
+13.2 脚本进阶数组
+
+链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892846688390015&vid=5285890799486919207
