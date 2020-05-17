@@ -1,5 +1,7 @@
 
 
+
+
 # RabbitMQ
 
 ## 1.MQ简介
@@ -27,6 +29,8 @@ MQ全称为Message Queue,消息队列（MQ）是一种应用程序对应用程�
 ### 	2.2 日志处理
 
 ![1589604749493](..\typora-user-images\1589604749493.png)
+
+![1589682729214](..\typora-user-images\1589682729214.png)
 
 ### 	2.3 应用解耦
 
@@ -329,7 +333,7 @@ public class Recv {
 
 #### 	7.2.2 分发轮询
 
-#### 7.2.2.1 消息生产者：Send
+##### 7.2.2.1 消息生产者：Send
 
 ```java
 
@@ -370,7 +374,7 @@ public class Send {
 
 
 
-#### 	7.2.2.2 消费者：Recv1：
+##### 	7.2.2.2 消费者：Recv1：
 
 ```java
 
@@ -409,7 +413,7 @@ public class Recv1 {
 }
 ```
 
-#### 	7.2.2.3 消费者：Recv2
+##### 	7.2.2.3 消费者：Recv2
 
 ```java
 public class Recv2 {
@@ -449,7 +453,7 @@ public class Recv2 {
 
 
 
-#### 		7.2.2.4现象：
+##### 		7.2.2.4现象：
 
 ​			 	消费者1 和消费者2处理消息的数量是一样的
 
@@ -473,7 +477,7 @@ boolean autoAck = false; //false 手动回执,处理完消息后，告诉MQ
 
 
 
-#### 7.2.3.1 生产者
+##### 	7.2.3.1 生产者
 
 ```java
 public class Send {
@@ -519,7 +523,7 @@ public class Send {
 
 
 
-### 7.2.3.2 消费者1
+##### 7.2.3.2 消费者1
 
 ```java
 public class Recv1 {
@@ -566,7 +570,7 @@ public class Recv1 {
 
 
 
-###  7.2.3.3 消费者2
+#####  7.2.3.3 消费者2
 
 ```java
 public class Recv2 {
@@ -610,7 +614,7 @@ public class Recv2 {
 
 
 
-#### 7.2.3.4 现象：
+##### 7.2.3.4 现象：
 
 **消费者2 处理的消息比消费者1多，能者多劳**
 
@@ -873,22 +877,405 @@ public class Recv2 {
 
 
 
-- 5.Topics 主题
-- ![1589607347814](..\typora-user-images\1589607347814.png)
-- 6.RPC 手动和自动确认消息
-- ![1589607357351](..\typora-user-images\1589607357351.png)
+### 7.5.Topics 主题
+
+
+
+
+
+![1589607347814](..\typora-user-images\1589607347814.png)
+
+
+
+​	Topic exchange
+​	将路由和某个模式匹配
+​	\# 匹配一个或者多个字符
+​	\* 匹配一个字符
+​	例如：Goods.#
+
+
+
+![1589702623908](..\typora-user-images\1589702623908.png)
+
+
+
+
+
+商品：发布、删除、修改、查询
+
+生产者
+
+```java
+public class Send {
+    public static final String EXCHANGE_NAME = "test_exchange_topic";
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+
+        // 声明交换机
+        channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+
+        String message = "商品...";
+
+        channel.basicPublish(EXCHANGE_NAME, "goods.delete", null, message.getBytes());
+
+        System.out.println("send message = " + message);
+
+        channel.close();
+        connection.close();
+
+    }
+
+}
+```
+
+消费者：
+
+```java
+public class Recv1 {
+    public static final String EXCHANGE_NAME = "test_exchange_topic";
+    public static final String QUEUE_NAME = "test_queue_topic_1";
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+
+        channel.queueDeclare(QUEUE_NAME, false,false,false,null);
+
+        //绑定：
+        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "goods.add");
+
+        channel.basicQos(1);
+
+        //定义消费者
+        Consumer consumer = new DefaultConsumer(channel){
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                String msg = new String(body, "utf-8");
+                System.out.println("[1] recv msg: " + msg);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally{
+                    System.out.println("[1] recv done!");
+                    // 手动回执
+                    channel.basicAck(envelope.getDeliveryTag(), false);
+                }
+            }
+        };
+
+        // 监听队列
+        channel.basicConsume(QUEUE_NAME, false, consumer);
+
+
+    }
+}
+```
+
+消费者2
+
+```java
+public class Recv2 {
+    public static final String EXCHANGE_NAME = "test_exchange_topic";
+    public static final String QUEUE_NAME = "test_queue_topic_2";
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+
+        channel.queueDeclare(QUEUE_NAME, false,false,false,null);
+
+        //绑定：
+        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "goods.#");
+
+        channel.basicQos(1);
+
+        //定义消费者
+        Consumer consumer = new DefaultConsumer(channel){
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                String msg = new String(body, "utf-8");
+                System.out.println("[2] recv msg: " + msg);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally{
+                    System.out.println("[2] recv done!");
+                    // 手动回执
+                    channel.basicAck(envelope.getDeliveryTag(), false);
+                }
+            }
+        };
+
+        // 监听队列
+        channel.basicConsume(QUEUE_NAME, false, consumer);
+
+
+    }
+}
+```
+
+
+
+### 7.6 RPC 手动和自动确认消息(消息确认机制 事务——confirm)
+
+在rabbitmq中，我们可以通过持久化数据，解决rabbitmq服务器异常的数据丢失问题
+问题：生产者将消息发送出去之后，消息到底有没有到达 rabbitmq服务器，默认的情况是不知道的
+两种方式：
+
+​	AMQP 实现了事务机制
+
+​	confirm 模式
+
+
+
+#### 事务机制：
+
+txSelect  txCommit txRollback
+
+txSelect  :用户将当前的channel设置成transaction模式
+txCommit ：用于提交事务
+txRollback：回滚事务
+
+##### 生产者
+
+```java
+public class TxSend {
+    public static final String QUEUE_NAME = "test_queue_tx";
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+        String msg = "hello tx message";
+
+        try{
+            // 开启事务
+            channel.txSelect();
+            channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());
+            System.out.println(1/0);
+            //提交事务
+            channel.txCommit();
+        } catch(Exception e){
+            // 回滚事务
+            channel.txRollback();
+            System.out.println("send message txRollback");
+        } finally{
+            channel.close();
+            connection.close();
+        }
+    }
+```
+
+消费者：
+
+```java
+public class TxRecv {
+    public static final String QUEUE_NAME="test_queue_tx";
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+        channel.basicConsume(QUEUE_NAME, true, new DefaultConsumer(channel){
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                String msg = new String(body, "utf-8");
+                System.out.println("recv[tx] msg:" + msg);
+            }
+        });
+
+    }
+}
+```
+
+
+
+**此种模式还是很耗时的，采用了这种方式，降低了Rabbitmq的消息吞吐量**
+
+### Confirm 模式
+
+**生产者端模式的实现原理**
+
+生产者将信道设置成confirm模式，一旦信道进入confirm模式，所有在该信道上面发布的消息都会被指派一个唯一的ID(从1开始)。一旦消息被投递到所有匹配的队列之后，broker就会发送一个确认给生产者(包含消息的唯一ID) 。这就使得生产者知道消息已经正确到达目的队列了,如果消息和队列是可持久化的，那么确认消息会将洧息写入磁盘之后发出，broker 回传给生产者的确认消息中deliver-tag 域包含了确认消息的序列号，此外broker也可以设置basic.ack的multiple域。表示到这个序列号之前的所有消息都已经得到了处理。
+
+**Confirm 模式最大的好处在于他是异步**
+
+Nack
+
+开启confirm模式
+channel.confirmSelect();
+
+编程模式：
+
+  1.普通 waitForCOnfirms()
+
+2. 批量的 发一批 waitForConfirms
+3. 异步 confirm 模式：提供一个回调
+
+**普通 confirm 单条普通**
+
+send
+
+```java
+/**
+ * 普通模式
+ */
+public class Send1 {
+    public static final String QUEUE_NAME = "test_queue_confirm1";
+
+    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+        // 生产者调用confirmSelect 将chancel设置为confirm模式。注意（事务机制改为这个会出异常）
+        channel.confirmSelect();
+
+        String msg = "hello confirm message";
+
+        channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());
+        System.out.println("send message txRollback");
+
+        // 判断是否发送成功
+        if(!channel.waitForConfirms()){
+            System.out.println("message send failed");
+        } else {
+            System.out.println("message send ok");
+        }
+
+        channel.close();
+        connection.close();
+    }
+}
+```
+
+**批量的 发一批 waitForConfirms**
+
+```java
+/**
+ * 批量模式
+ */
+public class Send2 {
+    public static final String QUEUE_NAME = "test_queue_confirm2";
+
+    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+        // 生产者调用confirmSelect 将chancel设置为confirm模式。注意（事务机制改为这个会出异常）
+        channel.confirmSelect();
+
+        // 批量发送
+        for (int i = 0; i < 10; i++) {
+            String msg = "hello confirm message";
+
+            channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());
+
+        }
+
+       System.out.println("send message txRollback");
+
+        // 确认是否发送成功
+        if(!channel.waitForConfirms()){
+            System.out.println("message send failed");
+        } else {
+            System.out.println("message send ok");
+        }
+
+        channel.close();
+        connection.close();
+    }
+}
+```
+
+**异步模式**
+
+Channel 对象提供的ConfirmListener()回调方法只包含deliveryTag (当前Channel发出的消息序号)。我们需要自己为每一个Channel维护一个unconfirm的消息序号集合，每publish一条数据，集合中元素加1。每回调一次handleAck方法，unconfirm 集合删掉相应的一条(multiple=false) 或多条( multiple=true)记录。从程序运行效率上看，这个unconfirm集合最好采用有序集合SortedSet存储结构。
+
+
+
+生产者：
+
+```java
+/**
+ * 异步
+ */
+public class Send3 {
+    public static final String QUEUE_NAME = "test_queue_confirm3";
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Connection connection = ConnectionUtil.getConnection();
+
+        Channel channel = connection.createChannel();
+
+        channel.queueDeclare(QUEUE_NAME, false,false,false, null);
+
+        // 生产者调用confirmSelect 将channel设置为confirm模式
+        channel.confirmSelect();
+
+        // 存放未确认的消息标识
+        final SortedSet<Long> confirmSet = Collections.synchronizedSortedSet(new TreeSet<Long>());
+
+        // 监听通道
+        channel.addConfirmListener(new ConfirmListener(){
+
+            // 没问题的handleAck
+            @Override
+            public void handleAck(long deliveryTag, boolean multiple) throws IOException {
+                if(multiple){
+                    System.out.println("【handleAck】-----multiple true");
+                    confirmSet.headSet(deliveryTag+1).clear();
+                } else {
+                    System.out.println("【handleAck】-----multiple false");
+                    confirmSet.remove(deliveryTag);
+                }
+            }
+
+            // handleNack 有问题的
+            @Override
+            public void handleNack(long deliveryTag, boolean multiple) throws IOException {
+
+                if(multiple){
+                    System.out.println("【N】handleNack-----multiple");
+                    confirmSet.headSet(deliveryTag + 1).clear();
+                } else {
+                    System.out.println("【N】handleNack-----multiple false");
+                    confirmSet.remove(deliveryTag);
+                }
+            }
+        });
+
+        String msgStr = "ssss";
+
+        while(true){
+            long seqNo = channel.getNextPublishSeqNo();
+            channel.basicPublish("", QUEUE_NAME, null, msgStr.getBytes());
+            confirmSet.add(seqNo);
+        }
+
+    }
+}
+```
+
+
+
+
+
+
+
+![1589607357351](..\typora-user-images\1589607357351.png)
+
 - 7.队列的持久和非持久
 - 8.rabbitmq的延迟队列
-
-
-
-
-
-
-
-
-
-
 
 ## 8.CentOS下RabbitMQ集群搭建
 
@@ -899,27 +1286,6 @@ public class Recv2 {
 ## 11.Spring Boot 集成RabbitMQ
 
 
-
-
-
-JAVA 操作rabbitMQ
-
-- 1.simple	简单队列
-- 2.work queues    工作队列，公平分发轮询分发
-- 3.publish/subscribe   发布订阅
-- 4.routing 路由选择通配符模式
-- 5.Topics 主题
-- 6.手动和自动确认消息
-- 7.队列的持久和非持久
-- 8.rabbitmq的延迟队列
-
-4.Spring AMQP Spring-Rabbit
-
-5.场景demo MQ实现搜索引擎DIH增量
-
-6.场景demo 未支付订单30分钟 取消
-
-7大数据应用，类似百度统计 cnzz架构消息队列
 
 
 
@@ -981,5 +1347,7 @@ channel.basicPublish("", QUERE_NAME, null, message.getBytes());
 ![1589626190528](..\typora-user-images\1589626190528.png)
 
 #### Direct（处理路由键）
+
+路由模式：
 
 ![1589626264675](..\typora-user-images\1589626264675.png)
