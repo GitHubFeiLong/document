@@ -1073,44 +1073,56 @@ Nginx可以在核心模块HttpGeoModule（http://wiki.nginx.org/HttpGeoModule）
 ```bash
 1 http{
 2
-3 ...
+3 	...
 4
-5 geo $useriprang {
-6 ranges;
-7 default a;
-8 0.0.0.1-0.8.255.255 a;
-9 0.9.0.0-0.255.255.255 a;
-10 1.0.0.0-1.0.0.255 a;
-11 1.0.1.0-1.0.1.255 b;
-12 1.0.2.0-1.0.3.255 b;
-13 1.0.4.0-1.0.7.255 a;
-14 ...
-15 223.255.252.0-223.255.253.255 c;
-16 223.255.254.0-223.255.254.255 a;
-17 223.255.255.0-223.255.255.255 a;
-18 }
+5 	geo $useriprang {
+6 		ranges;
+7 		default a;
+8 		0.0.0.1-0.8.255.255 a;
+9 		0.9.0.0-0.255.255.255 a;
+10 		1.0.0.0-1.0.0.255 a;
+11 		1.0.1.0-1.0.1.255 b;
+12 		1.0.2.0-1.0.3.255 b;
+13 		1.0.4.0-1.0.7.255 a;
+14 		...
+15 		223.255.252.0-223.255.253.255 c;
+16 		223.255.254.0-223.255.254.255 a;
+17 		223.255.255.0-223.255.255.255 a;
+18 	}
 19
-20 upstream backend {
-21 server 127.0.0.1:81;
-22 }
+20 	upstream backend {
+21 		server 127.0.0.1:81;
+22 	}
 23
-24 server {
-25 listen 80;
-26 client_max_body_size 10240m;
+24 	server {
+25 		listen 80;
+26 		client_max_body_size 10240m;
 27
-28 location / {
-29 proxy_redirect off;
-30 proxy_pass http://backend$request_uri&useriprang=$useriprang;
-31 proxy_next_upstream http_502 http_504 error timeout invalid_header;
-32 proxy_cache cache_one;
-33 proxy_cache_key $host:$server_port$uri$is_args$args;
-34 expires 5s;
-35 }
+28 		location / {
+29 			proxy_redirect off;
+30 			proxy_pass http://backend$request_uri&useriprang=$useriprang;
+31 			proxy_next_upstream http_502 http_504 error timeout invalid_header;
+32 			proxy_cache cache_one;
+33 			proxy_cache_key $host:$server_port$uri$is_args$args;
+34 			expires 5s;
+35 		}
 36
-37 }
+37 	}
 38
-39 ...
+39 		...
 40
 41 }
 ```
 
+Varnish 实现：
+Varnish 则有两个插件可以实现调度：
+https://github.com/cosimo/varnish-geoip （Last updated: 28/05/2013）
+https://github.com/meetup/varnish-geoip-plugin （Last updated: 2010）
+性能问题
+如上所述，使用Haproxy、Nginx、Varnish 都能快速实现这个功能。
+其中Nginx 和Varnish 使用了二分法在IP 表中定位用户IP，而Haproxy 是逐条过滤。
+所以在IP 分得较细，IP 段组较多（归类后超过1000 组）时，Haproxy 会出现明显的性能衰减，其余两者没有这个问题。
+其它
+本文使用的软件版本如下：
+HAProxy1.4.22，Nginx1.2.9，Varnish3.0.4。
+HAProxy 和Varnish 都是目前的最新版本。
