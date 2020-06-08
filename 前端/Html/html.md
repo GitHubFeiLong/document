@@ -27,3 +27,11 @@
 <input type="text" autocomplete="off"> 
 ```
 
+## 保留文本格式输出到页面
+
+```html
+<pre></pre>
+```
+
+
+

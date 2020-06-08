@@ -1126,3 +1126,119 @@ https://github.com/meetup/varnish-geoip-plugin （Last updated: 2010）
 本文使用的软件版本如下：
 HAProxy1.4.22，Nginx1.2.9，Varnish3.0.4。
 HAProxy 和Varnish 都是目前的最新版本。
+
+
+
+## Nginx tcp 代理
+
+nginx tcp代理功能由nginx_tcp_proxy_module模块提供，同时监测后端主机状态。该模块包括的模块有：
+ngx_tcp_module, ngx_tcp_core_module, ngx_tcp_upstream_module, ngx_tcp_proxy_module,
+ngx_tcp_upstream_ip_hash_module。
+
+
+
+### 安装
+
+```bash
+#下载tcp模块
+wget https://github.com/yaoweibin/nginx_tcp_proxy_module/archive/master.zip
+cd /usr/wkdir/nginx-1.6.3
+patch -p1 < src/nginx_tcp_proxy_module/tcp.patch
+cd nginx
+./configure --add-module=/path/to/nginx_tcp_proxy_module
+make
+make install
+```
+
+
+
+### 配置
+
+```bash
+http {
+	listen 80;
+	location /status {
+		check_status;
+	}
+}
+tcp {
+	upstream cluster_www_ttlsa_com {
+	# simple round-robin
+	server 127.0.0.1:1234;
+	check interval=3000 rise=2 fall=5 		timeout=1000;
+	#check interval=3000 rise=2 fall=5 	timeout=1000 type=ssl_hello;
+	#check interval=3000 rise=2 fall=5 	timeout=1000 type=http;
+	#check_http_send "GET / HTTP/1.0\r\n\r\n";
+	#check_http_expect_alive http_2xx http_3xx;
+}
+	server {
+		listen 8888;
+		proxy_pass cluster_www_ttlsa_com;
+	}
+}
+```
+
+这会出现一个问题，就是tcp 连接会掉线。原因在于当服务端关闭连接的时候，客户端不可能立刻发觉连接已经被关闭，需要等到当Nginx 在执行check 规则时认为服务端链接关闭，此时nginx 会关闭与客户端的连接。
+
+### 保持连接的配置
+
+```bash
+http {
+	listen 80;
+	location /status {
+		check_status;
+	}
+}
+tcp {
+	timeout 1d;
+	proxy_read_timeout 10d;
+	proxy_send_timeout 10d;
+	proxy_connect_timeout 30;
+	upstream cluster_www_ttlsa_com {
+		# simple round-robin
+		server 127.0.0.1:1234;
+		check interval=3000 rise=2 fall=5 timeout=1000;
+		#check interval=3000 rise=2 fall=5 timeout=1000 type=ssl_hello;
+		#check interval=3000 rise=2 fall=5 timeout=1000 type=http;
+		#check_http_send "GET / HTTP/1.0\r\n\r\n";
+		#check_http_expect_alive http_2xx http_3xx;
+	}
+	server {
+		listen 8888;
+		proxy_pass cluster_www_ttlsa_com;
+		so_keepalive on;
+		tcp_nodelay on;
+	}
+}
+```
+
+nginx_tcp_proxy_module 模块指令具体参见: http://yaoweibin.github.io/nginx_tcp_proxy_module/README.html
+
+
+
+## nginx 正向代理
+
+我们平时用的最多的最常见的是反向代理。反向代理想必都会配置的。那么nginx的正向代理是如何配置的呢？
+
+```bash
+server {
+	listen 8090;
+	location / {
+		resolver 218.85.157.99 218.85.152.99;
+		resolver_timeout 30s;
+		proxy_pass http://$host$request_uri;
+	}
+	access_log /data/httplogs/proxy-$host-aceess.log;
+}
+
+```
+
+就这么简单哈。
+测试：
+http://127.0.0.1:8090
+resolver指令
+语法: resolver address …[valid=time];
+默认值: —
+配置段: http, server, location
+配置DNS服务器IP地址。可以指定多个，以轮询方式请求。
+nginx会缓存解析的结果。默认情况下，缓存时间是名字解析响应中的TTL字段的值，可以通过valid参数更改。
