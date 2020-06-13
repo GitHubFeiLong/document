@@ -227,3 +227,11 @@
 13.5 文本处理三剑客之awk
 
 https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892859573291903&vid=5285890799486949604
+
+
+
+2020年6月13日 21点06分
+
+14. 1文本处理三剑客之awk
+
+https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892863868259199&vid=5285890799487173916
