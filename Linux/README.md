@@ -235,3 +235,13 @@ https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892859
 14. 1文本处理三剑客之awk
 
 https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892863868259199&vid=5285890799487173916
+
+
+
+
+
+2020年6月18日 22点02分
+
+14.1 网络基础知识
+
+链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892868163226495&vid=5285890799487194773
