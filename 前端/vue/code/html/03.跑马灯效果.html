@@ -28,7 +28,7 @@
             },
             methods:{
                 lang(){
-                    // if (this.intervalId != null)return false;
+                    if (this.intervalId != null)return false;
                     this.intervalId = setInterval(() => {
                         console.log(this.msg);
                         var start = this.msg.substring(0,1);
