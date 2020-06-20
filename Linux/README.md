@@ -245,3 +245,11 @@ https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892863
 14.1 网络基础知识
 
 链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892868163226495&vid=5285890799487194773
+
+
+
+2020年6月20日 12点02分
+
+14.2 网络配置
+
+链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892872458193791&vid=5285890794149407106
