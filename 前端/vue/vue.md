@@ -223,7 +223,7 @@
 
 
 
-## 事件修饰符
+## Vue 事件修饰符
 
 1. stop：使用 .stop 阻止冒泡
 2. prevent：使用 .prevent 阻止默认行为
@@ -365,5 +365,303 @@ var vm = new Vue({
 </script>
 </body>
 </html>
+```
+
+
+
+## Vue 中的class
+
+**传统使用**方式:
+
+```html
+<h1 class="red thin">h1</h1>
+```
+
+**Vue 使用**方式：
+
+1. 第一种是用方式，直接传递一个数组，注意： 这里的class需要使用 v-bind 做数据绑定
+
+   ```html
+   <!-- 结果是class="thin red" -->
+   <h1 :class="['thin','red']">h1</h1>
+   ```
+
+2. 第二种在数组中使用三元表达式
+
+   ```html
+   <!-- 结果是class="thin red" -->
+   <h1 :class="['thin','red', flag?'active':'']">h1</h1>
+   <script>
+       var vm = new Vue({
+           el:'#app',
+           data : {
+               flag:false
+           }
+       })
+   </script>
+   ```
+
+3. 第三种在数组中使用对象来代替三元表达式，提高代码的可读性
+
+   ```html
+   <!-- 结果是class="thin red" -->
+   <!-- 这里的 {'active':flag} flag是data中的数据，active是class的值 -->
+   <h1 :class="['thin','red', {'active':flag}]">h1</h1>
+   
+   <script>
+       var vm = new Vue({
+           el:'#app',
+           data : {
+               flag:false
+           }
+       })
+   </script>
+   ```
+
+4. 第四种在为 class 使用 v-bind 绑定 对象的时候，对象的属性是类名，由于 对象的属性可带引号，也可不带引号，所以这里可以没写引号；属性的值是一个标识符
+
+   ```html
+   <!-- 结果是class="thin active" -->
+   <h1 :class="{thin:true, red:false, active:true, italic:false}">h1</h1>
+   ```
+
+5. 使用data巧妙进行class绑定
+
+   ```html
+   <!-- 结果是class="thin red active" -->
+   <h1 :class="classObj">h1</h1>
+
+   <script>
+       var vm = new Vue({
+           el:'#app',
+           data : {
+                classObj:{thin:true, red:true, active:true, italic:false}
+           }
+       })
+   </script>
+   ```
+   
+
+
+
+## Vue 中的 style
+
+1. 直接使用对象
+
+   ```html
+   <!-- 对象就是无序键值对的集合（注意：键不能有中横线） -->
+   <span :style='{color:"red", "background-color":"blue", "font-weight":100}'>这是一个h1</span>
+   ```
+
+2. 使用 data 中的数据进行样式设置 
+
+   ```html
+   <span :style='styleObj1'>这是一个h1</span>
+   
+   <script>
+       var vm = new Vue({
+           el:'#app',
+           data : {
+               styleObj1:{color:"red", "background-color":"blue", "font-weight":100},
+               styleObj2:{"font-style":"italic"}
+           }
+       })
+   </script>
+   ```
+
+3. 使用多个样式对象
+
+   ```html
+   <span :style='[styleObj1, styleObj2]'>这是一个h1</span>
+   
+   <script>
+       var vm = new Vue({
+           el:'#app',
+           data : {
+               styleObj1:{color:"red", "background-color":"blue", "font-weight":100},
+               styleObj2:{"font-style":"italic"}
+           }
+       })
+   </script>
+   ```
+
+
+
+## Vue v-for循环
+
+### v-for循环普通数组
+
+```html
+<div id='app'>
+    <!-- item是循环的当前对象，i是索引，可以省略索引直接使用：v-for="item in list" -->
+    <p v-for="(item, i) in list">索引值：{{i}}， 值：{{item}}</p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data : {
+            <!--这里是普通数组-->
+            list:[1,2,3,4,5,6]
+        }
+    })
+</script>
+```
+
+
+
+### v-for循环对象数组
+
+```html
+  
+<div id='app'>
+    <p v-for="(user, i) in list">索引：{{i}} ID:{{user.id}}, name:{{user.name}}</p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data : {
+            <!--这里是对象数组-->
+            list:[
+                {id:1, name:'张三1'},
+                {id:2, name:'张三2'},
+                {id:3, name:'张三3'},
+                {id:4, name:'张三4'},
+            ]
+        }
+    })
+</script>
+```
+
+
+
+### v-for循环对象
+
+```html
+<div id='app'>
+    <!-- 注意：在遍历对象身上的键值对的时候，除了有val key，在第三个位置还有一个索引 -->
+    <p v-for="(val, key, index) in user">值是：{{val}}， 键是：{{key}}, 索引值：{{index}}</p>
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data : {
+            user:{
+                id:1,
+                name:"zhangshan",
+                gender:'男'
+            }
+        }
+    })
+</script>
+```
+
+
+
+### v-for迭代数字
+
+```html
+<div id='app'>
+    <!-- in 后面我们放过 普通数组，对象数组，对象，还可以放数字 -->
+    <!-- 注意：如果使用v-for迭代数字的话，前面的count 值从1 开始（1..10） -->
+    <p v-for="count in 10"> 这是第 {{count}} 次循环</p>
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+    }
+})
+</script>
+```
+
+
+
+### v-for 循环中key属性的使用
+
+```html
+<div id='app'>
+    <div>
+        <label>Id:
+            <input type="text" v-model="id">
+        </label>
+        <label>name:
+            <input type="text" v-model="name">
+        </label>
+        <input type="button" value="添加" v-on:click="add">
+    </div>
+
+    <!-- 注意：v-for循环的时候，key属性只能使用name或者string -->
+    <!-- 注意key 在使用的时候，必须使用 v-bind: 书香绑定的形式，指定key的值 -->
+    <!-- 在组件中，使用v-for循环的时候，或者在一些特殊情况中，如果v-for有问题，必须在使用v-for的同时，指定唯一的字符串/数字 类型:key 值 -->
+    <p v-for="item in list" v-bind:key="item.id">
+        <input type="checkbox">{{item.id}} ---
+        {{item.name}}
+    </p>
+</div>
+<script>
+var vm = new Vue({
+    el:'#app',
+    data : {
+        id:"",
+        name:"",
+        list:[
+            {id:1, name:'李斯'},
+            {id:2, name:'秦始皇'},
+            {id:3, name:'赵高'},
+            {id:4, name:'韩非'},
+            {id:5, name:"荀子"}
+        ]
+    },
+    methods:{
+        add(){
+            this.list.unshift({id:this.id, name:this.name})
+        }
+    }
+})
+</script>
+```
+
+
+
+## V-if 和V-show的使用
+
+|      | v-if                                                     | v-show                                                       |
+| ---- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| 特点 | 每次都会重新删除或创建元素                               | 每次不会重新进行DOM的删除和创建操作，只是切换了display的属性值 |
+| 性能 | 有较高的切换性能消耗                                     | 有较高的初始渲染消耗                                         |
+| 场景 | 如果元素可能永远也不会显示出来被用户看到，则推荐使用v-if | 如果元素涉及到频繁的切换，最好使用v-show                     |
+
+
+
+```html
+<div id='app'>
+    <!-- <input type="button" value="按钮" v-on:click="toggle"> -->
+    <input type="button" value="按钮" v-on:click="flag=!flag">
+
+    <!-- v-if的特点：每次都会重新删除或创建元素 -->
+    <!-- v-if 有较高的切换性能消耗 -->
+    <!-- 如果元素涉及到频繁的切换，最好使用v-show -->
+    <h3 v-if="flag">这是用v-if控制的元素</h3>
+
+    <!-- v-show的特点：每次不会重新进行DOM的删除和创建操作，只是切换了display的属性值 -->
+    <!-- v-show 有较高的初始渲染消耗 -->
+    <!-- 如果元素可能永远也不会显示出来被用户看到，则推荐使用v-if -->
+    <h3 v-show="flag">这是用v-show控制的元素</h3>
+    
+    
+</div>
+<script>
+    var vm = new Vue({
+        el:'#app',
+        data : {
+            flag:true
+        },
+        methods:{
+            toggle(){
+                this.flag = !this.flag;
+            }
+        }
+    })
+</script>
 ```
 

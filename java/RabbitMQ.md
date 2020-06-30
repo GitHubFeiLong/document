@@ -108,6 +108,12 @@ https://www.rabbitmq.com/which-erlang.html
 
 进入rabbit的sbin目录下运行
 
+```bash
+D:\work\java\rabbitMQ\rabbitmq_server-3.8.3\sbin> rabbitmq-plugins.bat enable rabbitmq_management
+```
+
+
+
 ![1589598250718](..\typora-user-images\1589598250718.png)
 
 
@@ -1315,7 +1321,7 @@ Message acknowledgment:
 #### 消息持久化
 
 ```
-Queue.DeclareOk queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete,                             Map<String, Object> arguments) throws IOException;
+Queue.DeclareOk queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments) throws IOException;
 ```
 
 **boolean durable = false;**

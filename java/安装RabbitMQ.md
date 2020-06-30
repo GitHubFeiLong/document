@@ -4,7 +4,7 @@
 
 ## 官网查看RabbitMQ和对应的Erlang版本
 
-1. 进入 [RabbitMQ 官网](www.rabbitmq.com) ，点击 顶上的 Get Started
+1. 进入 [RabbitMQ 官网](https://www.rabbitmq.com/) ，点击 顶上的 Get Started
 
 ![1590987138633](..\typora-user-images\1590987138633.png)
 
@@ -34,7 +34,7 @@
 
 
 
-根据第一步，知道了自己要下载erlang的版本后，进入 [erlang官网](www.erlang.org) ， 点击页面顶部的 **DOWNLOADS**
+根据第一步，知道了自己要下载erlang的版本后，进入 [erlang官网](https://www.erlang.org/) ， 点击页面顶部的 **DOWNLOADS**
 ![1591000236508](..\typora-user-images\1591000236508.png)
 
 
@@ -114,18 +114,21 @@ rabbitmq-server -detached
 [启动rabbitmq，提示ERROR: node with name "rabbit" already running on "localhost"](https://www.cnblogs.com/Sisiflying/p/6386988.html)
 
 ```bash
-➜  ~ rabbitmq-server
+[root@VM_0_9_centos: ~]#rabbitmq-server
 ERROR: node with name "rabbit" already running on "localhost"
-➜  ~ ps aux|grep epmd
+
+[root@VM_0_9_centos: ~]#ps aux|grep epmd
 wangyizhe         949   0.0  0.0  2461372    256   ??  S    二04下午   0:00.99 /usr/local/Cellar/erlang/19.0.2/lib/erlang/erts-8.0.2/bin/epmd -daemon
 wangyizhe       14871   0.0  0.0  2424600    432 s001  R+    4:12下午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn epmd
-➜  ~ ps aux|grep erl
+
+[root@VM_0_9_centos: ~]#ps aux|grep erl
 wangyizhe        4519   0.7  0.4  4134296  29636 s000  S    二05下午  12:43.67 /usr/local/Cellar/erlang/19.0.2/lib/erlang/erts-8.0.2/bin/beam.smp -W w -A 64 -P 1048576 -t 5000000 -stbt db -K true -B i -- -root /usr/local/Cellar/erlang/19.0.2/lib/erlang -progname erl -- -home /Users/wangyizhe -- -pa /usr/local/Cellar/rabbitmq/3.6.4/ebin -noshell -noinput -s rabbit boot -sname rabbit@localhost -boot /usr/local/opt/erlang/lib/erlang/bin/start_clean -kernel inet_default_connect_options [{nodelay,true}] -rabbit tcp_listeners [{"127.0.0.1",5672}] -sasl errlog_type error -sasl sasl_error_logger false -rabbit error_logger {file,"/usr/local/var/log/rabbitmq/rabbit@localhost.log"} -rabbit sasl_error_logger {file,"/usr/local/var/log/rabbitmq/rabbit@localhost-sasl.log"} -rabbit enabled_plugins_file "/usr/local/etc/rabbitmq/enabled_plugins" -rabbit plugins_dir "/usr/local/Cellar/rabbitmq/3.6.4/plugins" -rabbit plugins_expand_dir "/usr/local/var/lib/rabbitmq/mnesia/rabbit@localhost-plugins-expand" -os_mon start_cpu_sup false -os_mon start_disksup false -os_mon start_memsup false -mnesia dir "/usr/local/var/lib/rabbitmq/mnesia/rabbit@localhost" -kernel inet_dist_listen_min 25672 -kernel inet_dist_listen_max 25672
 wangyizhe        4532   0.0  0.0  2434824    464   ??  Ss   二05下午   0:12.77 erl_child_setup 256
 wangyizhe         949   0.0  0.0  2461372    256   ??  S    二04下午   0:00.99 /usr/local/Cellar/erlang/19.0.2/lib/erlang/erts-8.0.2/bin/epmd -daemon
 wangyizhe       14897   0.0  0.0  2424600    472 s001  R+    4:12下午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn erl
-➜  ~ kill -9 4519
-➜  ~ rabbitmq-server
+
+[root@VM_0_9_centos: ~]#kill -9 4519
+[root@VM_0_9_centos: ~]#rabbitmq-server
  
               RabbitMQ 3.6.4. Copyright (C) 2007-2016 Pivotal Software, Inc.
   ##  ##      Licensed under the MPL.  See http://www.rabbitmq.com/
@@ -139,14 +142,15 @@ wangyizhe       14897   0.0  0.0  2424600    472 s001  R+    4:12下午   0:00.0
 
 
 
-### 添加用户和权限
+### 用户相关命令
 
 默认网页guest用户是不允许访问的，需要增加一个用户修改一下权限，代码如下：
- 添加用户:`rabbitmqctl add_user admin admin`
 
+查看用户列表：`rabbitmqctl  list_users`
+添加用户:`rabbitmqctl add_user admin admin`
 添加权限:`rabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*"`
-
 修改用户角色:`rabbitmqctl set_user_tags admin administrator`
+修改用户密码:`rabbitmqctl  change_password  username  'newpasswd'`
 
 ## RabbitMQ的简单指令
 
