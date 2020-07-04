@@ -261,3 +261,11 @@ https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892863
 14.2 网络基础局域网技术
 
 链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892876753161087&vid=5285890799487327904
+
+
+
+2020年7月4日 11点27分
+
+14.3 常见网络设备
+
+链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892881048128383&vid=5285890799487338170
