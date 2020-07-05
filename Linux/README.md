@@ -269,3 +269,14 @@ https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892863
 14.3 常见网络设备
 
 链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=3892881048128383&vid=5285890799487338170
+
+
+
+2020年7月5日 10点38分
+
+14.4 常见网络设备
+
+链接：https://ke.qq.com/webcourse/index.html#cid=445311&term_id=100532217&taid=7485144449862527&vid=5285890799487358507
+
+
+
