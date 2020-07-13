@@ -379,6 +379,31 @@ stringCollection
 // "DDD2", "DDD1", "CCC", "BBB3", "BBB2", "AAA2", "AAA1"
 ```
 
+#### Map进行过滤
+
+```java
+Map<Integer, User> maps = new HashMap<>();
+        maps.put(1, new User(1,"1"));
+        maps.put(2, new User(2,"2"));
+        maps.put(3, new User(3,"3"));
+        maps.put(4, new User(4,"4"));
+
+Map<Integer, User> collect = maps.entrySet().stream()
+                .filter(v -> v.getValue().getName().equals("2") || v.getValue().getName().equals("1"))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+collect.entrySet().forEach(p->{
+            log.info("id:{},value:{}", p.getKey(), p.getValue());
+        });
+// 输出：
+//09:05:05.423 [main] INFO broadcast.maps.MapDemo - id:1,value:User(id=1, name=1)
+//09:05:05.432 [main] INFO broadcast.maps.MapDemo - id:2,value:User(id=2, name=2)
+```
+
+
+
+
+
 ### Match
 
 可以使用各种匹配操作来检查某个谓词是否与stream匹配。所有这些操作都是终端操作，并返回一个布尔结果。
@@ -671,16 +696,30 @@ Date legacyDate = Date.from(instant);
 System.out.println(legacyDate);     // Wed Dec 31 23:59:59 CET 2014
 ```
 
+
+
+#### 时间运算
+
+```java
+// 时间减（以 minus 开头，有秒，纳秒，分钟，小时，天，周，月，年）
+LocalDateTime localDateTime = LocalDateTime.now();
+localDateTime.minusDays(1);
+
+// 时间加（以plus 开头，有秒，纳秒，分钟，小时，天，周，月，年）
+LocalDateTime localDateTime = LocalDateTime.now();
+localDateTime.plusDays(1);
+```
+
+
+
+#### 格式化时间
+
 格式化date-times就像格式化dates or times一样。我们可以从自定义模式创建格式化器，而不是使用预定义的格式。
 
 ```
-DateTimeFormatter formatter =
-    DateTimeFormatter
-        .ofPattern("MMM dd, yyyy - HH:mm");
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+LocalDateTime localDateTime = LocalDateTime.parse("2020-07-10", formatter);
 
-LocalDateTime parsed = LocalDateTime.parse("Nov 03, 2014 - 07:13", formatter);
-String string = formatter.format(parsed);
-System.out.println(string);     // Nov 03, 2014 - 07:13
 ```
 
 Unlike `java.text.NumberFormat` the new `DateTimeFormatter` 是不可变的，并且是线程安全的。
