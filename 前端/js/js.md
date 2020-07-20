@@ -85,3 +85,23 @@ event.target.style.color = 'red';
 $(event.target).addClass('test-class');
 ```
 
+
+
+# 使用JavaScript设置CSS
+
+使用javascript动态修改页面的css3变量
+
+范例：
+
+```css
+/*定义css变量*/
+:root {
+    --nav-head-bgcolor:#e3e4e5;
+}
+```
+
+```javasc
+// 修改上面的css变量。
+document.documentElement.style.setProperty('--nav-head-bgcolor','red')
+```
+

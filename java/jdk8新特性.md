@@ -717,8 +717,16 @@ localDateTime.plusDays(1);
 格式化date-times就像格式化dates or times一样。我们可以从自定义模式创建格式化器，而不是使用预定义的格式。
 
 ```
+//注意如果待转换的字符串没有时间只有日期（如“2020-07-17”），那么使用第一种会报错,但是待转换的日期（如“2020-07-17 17：00：00”） 转换成日期是可以的。
+
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+// 转换成LocalDateTime
 LocalDateTime localDateTime = LocalDateTime.parse("2020-07-10", formatter);
+
+// 转换成LocaDate
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+LocalDate localDate = LocalDate.parse("2020-07-10", formatter);
 
 ```
 
