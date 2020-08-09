@@ -43,3 +43,42 @@ top: 50%;
 transform: translate(0, -50%);
 ```
 
+
+
+### 媒体查询
+
+#### html需要添加meta标签
+
+可以加多个meta标签
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+
+
+注意，将小分辨率卸载最下面。
+
+```css
+/*屏幕最大可见宽度为414 （手机plus）*/
+@media only screen and (max-width: 414px) {
+    css code
+}
+
+/*最大宽度375px (普通手机)时生效*/
+@media only screen and (max-width: 375px) {
+    css code
+}
+```
+
+
+
+### 过度
+
+```css
+/*过度属性*/
+transition-property:background-color;
+/*过渡时间*/
+transition-duration:0.5s;
+```
+

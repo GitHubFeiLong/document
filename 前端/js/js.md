@@ -1,6 +1,48 @@
-## 数组
+# 数组
 
-### 数组过滤
+## 数组循环
+
+### 方法一：普通for循环
+
+```javasc
+for(i = 0; i <= arr.length; i++){console.log(arr[i])}
+```
+
+### 方法二：forEach循环
+
+```javasc
+var arr = ['北京', '上海', '广州', '重庆', '天津'];
+arr.forEach(function (item, index, arr) {
+    console.log(val, key, arr);
+})
+```
+
+### 方法三：for..in 循环
+
+```javasc
+var arr = ['北京','上海','广州','重庆','天津'];
+
+for(var key in arr){  // 自定义变量,存储索引 0 1 2 ...
+	console.log(key,arr[key]); 
+}
+```
+
+
+
+## 数组排序
+
+```javascript
+// 注意数字11 小于 2
+arr.sort(function(a,b){
+	return a - b;
+})
+```
+
+
+
+
+
+## 数组过滤
 
 ```javascript
 /**
@@ -47,13 +89,25 @@ return arr.join('');
 
 
 
+## 字符串数组转成数字数组
+
+例如将["08","02"] 转成[8,2]
+
+```javasc
+var arr = ["08","02"];
+arr.map(Number);
+console.log(arr);	//[8,2]
+```
+
+
+
 ## 数组删除元素
 
 ### splice
 
-使用数组的**splice**方法删除数组中指定范围元素。
+使用数组的**splice**方法删除数组中指定范围元素，方法返回被删除的元素 数组。
 
-该方法有两个参数：第一个参数表示删除元素起始位置，第二个参数表示删除元素的结束下标。
+该方法有两个参数：第一个参数表示删除元素起始位置，第二个参数表示删除几个元素。
 
 该方法会返回被删除的元素组成的一个数组，原数组会被改变
 
@@ -87,9 +141,9 @@ $(event.target).addClass('test-class');
 
 
 
-# 使用JavaScript设置CSS
+# 使用JavaScript设置/获取CSS 变量
 
-使用javascript动态修改页面的css3变量
+## 使用javascript设置页面的css3变量
 
 范例：
 
@@ -104,4 +158,15 @@ $(event.target).addClass('test-class');
 // 修改上面的css变量。
 document.documentElement.style.setProperty('--nav-head-bgcolor','red')
 ```
+
+
+
+## 使用javascript获取页面定义的css3变量
+
+```javascript
+
+getComputedStyle(document.documentElement).getPropertyValue('--my-variable-name');
+```
+
+
 

@@ -104,9 +104,9 @@ Eshell V10.4  (abort with ^G)
 
 ```bash
 #启动后台管理
-rabbitmq-plugins enable rabbitmq_management  
+[root@VM-0-9-centos sbin]#rabbitmq-plugins enable rabbitmq_management  
 #后台运行rabbitmq
-rabbitmq-server -detached   
+[root@VM-0-9-centos sbin]#rabbitmq-server -detached   
 ```
 
 #### 如果启动MQ报错
@@ -155,7 +155,7 @@ wangyizhe       14897   0.0  0.0  2424600    472 s001  R+    4:12下午   0:00.0
 ## RabbitMQ的简单指令
 
 ```bash
-启动服务：rabbitmq-server -detached [ /usr/local/rabbitmq/sbin/rabbitmq-server  -detached ]
+启动服务：rabbitmq-server -detached 
 重启服务：rabbitmq-server restart
 关闭服务：rabbitmqctl stop
 查看状态：rabbitmqctl status
@@ -163,5 +163,21 @@ wangyizhe       14897   0.0  0.0  2424600    472 s001  R+    4:12下午   0:00.0
 开启某个插件：rabbitmq-pluginsenable xxx
 关闭某个插件：rabbitmq-pluginsdisablexxx
 注意：重启服务器后生效。
+```
+
+
+
+## 错误
+
+```bash
+ERROR: distribution port 25672 in use by rabbit@VM-0-9-centos
+
+# 解决方法
+netstat -lnp | grep 25672
+tcp        0      0 0.0.0.0:25672           0.0.0.0:*               LISTEN      2668/beam.smp       
+[root@VM-0-9-centos apps]# kill -9 2668
+
+[root@VM-0-9-centos apps]# rabbitmq-server –detached
+
 ```
 
