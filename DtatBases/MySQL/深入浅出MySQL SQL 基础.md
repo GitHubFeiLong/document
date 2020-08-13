@@ -311,7 +311,7 @@ Query OK, 0 rows affected (0.04 sec)
    6 rows in set (0.00 sec)
    ```
 
-6. 更改表明，语法如下
+6. 更改表名，语法如下
 
    ```mysql
    ALTER TABLE tablename RENAME [TO] new_tablename
@@ -687,5 +687,3 @@ select concat('alter table test1.',table_name, 'engine=innodb;') from tables whe
 4. STATISTICS：该表提供了关于表索引的信息。`show index from schemaname.tablename`的结果取之此表
 
 
-
-## MySQL支持的数据类型
