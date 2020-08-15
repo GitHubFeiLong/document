@@ -45,7 +45,7 @@ transform: translate(0, -50%);
 
 
 
-### 媒体查询
+## 媒体查询
 
 #### html需要添加meta标签
 
@@ -61,12 +61,12 @@ transform: translate(0, -50%);
 
 ```css
 /*屏幕最大可见宽度为414 （手机plus）*/
-@media only screen and (max-width: 414px) {
+@media only screen and (max-device-width: 414px) {
     css code
 }
 
 /*最大宽度375px (普通手机)时生效*/
-@media only screen and (max-width: 375px) {
+@media only screen and (max-device-width: 375px) {
     css code
 }
 ```

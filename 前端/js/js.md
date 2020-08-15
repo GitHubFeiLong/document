@@ -99,6 +99,22 @@ arr.map(Number);
 console.log(arr);	//[8,2]
 ```
 
+## 数组去重
+
+```javasc
+// 数组a
+var arr = ["a","b","c","b","a"]
+var new_arr = [];
+arr.forEach(function (item, index, arr) {
+	// item值在数组new_arr中不存在时 $.inArray(item, new_arr) = -1
+    if ($.inArray(item, new_arr) == -1) {
+    	new_arr.push(item);
+    }
+})
+```
+
+
+
 
 
 ## 数组删除元素
