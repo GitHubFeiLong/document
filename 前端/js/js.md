@@ -186,3 +186,17 @@ getComputedStyle(document.documentElement).getPropertyValue('--my-variable-name'
 
 
 
+# String
+
+## repeat 
+
+格式：result = str.repeat(n);
+
+字符串 str ,重复 n次 后 拼接成一个新的字符串 result 返回。
+
+```javascript
+var a = "100";
+a = a.repeat(3);
+console.log("a", a); // a 100
+```
+

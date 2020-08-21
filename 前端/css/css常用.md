@@ -10,6 +10,18 @@ text-overflow: ellipsis;
 
 
 
+## 内容过长时换行
+
+```css
+.content{
+     word-break: break-all
+}
+```
+
+
+
+
+
 ## background-image 铺满元素
 
 ```css
