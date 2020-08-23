@@ -33,7 +33,7 @@ mysql> show databases;
 | recode             |
 | sys                |
 +--------------------+
-10 rows in set (0.01 sec)
+4 rows in set (0.01 sec)
 ```
 
 这四个数据库是安装就自动创建的
