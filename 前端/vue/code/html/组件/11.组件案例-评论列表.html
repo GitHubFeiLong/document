@@ -11,7 +11,7 @@
 <body>
    
 <div id='app'>
-    <cmt-box></cmt-box>
+    <cmt-box @func="loadComments"></cmt-box>
 
     <ul class="list-group">
         <li class="list-group-item" v-for="item in list" :key="item.id">
@@ -36,7 +36,6 @@
         </div>
 
         <div class="form-group">
-            <label>评论内容：</label>
             <input type="button" value="发表评论" class="btn btn-primary" @click="postComment">
         </div>
     </div>
@@ -77,8 +76,11 @@ var  commentBox = {
 
             this.user = this.content = '';
 
+
+            this.$emit('func');    
         }
     }
+    
 }
 
 var vm = new Vue({
@@ -89,6 +91,19 @@ var vm = new Vue({
             {id: Date.now(), user:'江小白', content:'劝君更进一杯酒'},
             {id: Date.now(), user:'小马', content:'我姓马'},
         ]
+    }
+    ,beforeCreate(){ // 注意：这不能调用 loadComments 方法，因为在执行这个钩子函数的时候，data 和methods 都还没有被初始化好
+        
+    }
+    ,created(){
+        this.loadComments();
+    }
+    ,methods:{
+        loadComments(){
+            // 从本地的localStorage 中，加载评论列表
+            var list = JSON.parse(localStorage.getItem('cmts') || '[]');
+            this.list = list;
+        }
     }
     ,components:{
         'cmt-box':commentBox
