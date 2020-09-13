@@ -35,6 +35,10 @@ module.exports = {
     module:{  // 这个节点，用于配置所有第三方模块加载器
         rules: [ //所有第三方模块的匹配规则
             {test: /\.css$/, use:['style-loader', 'css-loader']} // 配置处理 .css文件的第三方loader 规则
+            // 配置处理 .less 文件的第三方 loader 规则
+            ,{test: /\.less$/, use:['style-loader', 'css-loader', 'less-loader']}
+            // 配置处理 .scss 文件的第三方loader 规则
+            ,{test:/\.scss$/, use:['style-loader', 'css-loader', 'sass-loader']}
         ]    
     }   
 

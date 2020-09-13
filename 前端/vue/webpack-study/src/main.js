@@ -8,6 +8,8 @@ import $ from 'jquery'
 
 // 使用 import 语法，导入 css样式表
 import './css/index.css'
+import './css/index.less'
+import './css/index.scss'
 // 注意：webpack，默认只能打包处理 JS类型的文件，无法处理其他非JS类型的文件；
 // 如果要处理非JS 类型的文件，我们需要手动去安装一些合适第三方的 loader 加载器。
 // 1.如果想要打包处理 css 文件， 需要安装 `cnpm i style-loader css-loader -D`
@@ -15,6 +17,11 @@ import './css/index.css'
 // 它是一个对象；在这个 module对象身上，有个 rules属性，这个 rules 是一个数组，；这个数组中
 // ，存放了，所有第三方文件的匹配和处理规则
 
+// 注意: webpack处理第三方文件类型的过程:
+// 1．发现这个要处理的文件不是Js文件，然后就去配置文件中，查找有没有对应的第三方loader规则
+// 2．如果能找到对应的规则，就会调用对应的loader处理这种文件类型;
+// 3．在调用loader的时候，是从后往前调用的;
+// 4．当最后的一个 loader调用完毕，会把处理的结果，直接交给webpack进行打包合并，最终输出到bundle.js中去
 
 $(function(){
     $('li:odd').css('backgroundColor','blue');
