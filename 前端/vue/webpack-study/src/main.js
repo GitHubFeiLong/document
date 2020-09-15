@@ -10,6 +10,13 @@ import $ from 'jquery'
 import './css/index.css'
 import './css/index.less'
 import './css/index.scss'
+
+
+//注意:如果要通过路径的形式，去引入node_modules中相关的文件，可以直接省略路径前面的，
+// node_modules这一层目录，直接写包的名称，然后后面跟上具体的文件路径
+// 不写node_modules这一层目录，默认就会去node_modules中查找
+// import  'bootstrap/dist/css/bootstrap.css'
+
 // 注意：webpack，默认只能打包处理 JS类型的文件，无法处理其他非JS类型的文件；
 // 如果要处理非JS 类型的文件，我们需要手动去安装一些合适第三方的 loader 加载器。
 // 1.如果想要打包处理 css 文件， 需要安装 `cnpm i style-loader css-loader -D`

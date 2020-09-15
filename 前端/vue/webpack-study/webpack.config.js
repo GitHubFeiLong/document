@@ -1,3 +1,4 @@
+// 由于webpack是基于Node进行构建的，所有，webpack的配置文件中，任何合法的Node代码都是支持的
 const path = require('path')
 
 const webpack= require('webpack')
@@ -10,6 +11,9 @@ const webpack= require('webpack')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 
 // 这个配置文件就是一个js文件，通过Node中的模块操作，向外暴露了一个配置对象
+// 当以命令行形式运行webpack或 webpack-dev-server的时候，工具会发现，我们并没有提供要打
+// 包的文件的入口和出口文件，此时，他会检查项目根目录中的配置文件，并读取这个文件，就拿到了导出
+// 的这个配置对象，然后根据这个对象，进行打包构建
 module.exports = {
     // 需要手动指定 入口和出口
     entry: path.join(__dirname, './src/main.js'),// 入口。表示要使用 webpack 打包哪个文件
@@ -22,10 +26,10 @@ module.exports = {
         // --open --port 3000 --contentBase src --hot
         open: true, // 自动打开浏览器
         port: 3000, // 设置启动时候的运行端口
-        contentBase: 'src', // 指定托管的根目录
+        // contentBase: 'src', // 指定托管的根目录
         hot: true, // 启用热更新
     },
-    // webpack 4的版本不支持，下面的写法，运行`npm run dev`会报错
+    // 所有webpack 插件的配置节点
     plugins: [
         new htmlWebpackPlugin({ // 创建一个在内存中生成HTML页面的插件
             template: path.join(__dirname, './src/index.html'), // 指定模板页面，将来会根据指定的页面路径，去生成内存中的页面
@@ -39,6 +43,21 @@ module.exports = {
             ,{test: /\.less$/, use:['style-loader', 'css-loader', 'less-loader']}
             // 配置处理 .scss 文件的第三方loader 规则
             ,{test:/\.scss$/, use:['style-loader', 'css-loader', 'sass-loader']}
+
+            // 处理图片文件路径的loader
+            // ,{test:/\.(jpg|png|gif|bmp|jpeg)$/, use:'url-loader'}
+            //limit给定的值，是图片的大小，单位是 byte，如果我们引用的图片，大于或等于给定的
+            //limit值，则不会被转为base64格式的字符串，如果图片小于给定的limit值，则会被转为base64的字符串
+            // ,{test:/\.(jpg|png|gif|bmp|jpeg)$/, use:'url-loader?limit=28,668'}
+
+            // 保留图片的名字和后缀
+            // ,{test:/\.(jpg|png|gif|bmp|jpeg)$/, use:'url-loader?limit=100&name=[name].[ext]'}
+            // 添加哈希值
+            ,{test:/\.(jpg|png|gif|bmp|jpeg)$/, use:'url-loader?limit=100&name=[hash:8]-[name].[ext]'}
+
+            // 处理字体文件的loader
+            ,{test:/\.(eot|ttf|svg|woff|woff2)$/, use:'url-loader'}
+
         ]    
     }   
 
