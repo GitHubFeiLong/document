@@ -27,3 +27,11 @@ SELECT nextval('exam_basic_id');
 
 
 
+## 修改字段数据类型
+
+```sql
+alter table test alter column filed type varchar using filed:: varchar
+```
+
+
+
