@@ -187,7 +187,7 @@ $ git grep "Hello" v2.5
 
 ```bash
 # 列出所有的分支
-$ git branch
+$ git branch -a
 
 # 列出所有的远端分支
 $ git branch -r
