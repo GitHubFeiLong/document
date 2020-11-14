@@ -11,14 +11,11 @@
 ### 1.1.卸载docker
 
 ```bash
-$ sudo yum remove docker \
-                  docker-client \
-                  docker-client-latest \
-                  docker-common \
-                  docker-latest \
-                  docker-latest-logrotate \
-                  docker-logrotate \
-                  docker-engine
+# 查看已安装的docker列表
+yum list installed |grep docker
+
+#删除已安装的docker
+yum -y remove docker-ce.x86_64
 ```
 
 ### 1.2.安装docker
