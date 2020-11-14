@@ -365,6 +365,18 @@ switched to db admin
 server should be down...
 ```
 
+> 如果一旦是因为数据损坏，则需要进行如下操作（了解）：  
+>
+> 1）删除lock文件：  
+>
+> ​	find / -name mongod.lock
+>
+> ​	rm  -rf mongod.lock
+>
+> 2）修复数据：  
+>
+> ​	mongod --repair --dbpath=/mongodb/data/db  
+
 ##### 生成systemctl 服务
 
 1）在/usr/lib/systemd/system 下创建一个mongod.service 文件，内容如下：
