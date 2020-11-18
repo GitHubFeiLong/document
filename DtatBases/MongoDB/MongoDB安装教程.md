@@ -71,14 +71,21 @@ storage:
 >
 > error-parsing-yaml-config-file-yaml-cpp-error-at-line-3-column-15-unknown-escape-character-d  
 >
-> 解决：
-> a. 对 \ 换成 / 或 \\\
-> b. 如果路径中没有空格，则无需加引号。  
+> > 解决：
+> > a. 路径分隔符使用反斜杠“\”
+> > b. 如果路径中没有空格，则无需加引号。  
 >
-> 2）配置文件中不能以Tab分割字段  
+> 2) 配置文件不使用空格
 >
-> 解决：
-> 将其转换成空格。  
+> > 直接使用路径即可，正斜杠，反斜杠都可以实现
+>
+> 3）配置文件中不能以Tab分割字段  
+>
+> > yaml格式，两个空格，value与前面的冒号有一个空格。
+> >
+> > 例如：
+> >
+> > >  key: value 
 
   启动方式：
 
@@ -95,6 +102,19 @@ D:\work\databases\mongodb-windows-x86_64-4.4.2-rc1\mongodb-win32-x86_64-windows-
 # 方式4 mongos -f ../config/mongod.conf
 D:\work\databases\mongodb-windows-x86_64-4.4.2-rc1\mongodb-win32-x86_64-windows-4.4.2-rc1\bin>mongos -f ../config/mongod.conf
 ```
+
+> 注意：
+>
+> 在windows上使用配置文件方式启动mongod服务报错：
+>
+> Error opening config file: Is a directory
+> try 'mongod --help' for more information
+>
+> 是因为path里面有空格，此时需要使用双引号将路径包起来：
+>
+> D:\>mongod -f  "Program Files (x86)\\mongod.conf"
+
+
 
 更多参数配置：  
 

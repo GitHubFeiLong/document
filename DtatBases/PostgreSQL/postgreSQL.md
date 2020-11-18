@@ -35,3 +35,12 @@ alter table test alter column filed type varchar using filed:: varchar
 
 
 
+## 函数
+
+​		非空，等同于isnull()
+
+```sql
+-- col_num 是null，使用 value
+COALESCE(col_num, value)
+```
+

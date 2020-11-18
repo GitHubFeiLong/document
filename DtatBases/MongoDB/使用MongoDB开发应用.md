@@ -458,7 +458,27 @@ db.inventory.find( { "instock.qty": { $gt: 10,  $lte: 20 } } )
 db.inventory.find( { "instock.qty": 5, "instock.warehouse": "A" } )
 ```
 
+### 查询数据库
 
+​		语法如下：
+
+```bash
+# 方式1：
+show dbs
+# 方式2：
+show databases
+```
+
+### 查询集和
+
+​		语法如下：
+
+```bash
+# 方式1：
+show tables;
+# 方式2：
+show collections
+```
 
 
 
@@ -659,7 +679,25 @@ db.inventory.deleteMany({ status : "A" })
 db.inventory.deleteOne( { status: "D" } )
 ```
 
+### 删除集和
 
+​		语法如下：
+
+```bash
+db.collection.drop()
+```
+
+​		如果成功删除选定集合，则 drop() 方法返回 true，否则返回 false。
+
+### 删除数据库
+
+​		语法如下：
+
+```bash
+db.dropDatabase()
+```
+
+​		删除当前数据库，默认为 test。
 
 ## 大部分写
 

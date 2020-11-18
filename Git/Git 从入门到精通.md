@@ -341,8 +341,11 @@ $ git grep "Hello" v2.5
 增删查分支：
 
 ```
-# 列出所有的分支
+# 列出所有的本地分支
 $ git branch
+
+# 列出所有分支
+$ git branch -a
 
 # 列出所有的远端分支
 $ git branch -r
