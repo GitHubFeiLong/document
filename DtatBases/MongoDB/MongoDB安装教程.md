@@ -258,6 +258,24 @@ file names: a list of files to run. files have to end in .js and will exit after
 > 提示：
 > MongoDB javascript shell是一个基于javascript的解释器，故是支持js程序的。  
 
+#### 创建windows服务
+
+1. 将mongodb的bin目录设置到path系统变量中去，然后使用以下命令创建一个服务：
+
+```bash
+# 创建
+mongod -f "XX\XX\mongod.conf" --install --serviceName "mongod"
+#启动
+net start mongod
+#关闭
+net stop mongod
+# 更多操作可以在Windows服务中去设置，比如开机自启什么的
+```
+
+> 注意：
+>
+> 这里使用管理员运行的cmd命令，不然会创建不成功。
+
 
 
 ### [Read Hat 安装](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/#install-mongodb-community-edition-on-red-hat-or-centos)  
