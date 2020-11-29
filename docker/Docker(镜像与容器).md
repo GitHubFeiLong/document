@@ -30,12 +30,53 @@ $ sudo yum-config-manager \
 # 安装最新版
 $ sudo yum install docker-ce docker-ce-cli containerd.io   
 
-# 列出docker 版本
+# 列出docker 客户端版本
 yum list docker-ce --showduplicates | sort -r
 
 ## 安装指定版本的docker 例如 docker-ce-18.09.1
 $ sudo yum install docker-ce-<VERSION_STRING> docker-ce-cli-<VERSION_STRING> containerd.io
 ```
+
+> 注意：
+>
+> centos8安装时出现错误信息
+>
+> ```bash
+> [root@localhost: ~]#yum install docker-ce docker-ce-cli containerd.io
+> Docker CE Stable - x86_64                                                                            591  B/s | 3.5 kB     00:05    
+> Error: 
+>  Problem 1: problem with installed package podman-1.0.0-2.git921f98f.module_el8.0.0+58+91b614e7.x86_64
+>   - package podman-1.0.0-2.git921f98f.module_el8.0.0+58+91b614e7.x86_64 requires runc, but none of the providers can be installed
+>   - package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-55.rc5.dev.git2abd837.module_el8.0.0+58+91b614e7.x86_64
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-55.rc5.dev.git2abd837.module_el8.0.0+58+91b614e7.x86_64
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+>   - conflicting requests
+>   - package runc-1.0.0-56.rc5.dev.git2abd837.module_el8.2.0+303+1105185b.x86_64 is filtered out by modular filtering
+>   - package runc-1.0.0-64.rc10.module_el8.2.0+304+65a3c2ac.x86_64 is filtered out by modular filtering
+>  Problem 2: problem with installed package buildah-1.5-3.gite94b4f9.module_el8.0.0+58+91b614e7.x86_64
+>   - package buildah-1.5-3.gite94b4f9.module_el8.0.0+58+91b614e7.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+>   - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-55.rc5.dev.git2abd837.module_el8.0.0+58+91b614e7.x86_64
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-55.rc5.dev.git2abd837.module_el8.0.0+58+91b614e7.x86_64
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+>   - package containerd.io-1.3.7-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+>   - package docker-ce-3:19.03.13-3.el8.x86_64 requires containerd.io >= 1.2.2-3, but none of the providers can be installed
+>   - conflicting requests
+>   - package runc-1.0.0-56.rc5.dev.git2abd837.module_el8.2.0+303+1105185b.x86_64 is filtered out by modular filtering
+>   - package runc-1.0.0-64.rc10.module_el8.2.0+304+65a3c2ac.x86_64 is filtered out by modular filtering
+> (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
+> 
+> ```
+>
+> 此时只需要执行下面的命令即可：
+>
+> ```bash
+> [root@localhost: ~]#yum install --allowerasing docker-ce
+> ```
+
+
 
 ### 1.3.启动docker
 
@@ -148,7 +189,7 @@ $ sudo Usage:	docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 #### 4.1.1. 创建交互式容器
 
 ```bash
-# 创建 centos 容器
+# 创建 centos 容器 (--name c1 也可以)
 docker run -it --name=c1 centos /bin/bash
 # -i: 交互式容器
 # -t: tty终端，操作容器
