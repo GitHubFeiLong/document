@@ -371,4 +371,697 @@ $ sudo firewall-cmd --reload
 >
 > ​	
 
-13
+### 持续集成环境（1）Jenkins安装
+
+1）安装JDK
+
+​		Jenkins需要依赖JDK，所以先安装JDK1.8
+
+```bash
+$ sudo yum install java-1.8.0-openjdk.x86_64 -y
+```
+
+> 注意：此时安装后的java -version 查看版本。
+>
+> 上面安装的是jre，还需要安装
+>
+> ```bash
+> yum list installed | grep openjdk
+> ```
+
+2）安装[jenkins]( https://jenkins.io/zh/download/)
+
+```bash
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo yum upgrade
+sudo yum install jenkins -y
+sudo systemctl daemon-reload
+```
+
+> 软件包地址：[RedHat Repository for Jenkins](https://pkg.jenkins.io/redhat-rc/)
+
+3)修改Jenkins配置
+
+```bash
+vim /etc/syscofig/jenkins
+```
+
+> 修改内容如下:
+>
+> JENKINS_USER="root"
+>
+> JENKINS_PORT=8888"
+
+```bash
+# 查看jenkins安装目录和配置文件的目录（）
+$ sudo rpm -ql jenkins
+$ sudo cd /var/lib/jenkins
+$ sudo vim hudson.model.UpdateCenter.xml
+```
+
+> 将url的值改为 `https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json`，然后重启`systemctl restart jenkins`
+
+5),启动Jenkins
+
+```bash
+$ sudo systemctl start jenkins
+```
+
+6)打开浏览器访问	http://192.168.66.101:8888
+
+> 注意:本服务器把防火墙关闭了，如果开启防火墙，需要在防火墙添加端口
+
+7）获取并输入admin账户密码
+
+```bash
+$ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+8）跳过插件安装
+
+​		因为Jekins插件需要连接默认官网下载，速度非常慢，而且经过会失败，所以我们暂时先跳过插件安装
+
+![image-20201130234904036](Jenkins.assets/image-20201130234904036.png)
+
+> 1. 选择插件来安装
+>
+> 2. 选择无，然后点击右下角的安装
+>
+>    ![image-20201130235120739](Jenkins.assets/image-20201130235120739.png)
+>
+> 3. 创建管理员用户(后面就是点击保存完成即可)
+>
+>    ![image-20201130235239265](Jenkins.assets/image-20201130235239265.png)
+
+
+
+### 持续集成环境(2) Jenkins插件管理
+
+​		Jenkins本身不提供很多功能，我们可以通过使用插件来满足我们的使用。例如从Gitlab拉取代码，使用Maven构建项目等功能需要依靠插件完成。接下来演示如何下载插件。
+
+#### 修改Jenkins插件下载地址
+
+​		Jenkins国外官方插件地址下载速度非常慢，所以可以修改为国内插件地址。
+
+> Jenkins->Manage jenkins->Manage Plugins，点击Available
+
+​		这样做是为了把Jenkins官方的插件列表下载到本地，接着修改地址文件，替换为国内插件地址
+
+```bash
+cd /var/lib/jenkins/updates
+sed  -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' default.json && sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
+```
+
+最后，Manage Plugins点击Advanced，把update Site改为国内插件下载地址 `https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json`
+
+![image-20201201205650965](Jenkins.assets/image-20201201205650965.png)
+
+Sumbit后，在浏览器输入: http://192.168.66.101:8888/restart，重启Jenkins。
+
+#### 下载中文汉化插件
+
+​		Jenkins->Manage Jenkins->Manage Plugins，点击Available，搜索"Chinese"
+
+![image-20201201210634430](Jenkins.assets/image-20201201210634430.png)
+
+>  注意：第而的一个按钮Download now and install after restart
+>
+> 表示下载完成，重启后安装（英语太差，没注意....）		
+
+下载安装后：
+
+> 下载完后，可能会出现
+
+![image-20201201211416768](Jenkins.assets/image-20201201211416768.png)
+
+### 持续集成环境(3)-Jenkins用户权限管理
+
+​		我们可以利用 `Role-based Authorization Strategy`插件来管理Jenkins用户权限
+
+#### 安装Role-based Authorization Strategy插件
+
+​		跟上面的中文插件一样步骤进行安装
+
+#### 开启权限全局安全配置
+
+![image-20201201212946598](Jenkins.assets/image-20201201212946598.png)
+
+**授权策略切换为"Role-Based Strategy"，保存**
+
+![image-20201201213101786](Jenkins.assets/image-20201201213101786.png)
+
+**创建角色**
+
+在系统管理页面进入Manage and Assign Roles
+
+![image-20201201213216537](Jenkins.assets/image-20201201213216537.png)
+
+点击"Manage Roles"
+
+![image-20201201213237226](Jenkins.assets/image-20201201213237226.png)
+
+​	![image-20201201213406748](Jenkins.assets/image-20201201213406748.png)
+
++ Global roles (全局角色)︰管理员等高级用户可以创建基于全局的角色。
++ Item roles(项目角色):针对某个或者某些项目的角色
++ Node roles(节点角色)︰节点相关的权限
+
+我们添加以下三个角色:
+
++ baseRole:该角色为全局角色。这个角色需要绑定Overall下面的Read权限，是为了给所有用户绑定最基本的Jenkins访问权限。
+
+  > 注意:如果不给后续用户绑定这个角色，会报错误:`用户名 is missing the Overall/Read permission`
+
++ role1:该角色为项目角色。使用正则表达式绑定 `itcast.*`，意思是只能操作 itcast 开头的项目。 
++ role2:该角色也为项目角色。绑定 `itheima.*`，意思是只能操作itheima开头的项目。
+
+![image-20201201214214614](Jenkins.assets/image-20201201214214614.png)
+
+保存。
+
+#### 创建用户
+
+​		在系统管理页面进入 Manage Users
+
+![image-20201201214316018](Jenkins.assets/image-20201201214316018.png)
+
+![image-20201201214345429](Jenkins.assets/image-20201201214345429.png)
+
+![image-20201201214357095](Jenkins.assets/image-20201201214357095.png)
+
+分别划建两个用户: jack和eric
+
+![image-20201201214552811](Jenkins.assets/image-20201201214552811.png)
+
+#### 给用户分配角色
+
+系统管理页面进入Manage and Assign Roles，点击Assign Roles绑定规则如下:
+
++ eric用户分别绑定baseRole和role1角色
++ jack用户分别绑定baseRole和role2角色
+
+![image-20201201215710081](Jenkins.assets/image-20201201215710081.png)
+
+### 持续集成环境(4)-Jenkins凭证管理
+
+​		凭据可以用来存储需要密文保护的数据库密码、Gitlab密码信息、Docker私有仓库密码等，以便jenkins可以和这些第三方的应用进行交互。
+
+#### 安装Credentials Binding插件
+
+​		要在Jenkins使用凭证管理功能，需要安装`Credentials Binding`插件
+
+![image-20201201220459890](Jenkins.assets/image-20201201220459890.png)
+
+​		安装插件后，系统管理多了"凭据配置"菜单，在这里管理所有凭证
+
+![image-20201201220629828](Jenkins.assets/image-20201201220629828.png)
+
+可以添加的凭证有5种:
+
+![image-20201201220952393](Jenkins.assets/image-20201201220952393.png)
+
++ username with password:用户名和密码
++ SSH Username with private key:使用SSH用户和密钥
++ Secret file:需要保密的文本文件，使用时Jenkins会将文件复制到一个临时目录中，再将文件路径设置到一个变量中，等构建结束后，所复制的Secret file就会被删除。
++ Secret text:需要保存的一个加密的文本串，如钉钉机器人或Github的api token
++ Certificate:通过上传证书文件的方式
+
+**常用的凭证类型有：username with password 和 SSH Username with private key**
+
+> 这里需要注意下，要包括Jenkins 凭据提供者，不然后面配置会告诉没权限。
+>
+> ![image-20201201222515991](Jenkins.assets/image-20201201222515991.png)
+
+​		接下来以使用Git工具到Gitlab拉取项目源码为例，演示Jenkins的如何管理Gitlab的凭证。
+
+#### 安装Git插件和Git工具
+
+​		为了让Jenkins支持从Gitlab拉取源码，需要安装Git插件以及在CentOS7上安装Git工具。
+
+**Git插件安装:**
+
+![image-20201201221406491](Jenkins.assets/image-20201201221406491.png)
+
+**CentoS7上安装Git工具:**
+
+```bash
+yum install git -y
+git --version
+```
+
+#### 用户密码类型
+
+1）创建凭证
+
+Jenkins->凭证->系统->全局凭证->添加凭证
+
+![image-20201201222623082](Jenkins.assets/image-20201201222623082.png)
+
+![image-20201201222649364](Jenkins.assets/image-20201201222649364.png)
+
+![image-20201201222704869](Jenkins.assets/image-20201201222704869.png)
+
+![image-20201201222933796](Jenkins.assets/image-20201201222933796.png)
+
+确定。
+
+2）在项目进行源码管理，配置凭证
+
+![image-20201201224146843](Jenkins.assets/image-20201201224146843.png)
+
+然后保存
+
+3）测试
+
+![image-20201201224341774](Jenkins.assets/image-20201201224341774.png)
+
+![image-20201201224447280](Jenkins.assets/image-20201201224447280.png)
+
+#### SSH密钥类型
+
+SSH免密登录示意图
+
+![image-20201201224559125](Jenkins.assets/image-20201201224559125.png)
+
+1)使用root用户生成公钥和私钥
+
+```bash
+ssh-keygen -t rsa
+```
+
+> 此过程是在Jenkins服务器进行处理的（不知道可不可以Gitlib上生成，后面有空进行验证）
+>
+> 中间使用回车继续执行。
+
+在`/root/.ssh/`目录保存了公钥和使用
+
+```bash
+[root@localhost .ssh]# ll /root/.ssh/
+total 8
+-rw------- 1 root root 1679 Dec  1 22:48 id_rsa
+-rw-r--r-- 1 root root  408 Dec  1 22:48 id_rsa.pub
+```
+
++ id_rsa:私钥文件
++ id_rsa.pub:公钥文件
+
+2)把生成的公钥放在Gitlab中
+
+![image-20201201225340065](Jenkins.assets/image-20201201225340065.png)
+
+复制后点击Add Key
+
+3）配置
+
+![image-20201201225534020](Jenkins.assets/image-20201201225534020.png)
+
+![image-20201201230556181](Jenkins.assets/image-20201201230556181.png)
+
+4）测试：
+
+新建一个项目进行测试
+
+![image-20201201230216462](Jenkins.assets/image-20201201230216462.png)
+
+![image-20201201230801603](Jenkins.assets/image-20201201230801603.png)
+
+可以发现也能正常进行拉取构建。
+
+### 持续集成环境(5)-Maven安装和配置
+
+​		在Jenkins集成服务器上，我们需要安装Maven来编译和打包项目。
+
+#### 安装Maven
+
+​		下载maven
+
+```bash
+$ sudo wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+```
+
+​		移动到 `/usr/local/` 、解压
+
+```bash
+$ sudo mv apache-maven-3.6.3-bin.tar.gz /usr/local/
+$ sudo cd /usr/local/
+$ sudo tar -zxvf apache-maven-3.6.3-bin.tar.gz
+```
+
+​		配置环境变量
+
+```bash
+$ sudo vim /etc/profile
+# 在末尾添加下面的内容
+PATH=$PATH:/usr/local/apache-maven-3.6.3/bin
+```
+
+​		是配置文件生效，查看maven版本
+
+```bash
+$ sudo source /etc/profile
+$ sudo mvn -v 
+```
+
+#### 全局工具配置关联JDK和Maven
+
+Jenkins->Global Tool Configuration->JDK->新增JDK，配置如下:
+
+![image-20201201235219956](Jenkins.assets/image-20201201235219956.png)
+
+#### 添加Jenkins全局变量
+
+Manage Jenkins->Configure System->Global Properties，添加三个全局变量
+
+JAVA_HOM、M2_HOME、PATH+EXTRA
+
+![image-20201201235821905](Jenkins.assets/image-20201201235821905.png)
+
+
+
+#### 修改Mayen的settings.xml
+
+​		创建本地仓库目录
+
+```bash
+$ sudo mkdir /root/repo
+```
+
+​		修改本地仓库地址
+
+```bash
+vim /usr/local/apache-maven-3.6.3/conf/settings.xml
+```
+
+> 本地仓库改为:<localRepository>/root/repol</localRepository>
+
+​		添加阿里云私服地址:
+
+```xml
+<mirror>      
+	  <id>nexus-aliyun</id>    
+	  <name>nexus-aliyun</name>  
+	  <url>http://maven.aliyun.com/nexus/content/groups/public</url>    
+	  <mirrorOf>central</mirrorOf>      
+	</mirror> 
+```
+
+#### 测试Maven是否配置成功
+
+1）在代码仓库中，创建一个maven项目。
+
+![image-20201202005514311](Jenkins.assets/image-20201202005514311.png)
+
+2）Jenkins创建一个项目，并进行配置
+
+![image-20201202005551301](Jenkins.assets/image-20201202005551301.png)
+
+![image-20201202005607307](Jenkins.assets/image-20201202005607307.png)
+
+4）构建
+
+### 持续集成环境(6)-Tomcat安装和配置
+
+#### 安装Tomcat8.5
+
+```bash
+$ sudo wget https://downloads.apache.org/tomcat/tomcat-8/v8.5.60/bin/apache-tomcat-8.5.60.tar.gz
+$ sudo mv apache-tomcat-8.5.60.tar.gz /usr/local/
+$ sudo cd /usr/local/
+$ sudo tar -xvf apache-tomcat-8.5.60.tar.gz
+$ sudo cd apache-tomcat-8.5.60/bin/
+$ sudo ./startup.sh 
+```
+
+![image-20201202201911759](Jenkins.assets/image-20201202201911759.png)
+
+注意:服务器已经关闭了防火墙，所以可以直接访问Tomcat啦地址为: http://192.168.66.102/8080
+
+#### 配置Tomcat用户角色权限
+
+默认情况下Tomcat是没有配置用户角色权限的
+
+![image-20201202201938431](Jenkins.assets/image-20201202201938431.png)![image-20201202201954473](Jenkins.assets/image-20201202201954473.png)
+
+添加角色账户
+
+```bash
+# 编辑文件 /usr/local/apache-tomcat-8.5.60/conf/tomcat-users.xml
+$ sudo vim /usr/local/apache-tomcat-8.5.60/conf/tomcat-users.xml
+```
+
+> 添加内容如下：
+>
+> ```xml
+> <role rolename="tomcat"/>
+>   <role rolename="role1"/>
+>   <role rolename="manager-script"/>
+>   <role rolename="manager-gui"/>
+>   <role rolename="manager-status"/>
+>   <role rolename="admin-gui"/>
+>   <role rolename="admin-script"/>
+>   <user username="tomcat" password="tomcat" roles="manager-gui,manager-script,tomcat,admin-gui,admin-script"/>
+> </tomcat-users>
+> ```
+
+用户和密码都是: tomcat
+
+注意:为了能够刚才配置的用户登录到Tomcat，还需要修改以下配置。
+
+```bash
+$ sudo vim /usr/local/apache-tomcat-8.5.60/webapps/manager/META-INF/context.xml
+```
+
+> 将下面的内容注释
+>
+> ```xml
+> <!-- <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+>          allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />-->
+> ```
+
+#### 重启Tomcat，访问测试
+
+![image-20201202203001236](Jenkins.assets/image-20201202203001236.png)
+
+
+
+## Jenkins 构建Maven项目
+
+### Jenkins项目构建类型(1)-Jenkins构建的项目类型介绍
+
+​		Jenkins中自动构建项目的类型有很多，常用的有以下三种:
+
++ 自由风格软件项目(Freestyle Project)
+
++ Maven项目(Maven Project)
+
++ 流水线项目(Pipeline Project)
+
+  ​	每种类型的构建其实都可以完成一样的构建过程与结果，只是在操作方式、灵活度等方面有所区别，在实际开发中可以根据自己的需求和习惯来选择。(PS:个人推荐使用流水线类型，因为灵活度非常高)
+
+### Jenkins项目构建类型(2)-自由风格项目构建
+
+​		下面演示创建一个自由风格项目来完成项目的集成过程:拉取代码->编译->打包->部署
+
+**拉取代码**
+
+​		创建项目，配置源码管理器，从Gitlib拉取代码
+
+![image-20201202205932668](Jenkins.assets/image-20201202205932668.png)
+
+> 创建一个 名为 web_demo_freestyle 的项目，使用Gitlib拉去项目源码
+
+**编译打包**
+		构建->添加构建步骤->Executor Shell
+
+```bash
+echo "开始编译和打包"
+mvn clean package
+echo "编译和打包结束"
+```
+
+**部署**
+		把项目部署到远程的Tomcat里面
+
+1）安装`Deploy to container`插件
+		Jenkins本身无法实现远程部署到Tomcat的功能，需要安装`Deploy to container`插件实现。
+
+![image-20201202211203176](Jenkins.assets/image-20201202211203176.png)
+
+2）配置项目
+
+配置->构建后操作-> Deploy war/ear to a container
+
+![image-20201202211325601](Jenkins.assets/image-20201202211325601.png)
+
+
+
+![image-20201202212357265](Jenkins.assets/image-20201202212357265.png)
+
+再次构建，构建成功后：
+
+![image-20201202212531733](Jenkins.assets/image-20201202212531733.png)
+
+刷新tomcat管理界面：
+
+![image-20201202212614332](Jenkins.assets/image-20201202212614332.png)
+
+> 我是使用的SpringBoot打包成war部署的，下main是我的相关配置
+>
+> 1. pom.xml:使用war包
+>
+>    ![image-20201202220112241](Jenkins.assets/image-20201202220112241.png)
+>
+> 2. 启动类：继承SpringBootServletInitializer重写configure方法。（不然静态文件访问不了，哈哈）
+>
+>    ```java
+>    @SpringBootApplication
+>    public class DemoApplication extends SpringBootServletInitializer {
+>    
+>        public static void main(String[] args) {
+>            SpringApplication.run(DemoApplication.class, args);
+>        }
+>    
+>        @Override
+>        protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+>            return super.configure(builder);
+>        }
+>    }
+>    ```
+
+### Jenkins项目构建类型(3)-Maven项目构建
+
+1）安装 `Maven Integration`插件
+
+![image-20201202223054497](Jenkins.assets/image-20201202223054497.png)
+
+2）创建Maven项目
+
+![image-20201202223929626](Jenkins.assets/image-20201202223929626.png)
+
+![image-20201202224223447](Jenkins.assets/image-20201202224223447.png)
+
+![image-20201202224342822](Jenkins.assets/image-20201202224342822.png)
+
+### Jenkins项目构建类型(4)-Pipeline流水线项目构建(*)
+
+#### Pipeline简介
+
+​		1）概念
+​		Pipeline，简单来说，就是一套运行在Jenkins上的工作流框架，将原来独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排和可视化的工作。
+​		
+
+​		2）使用Pipeline有以下好处(来自翻译自官方文档)∶
+
++ 代码: Pipeline以代码的形式实现，通常被检入源代码控制，使团队能够编辑，审查和迭代其传送流程。
+
++ 持久:无论是计划内的还是计划外的服务器重启，Pipeline都是可恢复的。
+
++ 可停止: Pipeline可接收交互式输入，以确定是否继续执行Pipeline。
+
++ 多功能: Pipeline支持现实世界中复杂的持续交付要求。它支持fork/join、循环执行，并行执行任务的功能。
+
++ 可扩展: Pipeline插件支持其DSL的自定义扩展，以及与其他插件集成的多个选项。
+
+  
+
+  ​	3）如何创建Jenkins Pipeline呢?
+
++ Pipeline脚本是由Groovy语言实现的，但是我们没必要单独去学习Groovy
+
++ Pipeline支持两种语法:Declarative(声明式)和Scripted  Pipeline(脚本式)语法
+
++ Pipeline也有两种创建方法:可以直接在Jenkins的Web UI界面中输入脚本;也可以通过创建一个Jenkinsfile脚本文件放入项目源码库中（一般我们都推荐在Jenkins 中直接从源代码控制(SCM)中直接载入Jenkinsfile Pipeline这种方法)。
+
+#### 安装Pipeline插件
+
+​		Manage Jenkins->Manage Plugins->可选插件->Pipeline
+
+![image-20201202225519295](Jenkins.assets/image-20201202225519295.png)
+
+​		安装插件后，创建项目的时候多了“流水线"类型
+
+#### Pipeline语法快速入门
+
+##### 1）Declarative声明式-Pipeline创建项目
+
+创建项目
+
+![image-20201202230759916](Jenkins.assets/image-20201202230759916.png)
+
+流水线--> 选择HelloWorld模板
+
+![image-20201202230856785](Jenkins.assets/image-20201202230856785.png)
+
+![image-20201202232642059](Jenkins.assets/image-20201202232642059.png)
+
+构建
+
+![image-20201202232713956](Jenkins.assets/image-20201202232713956.png)
+
+![image-20201202232723737](Jenkins.assets/image-20201202232723737.png)
+
+#### 拉取代码
+
+```groovy
+stage('pull code') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '0f9a326f-30ef-4381-9637-233a06d631ba', url: 'git@192.168.2.101:cfl/web_demo.git']]])
+            }
+        }
+```
+
+> 使用代码生成器生成
+>
+> ![image-20201202233648329](Jenkins.assets/image-20201202233648329.png)
+>
+> 将生成的代码，复制到具体Declarative(声明式)j脚本 steps 下
+
+#### 编译打包
+
+```groovy
+ stage('build project') {
+            steps {
+                sh 'mvn clean package' 
+            }
+        }
+```
+
+> 1. 使用代码生成器生成steps
+>
+>    ![image-20201202234311847](Jenkins.assets/image-20201202234311847.png)
+
+#### 部署
+
+```groovy
+stage('publish project') {
+            steps {
+                deploy adapters: [tomcat8(credentialsId: '80809bcb-ea1b-4786-ab6c-081b113abd9e', path: '', url: 'http://192.168.2.100:8080/')], contextPath: null, war: 'target/*.war'
+            }
+        }
+```
+
+> ![image-20201202235027884](Jenkins.assets/image-20201202235027884.png)
+
+#### Pipeline Script from SCM
+
+​		刚才我们都是直接在Jenkins的UI 界面编写Pipeline代码，这样不方便脚本维护，建议把Pipeline脚本放在项目中(一起进行版本控制)
+1)在项目根目录建立Jenkinsfile文件，把内容复制到该文件中
+
+![image-20201203001534831](Jenkins.assets/image-20201203001534831.png)
+
+![image-20201203001725337](Jenkins.assets/image-20201203001725337.png)
+
+![image-20201203002007631](Jenkins.assets/image-20201203002007631.png)
+
+### Jenkins项目构建细节(1)-常用的构建触发器
+
+#### Jenkins内置4种构建触发器:
+
++ 触发远程构建
++ 其他工程构建后触发（(Build after other projects are build)
++ 定时构建(Build periodically)
++ 轮询SCM (Poll SCM)
+
+#### 触发远程构建
