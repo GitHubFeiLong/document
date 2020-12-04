@@ -1064,4 +1064,271 @@ stage('publish project') {
 + 定时构建(Build periodically)
 + 轮询SCM (Poll SCM)
 
-#### 触发远程构建
+##### 1. 触发远程构建
+
+![image-20201203183507374](Jenkins.assets/image-20201203183507374.png)
+
+设置好TOEKN字符串后使用浏览器请求如下地址：
+
+```tex
+http://192.168.2.100:8888/job/web_demo_pipeline/build?token=666
+```
+
+就可以构建项目。
+
+##### 2.其他工程构建后触发
+
+1)创建pre_job流水线工程
+
+![image-20201203184033939](Jenkins.assets/image-20201203184033939.png)
+
+2)配置需要触发的工程
+
+![image-20201203184328365](Jenkins.assets/image-20201203184328365.png)
+
+##### 3.定时构建
+
+定时字符串从左往右分别为: 分 时 日 月 周
+
+> 一些定时表达式的例子:H代表形参
+>
+> 每30分钟构建一次:
+> H/30 * * * *    10:02 10:32
+>
+> 每2个小时构建一次:
+> H H/2 * * * 
+>
+> 每天的8点，12点，22点，一天构建3次:(多个时间点中间用逗号隔开)
+> 0 8,12,22 * * *
+>
+> 每天中午12点定时构建一次
+> H 12 * * *
+>
+> 每天下午18点定时构建一次
+> H 18 * * *
+>
+> 在每个小时的前半个小时内的每10分钟
+> H(0-29)/10 * * * *
+>
+> 每两小时一次，每个工作日上午9点到下午5点(也许是上午10:38，下午12:38，下午2:38，下午4:38)
+> H H(9-16)/2 * * 1-5
+
+
+
+##### 4.轮询SCM
+
+​		轮询SCM，是指定时扫描本地代码仓库的代码是否有变更，如果代码有变更就触发项目构建。
+
+
+
+>  注意:这次构建触发器，Jenkins会定时扫描本地整个项目的代码，增大系统的开销，不建议使用。
+>
+> 
+
+### Jenkins项目构建细节(2)-Git hook自动触发构建
+
+​		刚才我们看到在Jenkins的内置构建触发器中，轮询SCM可以实现Gitlab代码更新，项目自动构建，但是该方案的性能不佳。那有没有更好的方案呢?有的。就是利用Gitlab的webhook实现代码push到仓库，立即触发项目自动构建。
+
+![image-20201203201859393](Jenkins.assets/image-20201203201859393.png)
+
+#### 安装Gitlab Hook插件
+
+​		需要安装两个插件：Gitlab Hook和GitLab
+
+![image-20201203202230441](Jenkins.assets/image-20201203202230441.png)
+
+> 注：安装Gitlab Hook 插件后还要安装GitLab 插件
+
+#### Jenkins 设置自动构建
+
+> 勾选后，让它保持默认，记住URL,后面Gitlab上配置用到了。
+
+![image-20201203204310687](Jenkins.assets/image-20201203204310687.png)
+
+#### Gitlab 设置
+
+1. 配置Gitlab
+
+> 以下操作，都是使用root账户进行
+
+Admin Area -> Settings -> Network
+
+![image-20201203204809136](Jenkins.assets/image-20201203204809136.png)
+
+2. 配置指定项目
+
+![image-20201203205227085](Jenkins.assets/image-20201203205227085.png)
+
+添加后，可以点击Test测试
+
+![image-20201203205401111](Jenkins.assets/image-20201203205401111.png)
+
+出现下面错误（未授权）
+
+![image-20201203205430907](Jenkins.assets/image-20201203205430907.png)
+
+在Jenkin中配置
+
+系统配置，找到将身份验证取消勾选，保存后在重复执行上步操作。
+
+![image-20201203205821741](Jenkins.assets/image-20201203205821741.png)
+
+![image-20201203205955274](Jenkins.assets/image-20201203205955274.png)
+
+![image-20201203205935252](Jenkins.assets/image-20201203205935252.png)
+
+### Jenkins项目构建细节(3)-Jenkins的参数化构建
+
+​		有时在项目构建的过程中，我们需要根据用户的输入动态传入一些参数，从而影响整个构建结果，这时我们可
+以使用参数化构建。
+
+​		Jenkins支持非常丰富的参数类型
+
+![image-20201203210714806](Jenkins.assets/image-20201203210714806.png)
+
+​		接下来演示通过输入gitlab项目的分支名称来部署不同分支项目。
+
+#### 项目创建分支，井推送到Gitlab上
+
+![image-20201203210659146](Jenkins.assets/image-20201203210659146.png)
+
+构建时：
+
+![image-20201203210822541](Jenkins.assets/image-20201203210822541.png)
+
+此时的参数名称是branch，默认值是master。现在我们可以在Jenkinsfile使用EL表达式进行使用参数变量`${branch}`
+
+### Jenkins项目构建细节(4)-配置邮箱服务器发送构建结果
+
+#### 安装Email Extension插件
+
+#### Jenkins设置邮箱相关参数
+
+系统配置 -> Extended E-mail Notification
+
+
+
+#### 准备邮件内容
+
+#### 编写Jenkinsfile添加构建后发送邮件
+
+#### 测试
+
+
+
+### Jenkins+SonarQube代码审查(1) -安装SonarQube
+
+#### SonaQube简介
+
+​		SonarQube是一个用于管理代码质量的开放平台，可以快速的定位代码中潜在的或者明显的错误。目前支持
+java,C#,C/C++,Python,PL/SQL,Cobol.JavaScrip,Groovy等二十几种编程语言的代码质量管理与检测。
+官网: https://www.sonargube.org/
+
+#### 环境要求
+
+| 软件      | 版本 |
+| --------- | ---- |
+| JDK       | 1.8  |
+| MySQL     | 5.6  |
+| SonarQube | 7.0  |
+
+> SonarQube 高版本不支持mysql，安装时注意版本兼容。
+> [Requirements - SonarQube-7.0](https://docs.sonarqube.org/7.0/Requirements.html)
+
+#### 安装SonarQube
+
+1)安装MySQL
+
+[centos8 mysql安装教程](https://blog.csdn.net/qq_42428264/article/details/105324797)
+
+2）安装SonarQube
+
+> 注意，高版本的SonarQube将不支持MySQL
+>
+> [ MySQL: SonarQube和Gitlab放弃支持的原因_知行合一 止于至善-CSDN博客_sonarqube不支持mysql](https://blog.csdn.net/liumiaocn/article/details/102714605)
+
+在MySQL创建sonar数据库
+
+```bash
+mysql> create database sonar;
+Query OK, 1 row affected (0.08 sec)
+```
+
+下载sonar压缩包:
+https://www.sonarqube.org/downloads/
+
+##### 解压sonar,并设置权限
+
+```bash
+$ sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.0.zip
+$ sudo mv sonarqube-8.5.1.38104.zip /usr/local/
+$ sudo cd /usr/local
+$ sudo unzip  sonarqube-7.0.zip
+$ sudo mv sonarqube-7.0 sonarqube
+$ sudo useradd sonar
+$ sudo chown -R sonar /usr/local/sonarqube
+```
+
+##### 修改sonar配置文件
+
+```bash
+$ sudo vim /usr/local/sonarqube/conf/sonar.properties
+```
+
+> #内容如下:
+> sonar.jdbc.username=root
+> sonar.jdbc.password=123456
+> sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
+>
+> 注意: sonar默认监听9000端口，如果9000端口被占用，需要更改。
+>
+> ```bash
+> #sonar.web.port=9000
+> ```
+
+启动sonar
+
+```bash
+#启动
+su sonar /usr/local/sonarqube/bin/linux-x86-64/sonar.sh start
+#查看状态
+su sonar /usr/local/sonarqube/bin/linux-x86-64/sonar.sh status 
+#停止
+su sonar /usr/local/sonarqube/bin/linux-x86-64/sonar.sh stop
+#查看日志
+tail -f logs/sonar.logs 
+```
+
+> 启动失败：
+>
+> `[max virtual memory areas vm.max_map_count [65530\] is too low, increase to at least [262144]](https://www.cnblogs.com/yidiandhappy/p/7714489.html)`
+>
+> ```bash
+> 解决：
+> 切换到root用户
+> 执行命令：
+> sysctl -w vm.max_map_count=262144
+> 查看结果：
+> sysctl -a|grep vm.max_map_count
+> 显示：
+> vm.max_map_count = 262144
+> 
+> 上述方法修改之后，如果重启虚拟机将失效，所以：
+> 解决办法：
+> 在   /etc/sysctl.conf文件最后添加一行
+> vm.max_map_count=262144
+> 即可永久修改
+> ```
+>
+> `max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]`
+>
+> ```bash
+> 编辑 /etc/security/limits.conf，追加以下内容；
+> * soft nofile 65536
+> * hard nofile 65536
+> ```
+
+访问sonar
+`http://ip:9000` username:admin password:admin
+
+36
