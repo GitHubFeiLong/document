@@ -1,14 +1,58 @@
-# Docker(镜像与容器)
+# Docker(镜像与容器)介绍及安装
+
+## 1、什么是Docker
+
++ 使用最广泛的开源容器引擎
++ 一种操作系统级虚拟化技术
++ 依赖于Linux 内核特性：Namespace 和 Cgroups
++ 一个简单的应用程序打包工具
+
+### 1.1、Docker 设计目标
+
+1. 提供简单的应用程序打包工具
+2. 开发人员和运维人员职责逻辑分离
+3. 多环境保持一致
+
+### 1.2、Docker 基本组成
+
+1. Docker Client ： 客户端
+2. Ddocker Daemon： 守护进程
+3. Docker Images ：镜像
+4. Docker Container ：容器
+5. Docker Registry：镜像仓库
+
+![image-20200829160156957](Docker(镜像与容器).assets/image-20200829160156957-1607146715475.png)
 
 
 
-## 1.安装卸载docker
+### 1.3、容器 VS 虚拟机
+
+|          | Container                                | VM               |
+| -------- | ---------------------------------------- | ---------------- |
+| 启动速度 | 秒级                                     | 分钟级           |
+| 运行性能 | 接近原生                                 | 5%左右损失       |
+| 磁盘占用 | MB                                       | GB               |
+| 数量     | 成百上千                                 | 一般几十台       |
+| 隔离性   | 进程级别                                 | 系统级（更彻底） |
+| 操作系统 | 只支持Linux                              | 几乎所有         |
+| 封装程度 | 只打包项目代码和依赖关系，共享宿主机内核 | 完整的操作系统   |
+
+### 1.4、Docker 应用场景
+
+1. 应用程序打包和发布
+2. 应用程序隔离
+3. 持续集成
+4. 部署微服务
+5. 快速搭建测试环境
+6. 提供PaaS产品（平台即服务）
+
+
+
+## 2、安装卸载docker
 
 [docker下载官网地址]: https://docs.docker.com/get-docker/	"选择下载的平台"
 
-
-
-### 1.1.卸载docker
+### 2.1、卸载docker
 
 ```bash
 # 查看已安装的docker列表
@@ -18,7 +62,21 @@ yum list installed |grep docker
 yum -y remove docker-ce.x86_64
 ```
 
-### 1.2.安装docker
+> 完全卸载
+>
+> ```bash
+> $ sudo yum remove docker \
+>                   docker-client \
+>                   docker-client-latest \
+>                   docker-common \
+>                   docker-latest \
+>                   docker-latest-logrotate \
+>                   docker-logrotate \
+>                   docker-engine
+> ```
+>
+
+### 2.2、安装docker
 
 ```bash
 $ sudo yum install -y yum-utils
@@ -78,7 +136,7 @@ $ sudo yum install docker-ce-<VERSION_STRING> docker-ce-cli-<VERSION_STRING> con
 
 
 
-### 1.3.启动docker
+### 2.3、启动docker
 
 ```bash
 $ sudo systemctl start docker
@@ -98,7 +156,7 @@ $ sudo systemctl start docker
 
 
 
-## 2.docker 帮助命令使用
+## 3、docker 帮助命令使用
 
 1. 查看docker 的帮助命令,最后有一句`Run 'docker COMMAND --help' for more information on a command.` 查看docker 子命令的帮助文档使用`docker `
 
@@ -127,9 +185,41 @@ $ sudo systemctl start docker
 
 
 
-## 3.镜像
+## 4、镜像
 
-### 3.1.查看镜像列表
+### 4.1、镜像是什么？
+
++ 一个分层存储的文件
++ 一个软件的环境
++ 一个镜像可以创建N个容器
++ 一种标准化的交互
++ 一个不包含Linux 内核而又精简的Linux 操作系统
+
+​		镜像不是一个单一个文件，而是有多层构成。我们可以通过 “docker history <ID/NAME>” 查看镜像中各层内容及大小，每层对应着Dockerfile 中的一条指令。Docker镜像默认存储在 /var/lib/docker/\\<storage-driver\\>中。
+
+### 4.2、镜像从哪里来？
+
+​		Docker Hub 是由Docker 公司负责维护的公共注册中心，包含大量的容器镜像，Docker 工具默认从这个公共镜像库下载镜像。
+
+​		地址：https://hub.docker.com/explore
+
+​		配置镜像加速器：https://www.daocloud.io/mirror
+
+```bash
+curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://f1361db2.m.daocloud.io
+```
+
+### 4.3、镜像与容器联系
+
+​		如图，容器其实是在镜像的最上面加了一层读写层，在运行容器里文件改动时，会先从镜像里要写的文件复制到容器自己的文件系统中（读写层）。
+
+​		如果容器删除了，最上面的读写层也就删除了，改动也就丢失了。所以无论多少个容器共享一个镜像，所做的写操作都是从镜像的文件系统中复制过来操作的，并不会修改镜像的源文件，这种方式提高磁盘利用率。
+
+​		若想持久化这些改动，可以通过docker commit 将容器保存成一个新镜像。
+
+![image-20200829175017114](Docker(镜像与容器).assets/image-20200829175017114.png)
+
+### 4.4、查看镜像列表
 
 ```bash
 $ sudo docker image list
@@ -137,38 +227,39 @@ or
 $ sudo docker images
 ```
 
-### 3.2.配置镜像加速器
+### 4.5、配置阿里云镜像加速器
 
 ```bash
 # 如果不存在/etc/docker文件夹就创建
 $ sudo mkdir -p /etc/docker
 # 不存在daemon.json 文件就创建
-sudo tee /etc/docker/daemon.json <<-'EOF'
+$ sudo vim /etc/docker/daemon.json
+# 粘贴下面的内容
 {
   "registry-mirrors": ["https://ivy3rays.mirror.aliyuncs.com"]
 }
-EOF
+
 # 重启服务
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
 
-### 3.3.拉取镜像
+### 4.6、拉取镜像
 
 ```bash
 # 拉取镜像
 $ sudo docker pull image-name[:version]
 ```
 
-### 3.4.删除查找镜像
+### 4.7、删除查找镜像
 
-#### 3.4.1.查找镜像
+#### 4.7.1、查找镜像
 
 ```bash
 $ sudo docker search tomcat
 ```
 
-#### 3.4.2.删除镜像
+#### 4.7.2、删除镜像
 
 删除镜像，可以使用镜像的名称，镜像的id 多个使用空格隔开。
 
@@ -176,17 +267,15 @@ $ sudo docker search tomcat
 $ sudo docker rmi image-name [IMAGE ID]
 ```
 
+## 5、容器
 
-
-## 4.容器
-
-### 4.1.创建容器
+### 5.1、创建容器
 
 ```bash
 $ sudo Usage:	docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 ```
 
-#### 4.1.1. 创建交互式容器
+#### 5.1.1、创建交互式容器
 
 ```bash
 # 创建 centos 容器 (--name c1 也可以)
@@ -195,7 +284,7 @@ docker run -it --name=c1 centos /bin/bash
 # -t: tty终端，操作容器
 ```
 
-#### 4.1.2. 创建守护式容器
+#### 5.1.2、创建守护式容器
 
 ```bash
 $ sudo docker run -itd --name c2 centos /bin/bash
@@ -204,33 +293,51 @@ $ sudo docker run -itd --name c2 centos /bin/bash
 $ sudo docker exec -it c2 /bin/bash
 ```
 
-### 4.2.查看容器
+#### 5.1.3、创建端口映射容器
 
-#### 4.2.1.查看正在运行的容器
+```bash
+# -p：端口映射
+$ sudo docker run -itd --name=t1 -p 8888:8080 new-containner /bin/bash
+```
+
+#### 5.1.4、创建目录挂载容器
+我们可以在创建容器的时候，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器。
+
+创建容器添加-v参数后边为 宿主机目录:容器目录
+
+```bash
+$ sudo docker run -id --name=c1 -v /opt/:/usr/local/myhtml centos
+```
+
+
+
+### 5.2、查看容器
+
+#### 5.2.1、查看正在运行的容器
 
 ```bash
 $ sudo docker ps
 ```
 
-#### 4.2.2.查看所有容器
+#### 5.2.2、查看所有容器
 
 ```bash
 $ sudo docker ps -a
 ```
 
-#### 4.2.3.查看最后一次运行的容器
+#### 5.2.3、查看最后一次运行的容器
 
 ```bash
 $ sudo docker ps -l
 ```
 
-#### 4.2.4.查看容器名称
+#### 5.2.4、查看容器名称
 
 ```bash
 $ sudo docker ps -aq
 ```
 
-#### 4.2.5.查看容器的详细信息
+#### 5.2.5、查看容器的详细信息
 
 ```bash
 $ sudo docker inspect container-name
@@ -239,9 +346,7 @@ $ sudo docker inspect container-name
 $ sudo docker inspect -f='{{.NetworkSettings.IPAddress}}' container-name
 ```
 
-
-
-### 4.3.容器启动、停止、重启
+#### 5.2.6、容器启动、停止、重启
 
 ```bash
 $ sudo docker start container-name [container-name1]
@@ -251,9 +356,7 @@ $ sudo docker stop container-name [container-name1]
 $ sudo docker restart container-name [container-name1]
 ```
 
-
-
-### 4.4.删除容器
+#### 5.2.7、删除容器
 
 可以删除多个，但不能删除正在运行的容器。
 
@@ -263,21 +366,19 @@ $ sudo docker rm container-name [container-id]
 $ sudo docker rm `docker ps -aq`
 ```
 
-
-
-### 4.5.查看容器日志
+#### 5.2.8、查看容器日志
 
 ```bash
 $ sudo docker logs container-name/container-id
 ```
 
-### 4.6.容器拷贝
+### 5.3、容器拷贝
 
 将宿主机上的文件拷贝到容器中取，或把容器中的文件拷贝到宿主机上。
 
 注意：停止的容器也能进行操作
 
-#### 4.6.1.拷入容器
+#### 5.3.1、拷入容器
 
 ```bash
 $ sudo docker cp 需要拷贝的文件或目录 容器名称:容器目录
@@ -285,23 +386,10 @@ $ sudo docker cp 需要拷贝的文件或目录 容器名称:容器目录
 $ sudo docker cp 1.txt c1:/root
 ```
 
-#### 4.6.2.拷入宿主机
+#### 5.3.2、拷入宿主机
 
 ```bash
 $ sudo docker cp 容器名称:容器目录 需要拷贝到文件目录
 #例如：
 $ sudo docker cp  c1:/root/1.txt /root
 ```
-
-
-
-### 4.7.目录挂载
-
-我们可以在创建容器的时候，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器。
-
-创建容器添加-v参数后边为 宿主机目录:容器目录
-
-```bash
-$ sudo docker run -id --name=c1 -v /opt/:/usr/local/myhtml centos
-```
-

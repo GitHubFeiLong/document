@@ -846,7 +846,7 @@ $ sudo vim /usr/local/apache-tomcat-8.5.60/webapps/manager/META-INF/context.xml
 
 
 
-## Jenkins 构建Maven项目
+## 3、Jenkins 构建Maven项目
 
 ### Jenkins项目构建类型(1)-Jenkins构建的项目类型介绍
 
@@ -1331,4 +1331,131 @@ tail -f logs/sonar.logs
 访问sonar
 `http://ip:9000` username:admin password:admin
 
-36
+### Jenkins+SonarQibe代码审查(2)-实现代码审查
+
+![image-20201204200904539](Jenkins.assets/image-20201204200904539.png)
+
+#### 安装 SonarQube Scanner 插件
+
+![image-20201204201250856](Jenkins.assets/image-20201204201250856.png)
+
+#### 添加SonarQube 凭证
+
+![image-20201204202335049](Jenkins.assets/image-20201204202335049.png)
+
+#### Jenkins 添加SonarQube Scanner
+
+![image-20201204202457059](Jenkins.assets/image-20201204202457059.png)
+
+#### Jenkins 添加 SonarQube servers
+
+![image-20201204202607586](Jenkins.assets/image-20201204202607586.png)
+
+#### 在项目添加SonaQube代码审查(非流水线项目)
+
+添加构建配置：
+
+指定项目-> 配置 -> 构建 -> 增加构建步骤（选择Execute SonarQube Scanner） -> Execute SonarQube Scanner 配置
+
+![image-20201204204859479](Jenkins.assets/image-20201204204859479.png)
+
+![image-20201204205112653](Jenkins.assets/image-20201204205112653.png)
+
+添加构建步骤(模板):
+
+```properties
+#must be unique in a given sonarQube instance
+sonar.projectKey=web_demo_freestyle
+# this is the name and version displayed in the sonarQube uI. was mandatory prior  to sonarQube 6.1.
+sonar.projectName=web_demo
+sonar.projectversion=1.0
+# Path is relative to the sonar-project.properties file. Replace "\" by " /" on windows.
+# This property is optiona1 if sonar.modules is set.
+sonar.sources=.
+sonar.exclusions=**/test/**,**/target/**
+sonar.java.source=1.8
+sonar.java.target=1.8
+# Encoding of the source code. Default is default system encoding
+sonar.sourceEncoding=UTF-8
+sonar.java.binaries=target/classes
+```
+
+#### 在项目添加SonaQube代码审查（流水线项目)
+
+![image-20201204211714904](Jenkins.assets/image-20201204211714904.png)
+
+1)项目根目录下，创建`sonar-project.properties`文件
+
+```properties
+#must be unique in a given sonarQube instance
+sonar.projectKey=web_demo_pipline
+# this is the name and version displayed in the sonarQube uI. was mandatory prior  to sonarQube 6.1.
+sonar.projectName=web_demo_pipline
+sonar.projectversion=1.0
+# Path is relative to the sonar-project.properties file. Replace "\" by " /" on windows.
+# This property is optiona1 if sonar.modules is set.
+sonar.sources=.
+sonar.exclusions=**/test/**,**/target/**
+sonar.java.source=1.8
+sonar.java.target=1.8
+# Encoding of the source code. Default is default system encoding
+sonar.sourceEncoding=UTF-8
+sonar.java.binaries=target/classes
+```
+
+2)修改Jenkins文件，新添加一个stage
+
+```Groovy
+stage('code checking') {
+            steps {
+                script {
+                    // 引入SonarQubescanner工具
+                    scannerHome = tool 'sonarqube-scanner'
+                }
+                // 引入sonarQube的服务器环境
+                withSonarQubeEnv('sonarqube server') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+```
+
+## 4、Jenkins+Docker+SpringCloud微服务持续集成(上)
+
+
+
+### Jenkins+Docker+SpringCloud持续集成流程说明
+
+![image-20201204212855639](Jenkins.assets/image-20201204212855639.png)
+
+大致流程说明：
+
+1）开发人员每天把代码提交到Gitlab代码仓库
+
+2) Jenkins从Gitlab中拉取项目源码，编译并打成jar包，然后构建成Docker镜像，将镜像上传到Harbor私有仓库。
+
+3) Jenkins发送SSH远程命令，让生产部署服务器到Harbor私有仓库拉取镜像到本地，然后创建容器。
+
+4）最后，用户可以访问到容器
+
+**服务列表**
+
+| 服务器名称       | IP地址         | 安装的软件           |
+| ---------------- | -------------- | -------------------- |
+| 代码托管服务器   | 192.168.66.100 | Gitlab               |
+| 持续集成服务器   | 192.168.66.101 | Jenkins,Maven,Docker |
+| Docker仓库服务器 | 192.168.66.102 | Docker,Harbor        |
+| 生产部署服务器   | 192.168.66.103 | Docker               |
+
+
+
+### SpringCloud微服务源码概述
+
+项目架构:前后端分离
+
+后端技术栈: SpringBoot+SpringCloud+SpringDataJpa (Spring全家桶)
+
+微服务项目结构：
+
+![image-20201204213656128](Jenkins.assets/image-20201204213656128.png)
+
