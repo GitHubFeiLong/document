@@ -1230,32 +1230,42 @@ java,C#,C/C++,Python,PL/SQL,Cobol.JavaScrip,Groovy等二十几种编程语言的
 | --------- | ---- |
 | JDK       | 1.8  |
 | MySQL     | 5.6  |
-| SonarQube | 7.0  |
+| SonarQube | 6.5  |
 
 > SonarQube 高版本不支持mysql，安装时注意版本兼容。
-> [Requirements - SonarQube-7.0](https://docs.sonarqube.org/7.0/Requirements.html)
 
 #### 安装SonarQube
 
 1)安装MySQL
 
-[centos8 mysql安装教程](https://blog.csdn.net/qq_42428264/article/details/105324797)
-
 2）安装SonarQube
+
+下载sonar压缩包:
+https://www.sonarqube.org/downloads/
 
 > 注意，高版本的SonarQube将不支持MySQL
 >
 > [ MySQL: SonarQube和Gitlab放弃支持的原因_知行合一 止于至善-CSDN博客_sonarqube不支持mysql](https://blog.csdn.net/liumiaocn/article/details/102714605)
+>
+> 安装教程
+>
+> [Linux下安装sonarQube并配置Mysql数据库_u013111003的博客-CSDN博客](https://blog.csdn.net/u013111003/article/details/82383333)
 
 在MySQL创建sonar数据库
 
 ```bash
-mysql> create database sonar;
-Query OK, 1 row affected (0.08 sec)
+DROP DATABASE sonar;
+ 
+CREATE DATABASE sonar CHARACTER SET utf8 COLLATE utf8_general_ci;
+ 
+CREATE USER 'sonar' IDENTIFIED BY 'sonar';
+ 
+GRANT ALL ON sonar.* TO 'sonar'@'%' IDENTIFIED BY 'sonar';
+ 
+GRANT ALL ON sonar.* TO 'sonar'@'localhost' IDENTIFIED BY 'sonar';
+ 
+FLUSH PRIVILEGES;
 ```
-
-下载sonar压缩包:
-https://www.sonarqube.org/downloads/
 
 ##### 解压sonar,并设置权限
 
@@ -1286,6 +1296,14 @@ $ sudo vim /usr/local/sonarqube/conf/sonar.properties
 > #sonar.web.port=9000
 > ```
 
+修改wrapper.conf 的JDK的配置
+
+```bash
+vim conf/wrapper.conf
+```
+
+> 修改JDK内容如下：wrapper.java.command=/usr/local/java/jdk1.8.0_202/bin/java
+
 启动sonar
 
 ```bash
@@ -1296,7 +1314,7 @@ su sonar /usr/local/sonarqube/bin/linux-x86-64/sonar.sh status
 #停止
 su sonar /usr/local/sonarqube/bin/linux-x86-64/sonar.sh stop
 #查看日志
-tail -f logs/sonar.logs 
+tail -10f logs/sonar.logs 
 ```
 
 > 启动失败：

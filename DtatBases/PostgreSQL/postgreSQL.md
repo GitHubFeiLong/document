@@ -44,3 +44,12 @@ alter table test alter column filed type varchar using filed:: varchar
 COALESCE(col_num, value)
 ```
 
+## 查询列的数据类型转换
+
+​		例如，将 4.0/3 转换成两位小数（cast）
+
+```sql
+select 4.0/3 -- 结果是1.3333333333333333
+select cast(4.0/3 as decimal(10,2)) -- 结果是1.33
+```
+
