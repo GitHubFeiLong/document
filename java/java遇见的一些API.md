@@ -22,7 +22,28 @@ list1.stream().sorted(Comparator.comparing(BRcAAchedule::getSdate)).forEach(p->{
 list1.stream().sorted(Comparator.comparing(BRcAAchedule::getSdate).reversed()).forEach(p->{
             System.out.println(p.toString());
         });
+
 ```
+
+### 有null的值进行排序
+
+​		下面的集和 list 中的元素 topic 的属性 topicNum 可能为null值，这时使用上面的直接排序就会出现异常。
+
+​		下面的代码重点语句：`Comparator.comparing(topic -> topic.getTopicNum(), Comparator.nullsLast(Integer::compareTo))`,除了`nullsLast` 还有`nullsFirst`
+
+> `nullsLast` : null的记录放在后面
+
+```java
+ list.stream().sorted(Comparator.comparing(topic -> topic.getTopicNum(), Comparator.nullsLast(Integer::compareTo)))
+                .forEach(f->{
+                    int num = Optional.ofNullable(f.getTopicNum()).orElse(0) + i.get();
+                    f.setTopicNum(num);
+                    // 自增
+                    i.getAndIncrement();
+                });
+```
+
+
 
 
 
