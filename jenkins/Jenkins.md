@@ -1477,3 +1477,107 @@ stage('code checking') {
 
 ![image-20201204213656128](Jenkins.assets/image-20201204213656128.png)
 
+### 环境准备(3)-Harbor镜像仓库安装及使用
+
+#### Harbor简介
+
+![image-20201210212000934](Jenkins.assets/image-20201210212000934.png)
+		Harbor(港口，港湾）是一个用于存储和分发Docker镜像的企业级Registry服务器。
+
+​		除了Harbor这个私有镜像仓库之外，还有Docker官方提供的Registry。相对Registry，Harbor具有很多优势:
+
+1. 提供分层传输机制，优化网络传输
+   Docker镜像是是分层的，而如果每次传输都使用全量文件(所以用FTP的方式并不适合)，显然不经济。必须提供识别分层传输的机制，以层的UUID为标识，确定传输的对象。
+2. 提供WEB界面，优化用户体验
+   只用镜像的名字来进行上传下载显然很不方便，需要有一个用户界面可以支持登陆、搜索功能，包括区公有、私有镜像。
+3. 支持水平扩展集群
+   当有用户对镜像的上传下载操作集中在某服务器，需要对相应的访问压力作分解。
+4. 良好的安全机制
+   企业中的开发团队有很多不同的职位，对于不同的职位人员，分配不同的权限，具有更好的安全性。
+
+#### Harbor安装
+
+​		Hakbor需要安装在192.168.66.102上面
+
+1）先安装Docker并启动Docker (已完成)。
+参考之前的安装过程
+2）先安装docker-compose
+
+```bash
+$ sudo cur1 -L https: / /github.com/docker/compose/releases/down1oad/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/loca1/bin/docker-compose
+
+$ sudo chmod +x /usr/loca1/bin/docker-compose
+```
+
+3）给docker-compose添加执行权限
+
+```bash
+$ sudo chmod +x /usr/local/bin/docker-compose
+```
+
+4)查看docker-compose是否安装成功
+
+```bash
+$ docker-compose -version
+```
+
+5）下载Harbor的压缩包(本课程版本为: v1.9.2)
+
+```bash
+https://github.com/goharbor/harbor/releases
+```
+
+6)上传压缩包到linux，并解压
+
+```bash
+$ tar -zxvf harbor-offline-installer-v2.1.2-rc1.tgz
+
+$ mv harbor /usr/local/harbor
+```
+
+7）修改Harbor的配置，修改hostname和port
+
+```bash
+$ vim harbor.yml.tmpl
+```
+
+> hostname: 192.168.66.102
+> port: 85
+
+
+
+8）安装Harbor
+
+```bash
+$ cp harbor.yml.tmpl harbor.yml
+$ ./prepare
+$ ./install.sh
+```
+
+9)启动Harbor
+
+```bash
+#启动
+$ docker-compose up -d
+#停止
+$ docker-compose stop
+#重新启动
+$ docker-compose restart
+```
+
+10)访问Harbor
+
+http://192.168.66.102:85
+
+> 默认账户密码: admin/Harbor12345
+
+#### 在Harbor创建用户和项目
+
+1)创建项目
+
+​		Harpor的项目分为公开和私有的:
+
++ 公开项目:所有用户都可以访问，通常存放公共的镜像，默认有一个library公开项目。
++ 私有项目:只有授权用户才可以访问，通常存放项目本身的镜像。
+  我们可以为微服务项目创建一个新的项目:
+
