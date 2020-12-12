@@ -43,6 +43,30 @@ list1.stream().sorted(Comparator.comparing(BRcAAchedule::getSdate).reversed()).f
                 });
 ```
 
+自定义排序方式
+
+```java
+ HashMap<String, Integer> keyMap = new HashMap(){{
+            put("单选题", 1);
+            put("多选题", 2);
+            put("判断题", 3);
+            put("填空题", 4);
+            put("主观题", 5);
+        }};
+
+        List<String> list1 = Arrays.asList("主观题","填空题","单选题","判断题","多选题");
+        list1.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return keyMap.get(o1).compareTo(keyMap.get(o2));
+            }
+        });
+
+        log.info(list1.toString());
+```
+
+
+
 
 
 
