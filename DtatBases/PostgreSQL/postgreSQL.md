@@ -53,3 +53,13 @@ select 4.0/3 -- 结果是1.3333333333333333
 select cast(4.0/3 as decimal(10,2)) -- 结果是1.33
 ```
 
+
+
+## 新增或修改(UPSERT)
+
+```sql
+INSERT INTO question_type_introduction (uuid, question_type_introduction)
+        VALUES(#{uuid}, #{questionTypeIntroduction})
+        ON conflict(uuid) DO UPDATE SET question_type_introduction = #{questionTypeIntroduction}
+```
+

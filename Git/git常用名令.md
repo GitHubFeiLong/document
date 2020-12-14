@@ -233,7 +233,7 @@ $ git tag tag-name
 $ git tag -a tag-name
 ```
 
-### 合并与重置
+### 合并与变基
 
 > merge 与 rebase 虽然是 git 常用功能，但是强烈建议不要使用 git 命令来完成这项工作。
 >
@@ -258,10 +258,12 @@ git stash pop
 git merge branch
 ```
 
-重置：
+变基：
+
+​		使用 rebase 可以使git历史变为完整一条线
 
 ```bash
-# 将当前HEAD版本重置到分支中，请勿重置已发布的提交
+# 将 <branch> 的分支变基到当前分支
 $ git rebase <branch>
 ```
 
