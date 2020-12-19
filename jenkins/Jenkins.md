@@ -1581,3 +1581,28 @@ http://192.168.66.102:85
 + 私有项目:只有授权用户才可以访问，通常存放项目本身的镜像。
   我们可以为微服务项目创建一个新的项目:
 
+## 6、基于Kubernetes/K8S构建Jenkins持续集成平台(上)
+
+### Jenkins的Master-Slave分布式构建
+
+#### 什么是Master-Slave分布式构建
+
+![image-20201215220743713](Jenkins.assets/image-20201215220743713.png)
+
+​		Jenkins的Master-Slave分布式构建，就是通过将构建过程分配到从属Slave节点上，从而减轻Master节点的压力，而且可以同时构建多个，有点类似负载均衡的概念。
+
+#### 如何实现Master-Slave分布式构建
+
+1）开启代理程序的TCP端口
+Manage jenkins -> Configure Global Security
+
+![image-20201215221515709](Jenkins.assets/image-20201215221515709.png)
+
+2）新建节点
+Manage Jenkins—Manage Nodes—新建节点
+
+![image-20201215221913230](Jenkins.assets/image-20201215221913230.png)
+
+![image-20201215222228793](Jenkins.assets/image-20201215222228793.png)
+
+![image-20201215222508422](Jenkins.assets/image-20201215222508422.png)
