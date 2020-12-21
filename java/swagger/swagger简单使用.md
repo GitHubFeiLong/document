@@ -12,11 +12,34 @@
     <groupId>io.springfox</groupId>
     <artifactId>springfox-swagger2</artifactId>
     <version>2.9.2</version>
+    <exclusions>
+        <exclusion>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </exclusion>
+    </exclusions>
 </dependency>
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-swagger-ui</artifactId>
     <version>2.9.2</version>
+</dependency>
+<dependency>
+    <groupId>io.swagger</groupId>
+    <artifactId>swagger-models</artifactId>
+    <version>1.6.0</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>io.swagger</groupId>
+    <artifactId>swagger-annotations</artifactId>
+    <version>1.6.0</version>
+    <scope>compile</scope>
 </dependency>
 ```
 
@@ -367,3 +390,4 @@ public class Swagger2Config {
 > 注意
 >
 > 1. 如果接口的参数是一个自定义对象的话，那么方法就不要使用 @ApiImplicitParam 和 @ApiImplicitParams ，只需要在该对象的类上添加注解 @ApiModel 在 其属性上添加@ApiModelProperty,这样就会生成 详细的接口文档。
+
