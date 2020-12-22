@@ -4,6 +4,8 @@
 
 ## 集合去重 distinct
 
+### 单个元素去重
+
 ```java
 // 需要重写equals 和 hashcode方法
 // 循环的内容已经去重了
@@ -11,6 +13,14 @@ list.stream().distinct().forEach(p->{
     
 })
 ```
+
+### 集和元素中指定属性去重
+
+```java
+list.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(()->new TreeSet<>(Comparator.comparing(ExamBasicDTO::getUuid))), ArrayList::new));
+```
+
+
 
 ## 集合排序 sorted
 
@@ -82,7 +92,7 @@ list1.stream().sorted(Comparator.comparing(BRcAAchedule::getSdate).reversed()).f
 
 
 
-## ListIterator
+## List Iterator
 
 集合循环时根据条件添加删除元素
 
