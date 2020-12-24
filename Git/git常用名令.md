@@ -278,3 +278,28 @@ $ git rebase <branch>
    ```
 
 2. 使用上面的命令后，本地更改的代码不会消失，只会保存在暂存区。此时在正常添加到工作区，然后提交。
+
+## 添加远程仓库
+
+1. 初始化本地git
+
+   ```bash
+   $ git init
+   ```
+
+2. 添加远程仓库
+
+   ```bash
+   $ git remote add origin https://github.com/GitHubFeiLong/spring-security.git
+   ```
+
+3. 如果本地有文件的话，先提交，push，然后再pull
+
+   ```bash
+   $ git add .
+   $ git commit -m"init"
+   $ git push
+   $ git pull
+   ```
+
+   
