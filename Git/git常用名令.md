@@ -296,10 +296,19 @@ $ git rebase <branch>
 3. 如果本地有文件的话，先提交，push，然后再pull
 
    ```bash
-   $ git add .
+   $ git  add .
    $ git commit -m"init"
    $ git push
    $ git pull
    ```
 
    
+
+## 仓库迁移
+
+本地分支 拉取新的远程分支时报错：`fatal: refusing to merge unrelated histories` 在后部添加 `--allow-unrelated-histories` 完美解决
+
+```bash
+git pull origin master --allow-unrelated-histories
+```
+
