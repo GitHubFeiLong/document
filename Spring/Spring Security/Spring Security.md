@@ -170,3 +170,9 @@
 15. org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 
     > 获取所配置资源访问的授权信息，根据SecurityContextHolder中存储的用户信息来决定其是否有权限。
+
+### 4.2 spring security 过滤器链加载原理
+
+#### 4.2.1 DelegatingFilterProxy
+
+我们在web.xml中配置了一个名称为 springSecurityFilterChain 的过滤器DelegatingFilterProxy，接下我直接对DelegatingFilterProxy源码里重要代码进行说明，其中删减掉了一些不重要的代码，大家注意我写的注释就行了!
