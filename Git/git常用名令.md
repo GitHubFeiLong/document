@@ -111,7 +111,7 @@ $ git reset --hard <commit-hash>
 $ git push -f
 ```
 
-### 
+
 
 ### 更新与推送
 
@@ -142,7 +142,13 @@ $ git push <remote> --delete <branch> (since Git v1.7.0)
 $ git push --tags
 ```
 
-### 
+### Sourcetree推送失败解决
+
+```bash
+git config http.sslVerify "false"
+```
+
+
 
 ### 查看信息
 
