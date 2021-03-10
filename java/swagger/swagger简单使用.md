@@ -381,7 +381,7 @@ public class Swagger2Config {
 | @EnableSwagger2                                              | 放在swagger配置类上，用于配置swagger                         |
 | @Api(value = "", tags = "")                                  | 我通常是放在Controller上，表明这个控制器会被Swagger生成接口文档 |
 | @ApiOperation(value = "接口简短说明", notes = "接口详细描述") | 放在控制器中的方法上                                         |
-| @ApiImplicitParam(name = "", value = "", required = true, dataType = "") | 描述接口需要的参数说明                                       |
+| @ApiImplicitParam(name = "", value = "", required = true, dataType = "", paramType="query") | 描述接口需要的参数说明                                       |
 | @ApiImplicitParams({@ApiImplicitParam ...})                  | 描述接口需要的参数说明(多个参数时使用)                       |
 | @ApiModel                                                    | 放在实体类上                                                 |
 | @ApiModelProperty(name = "", value = "", required = true)    | 放在实体类的属性上                                           |
