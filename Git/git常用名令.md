@@ -145,6 +145,12 @@ $ git push --tags
 ### Sourcetree推送失败解决
 
 ```bash
+fatal: unable to access 'https://github.com/GitHubFeiLong/goudong-web-ui.git/': OpenSSL SSL_read: Connection was reset, errno 10054
+```
+
+解决办法
+
+```bash
 git config http.sslVerify "false"
 ```
 
