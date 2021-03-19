@@ -111,8 +111,6 @@ $ git reset --hard <commit-hash>
 $ git push -f
 ```
 
-
-
 ### 更新与推送
 
 更新：
@@ -141,20 +139,6 @@ $ git push <remote> --delete <branch> (since Git v1.7.0)
 # 发布标签
 $ git push --tags
 ```
-
-### Sourcetree推送失败解决
-
-```bash
-fatal: unable to access 'https://github.com/GitHubFeiLong/goudong-web-ui.git/': OpenSSL SSL_read: Connection was reset, errno 10054
-```
-
-解决办法
-
-```bash
-git config http.sslVerify "false"
-```
-
-
 
 ### 查看信息
 
@@ -323,62 +307,3 @@ $ git rebase <branch>
 ```bash
 git pull origin master --allow-unrelated-histories
 ```
-
-
-
-## Git Pull Push慢
-
-### 方法一
-
-1. 打开网站：https://fastly.net.ipaddress.com/
-
-2. 查询两个域名（github.com、github.global.ssl.fastly.net ）分别对应IP地址（140.82.112.3、199.232.69.194）
-
-3. 查询cdn（assets-cdn.github.com）
-
-   ```
-   185.199.108.153
-   185.199.109.153
-   185.199.110.153
-   185.199.111.153
-   ```
-
-   
-
-4. 编辑hosts文件（C:\Windows\System32\drivers\etc\hosts）
-
-   ```
-   199.232.69.194 github.global.ssl.fastly.net
-   140.82.112.3 github.com
-   185.199.108.153 assets-cdn.github.com
-   185.199.109.153 assets-cdn.github.com
-   185.199.110.153 assets-cdn.github.com
-   185.199.111.153 assets-cdn.github.com
-   ```
-
-5. 刷新电脑DNS
-
-   ```bash
-   ipconfig/flushdns
-   ```
-
-> 注意：hosts文件不能多空格，多空行。
->
-> 执行完成后，关闭浏览器重新打开GitHub
-
-
-
-### 方法二
-
-打开网站[Dns检测|Dns查询 - 站长工具](http://tool.chinaz.com/dns)， 查询 github.com
-
-![image-20210311095120479](git常用名令.assets/image-20210311095120479.png)
-
-找到TTL值（响应时间）最短的IP地址。
-
-编辑hosts文件
-
-```
-13.114.40.48 github.com
-```
-
