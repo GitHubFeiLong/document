@@ -1,6 +1,6 @@
 # Spring Cloud
 
-搭建项目时，需要优先兼顾spring cloud的版本（80看完）
+搭建项目时，需要优先兼顾spring cloud的版本（91看完）
 
 [查看官网的cloud版本](https://spring.io/projects/spring-cloud#overview)
 
