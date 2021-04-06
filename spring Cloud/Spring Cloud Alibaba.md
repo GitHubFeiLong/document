@@ -1,6 +1,6 @@
 # Spring Cloud
 
-搭建项目时，需要优先兼顾spring cloud的版本（44看完）
+搭建项目时，需要优先兼顾spring cloud的版本（80看完）
 
 [查看官网的cloud版本](https://spring.io/projects/spring-cloud#overview)
 
@@ -38,13 +38,27 @@
 ### 服务调用
 
 1. Ribbon 
+
 2. LoadBalancer(代替Ribbon)
+
 3. Feign(死了)
+
 4. OpenFeign（自带Ribbon，自带负载均衡）
+
+   ```txt
+   1. 默认客户端等待1s，超过了就超时报错。
+   2. OpenFeign 底层引入了Ribbon
+   3. 配置客户端的ribbon超时时间
+   ribbon:
+     ReadTimeout: 5000 #建立连接所用时间（避免超时）
+     ConnectTimeout: 5000 #连接后接口调用时间（避免超时）
+   ```
+
+   
 
 ### 服务熔断降级
 
-1. Hystrix（死）
+1. Hystrix（停止更新，进入维护）
 2. resilience4j
 3. sentinel(alibaba)
 
@@ -55,11 +69,11 @@
 
 ### 服务配置
 
-1. Config(死)
+1. Config(被代替)
 2. Nacos
 
 ## 服务总线
 
-1. Bus(死)
+1. Bus(被代替)
 2. Nacos
 
