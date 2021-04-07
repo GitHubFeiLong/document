@@ -1,6 +1,6 @@
 # Spring Cloud
 
-搭建项目时，需要优先兼顾spring cloud的版本（91看完）
+搭建项目时，需要优先兼顾spring cloud的版本（148看完）
 
 [查看官网的cloud版本](https://spring.io/projects/spring-cloud#overview)
 
@@ -76,4 +76,40 @@
 
 1. Bus(被代替)
 2. Nacos
+
+### Alibaba
+
+## Nacos
+
+> 注意数据库的版本
+
+https://github.com/alibaba/nacos
+
+默认端口是8848 用户名和密码都是nacos
+
+下载：
+
+![image-20210407095522013](Spring Cloud Alibaba.assets/image-20210407095522013.png)
+
+集群（3个或3个以上构成），MySQL数据库用来持久化数据（默认嵌入式数据库）config目录下脚本：nacos-mysql（创建数据库）
+
+Mysql 集群（主从复制），Nginx 集群
+
+## Sentinel
+
+https://github.com/alibaba/Sentinel/releases/tag/1.8.1 下载
+
+java -jar xxx.jar运行
+
+默认端口号是8080
+
+用户名和密码都是sentinel
+
+## Seata 
+
+处理分布式事务
+
+github:https://github.com/seata/seata/releases/tag/v1.0.0
+
+
 
