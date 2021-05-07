@@ -226,7 +226,7 @@ github:https://github.com/seata/seata/releases/tag/v1.0.0
 
 ### 集群搭建
 
-> 注意：需要将启动脚本文件(startup.cmd/startup.sh)中的MODE修改为集群模式（cluster）
+> 注意：需要将启动脚本文件(startup.cmd/startup.sh)中的MODE修改为集群模式（cluster），单机模式是 ‘standalone’
 >
 > ```cmd
 > set MODE="cluster"
