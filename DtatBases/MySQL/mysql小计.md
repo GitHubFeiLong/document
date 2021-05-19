@@ -6,3 +6,10 @@
 UPDATE IGNORE table_name...
 ```
 
+设置主键默认值为UUID
+
+```sql
+alter table table_name alter column uuid set default (uuid());
+```
+
+> 注意是 `(uuid())`
