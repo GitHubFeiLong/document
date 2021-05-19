@@ -1,1 +1,0 @@
-xcopy C:\Users\msi\AppData\Roaming\Typora\typora-user-images D:\workspaces\idea\document\typora-user-images
