@@ -60,7 +60,13 @@ java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject
 </dependency>
 ```
 
-### 配置dashboard 的IP地址
+###  配置启动参数
+
+1. 启动时加入 JVM 参数 `-Dcsp.sentinel.dashboard.server=consoleIp:port` 指定控制台地址和端口。若启动多个应用，则需要通过 `-Dcsp.sentinel.api.port=xxxx` 指定客户端监控 API 的端口（默认是 8719）。
+
+>  除了修改 JVM 参数，也可以通过配置文件取得同样的效果。更详细的信息可以参考 [启动配置项](https://sentinelguard.io/zh-cn/docs/startup-configuration.html)。
+
+2. 配置文件
 
 启动应用时添加 dashboard IP地址: `-Dcsp.sentinel.dashboard.server=localhost:8080`。
 
@@ -72,6 +78,42 @@ spring:
         dashboard: localhost:8080 #配置Sentinel dashboard地址
         port: 8719 #默认端口，如果被占用会加一。用于连接dashboard
 ```
+
+### 触发客户端初始化
+
+**确保客户端有访问量**，Sentinel 会在**客户端首次调用的时候**进行初始化，开始向控制台发送心跳包。
+
+> 注意：您还需要根据您的应用类型和接入方式引入对应的 [适配依赖](https://sentinelguard.io/zh-cn/docs/open-source-framework-integrations.html)，否则即使有访问量也不能被 Sentinel 统计。
+
+### 规则管理及推送
+
+Sentinel 控制台同时提供简单的规则管理以及推送的功能。规则推送分为 3 种模式，包括 "原始模式"、"Pull 模式" 和"Push 模式"。
+
+#### [原始模式](https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel#原始模式)
+
+说明：API 将规则推送至客户端并直接更新到内存中，扩展写数据源（[`WritableDataSource`](https://github.com/alibaba/Sentinel/wiki/动态规则扩展)）
+
+优点：简单，无任何依赖
+
+缺点：不保证一致性；规则保存在内存中，重启即消失。严重不建议用于生产环境
+
+#### [Pull 模式](https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel#Pull模式)
+
+说明：扩展写数据源（[`WritableDataSource`](https://github.com/alibaba/Sentinel/wiki/动态规则扩展)）， 客户端主动向某个规则管理中心定期轮询拉取规则，这个规则中心可以是 RDBMS、文件 等
+
+优点：简单，无任何依赖；规则持久化
+
+缺点：不保证一致性；实时性不保证，拉取过于频繁也可能会有性能问题。
+
+#### **[Push 模式](https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel#Push模式)**
+
+说明：扩展读数据源（[`ReadableDataSource`](https://github.com/alibaba/Sentinel/wiki/动态规则扩展)），规则中心统一推送，客户端通过注册监听器的方式时刻监听变化，比如使用 Nacos、Zookeeper 等配置中心。这种方式有更好的实时性和一致性保证。**生产环境下一般采用 push 模式的数据源**
+
+优点：规则持久化；一致性；快速
+
+缺点：引入第三方依赖
+
+
 
 ## 基本使用 - 资源与规则
 
