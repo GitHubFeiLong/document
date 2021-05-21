@@ -77,16 +77,6 @@
 1. Bus(被代替)
 2. Nacos
 
-## Sentinel 服务熔断降级
-
-https://github.com/alibaba/Sentinel/releases/tag/1.8.1 下载
-
-java -jar xxx.jar运行
-
-默认端口号是8080
-
-用户名和密码都是sentinel
-
 ## Seata 
 
 处理分布式事务
