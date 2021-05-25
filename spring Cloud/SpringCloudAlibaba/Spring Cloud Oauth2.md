@@ -2,7 +2,7 @@
 
 先只记录下简单使用，因为也是在网上找的入门教程，所以还没太深入了解和使用。但是使用了微服务，打算还是使用它进行鉴权和认证。
 
-## 使用
+## 创建项目
 
 ### 步骤一：创建maven项目
 
@@ -276,4 +276,46 @@ public class UserController {
 ```
 
 
+
+## 客户端使用
+
+1. 浏览器访问 http://localhost:10003/oauth/authorize?response_type=code&client_id=admin&redirect_uri=http://www.baidu.com&scope=all&state=normal
+
+   > 访问上述地址后，会跳转到登录页面登录。填写UserService中配置用户名和密码登录。
+
+2. 登录成功后会跳转到一个页面，先选择Approve(Approve 批准，Deny 拒绝)，然后点击 Authorize(授权)
+
+   ![image-20210525170630783](Spring Cloud Oauth2.assets/image-20210525170630783.png)
+
+3. 页面重定向指定的百度首页，并有一个code参数(http://www.baidu.com/?code=1JEpbt&state=normal)
+
+   ![image-20210525170904962](Spring Cloud Oauth2.assets/image-20210525170904962.png)
+
+4. 复制code，请求接口获取token
+
+   > 1. POST方式访问接口`http://localhost:10003/oauth/token`
+   >
+   > 2. 添加认证方式，选择Basic Auth 
+   >
+   >    ![image-20210525171345649](Spring Cloud Oauth2.assets/image-20210525171345649.png)
+   >
+   > 3. 添加请求参数
+   >
+   >    | KEY          | VALUE                |
+   >    | ------------ | -------------------- |
+   >    | code         | 5k95sP               |
+   >    | grant_type   | authorization_code   |
+   >    | client_id    | admin                |
+   >    | redirect_uri | http://www.baidu.com |
+   >    | scope        | all                  |
+   >
+   > 4. 请求后，获取到token字符串。
+   >
+   > ![image-20210525171049010](Spring Cloud Oauth2.assets/image-20210525171049010.png)
+   >
+   > 6. 使用Token字符串，进行访问资源
+   >
+   >    ![image-20210525171621593](Spring Cloud Oauth2.assets/image-20210525171621593.png)
+
+   
 
