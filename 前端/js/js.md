@@ -136,6 +136,14 @@ console.log(arr);// [2,3]
 
 
 
+## 数组创建
+
+```javascript
+let obj = {id:1, name:'name1'};
+// 创建10个长度的数组，元素都是obj
+let arr = Array(10).fill(obj);
+```
+
 
 
 # Event
