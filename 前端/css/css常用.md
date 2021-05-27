@@ -8,7 +8,9 @@ white-space: nowrap;
 text-overflow: ellipsis;
 ```
 
-
+> 如果出现排版错误
+>
+> 添加`vertical-align: top;`
 
 ## 内容过长时换行
 
