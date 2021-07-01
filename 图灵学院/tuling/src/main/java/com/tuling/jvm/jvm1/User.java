@@ -1,4 +1,4 @@
-package com.tuling.jvm;
+package com.tuling.jvm.jvm1;
 
 /**
  * @author e-Feilong.Chen
@@ -7,4 +7,7 @@ package com.tuling.jvm;
  * @date 2021/6/29 9:22
  */
 public class User {
+    public void sout(){
+        System.out.println("User1-2 sout 方法输出");
+    }
 }
