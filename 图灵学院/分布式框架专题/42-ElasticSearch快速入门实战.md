@@ -211,9 +211,9 @@ mapping是处理数据的方式和规则方面做一些限制，如某个字段�
 
 ```bash
 # 解压Elasticsearch
-su tlbaiqi
-cd /user/local/
-tar ‐zvxf elasticsearch‐7.6.1‐linux‐x86_64.tar.gz ‐C /usr/local/es/
+$su tlbaiqi
+$cd /user/local/
+$tar ‐zvxf elasticsearch‐7.6.1‐linux‐x86_64.tar.gz ‐C /usr/local/es/
 ```
 
 ### 4.1.3 修改配置文件
@@ -223,12 +223,12 @@ tar ‐zvxf elasticsearch‐7.6.1‐linux‐x86_64.tar.gz ‐C /usr/local/es/
 **进入服务器使用baiqi用户**来修改配置文件
 
 ```bash
-cd /usr/local/es/elasticsearch‐7.6.1/config
-mkdir ‐p /usr/local/es/elasticsearch‐7.6.1/log
-mkdir ‐p /usr/local/es/elasticsearch‐7.6.1/data
-rm ‐rf elasticsearch.yml
+$cd /usr/local/es/elasticsearch‐7.6.1/config
+$mkdir ‐p /usr/local/es/elasticsearch‐7.6.1/log
+$mkdir ‐p /usr/local/es/elasticsearch‐7.6.1/data
+$rm ‐rf elasticsearch.yml
 
-vim elasticsearch.yml
+$vim elasticsearch.yml
 # 内容
 cluster.name: baiqi‐es
 node.name: node1
@@ -259,8 +259,8 @@ http.cors.allow‐origin: "*"
 node1.baiqi.cn使用baiqi用户执行以下命令调整jvm堆内存大小，每个人根据自己服务器的内存大小来进行调整。
 
 ```bash
-cd /usr/local/es/elasticsearch‐7.6.1/config
-vim jvm.options
+$cd /usr/local/es/elasticsearch‐7.6.1/config
+$vim jvm.options
 ‐Xms2g
 -Xmx2g
 ```
@@ -368,6 +368,10 @@ http://192.168.21.130:9200/?pretty
 
 # 5 客户端Kibana安装
 
+[下载地址](https://www.elastic.co/cn/downloads/kibana)
+
+> 注意版本要与elasticsearch一致
+
 ## 5.1客户端可以分为图形界面客户端,和代码客户端.
 
 ## 5.2 ES主流客户端Kibana，开放9200端口与图形界面客户端交互
@@ -404,7 +408,13 @@ http://ip:5601/app/kibana
 
 ## 6.1 下载Elasticsearch IK分词器
 
-https://github.com/medcl/elasticsearch-analysis-ik/releases
+[https://github.com/medcl/elasticsearch-analysis-ik/releases](https://github.com/medcl/elasticsearch-analysis-ik/releases)
+
+> 注意 es的目录不能出现中文或空格，不然这里要出现错误 
+>
+> ```txt
+> java.security.AccessControlException: access denied
+> ```
 
 ## 6.2 切换到baiqi用户，并在es的安装目录下/plugins创建ik
 
@@ -451,8 +461,8 @@ POST _analyze
 
 # 7、指定IK分词器作为默认分词器
 
-ES的默认分词设置是standard，这个在中文分词时就比较尴尬了，会单字拆分，比如我搜索关键词“清华大学”，这时候会按“清”，“华”，“大”，“学”去分词，然后搜出来的都是些“清清的河水”，“中华儿女”，“地大物博”，“学而不思则罔”之类的莫名其妙的结果，这里我们就想把这个分词方式修改一下，于是呢，就想到了ik分词器，有两种ik_smart和ik_max_word。
-ik_smart会将“清华大学”整个分为一个词，而ik_max_word会将“清华大学”分为“清华大学”，“清华”和“大学”，按需选其中之一就可以了。
+ES的默认分词设置是**standard**，这个在中文分词时就比较尴尬了，会单字拆分，比如我搜索关键词“清华大学”，这时候会按“清”，“华”，“大”，“学”去分词，然后搜出来的都是些“清清的河水”，“中华儿女”，“地大物博”，“学而不思则罔”之类的莫名其妙的结果，这里我们就想把这个分词方式修改一下，于是呢，就想到了ik分词器，有两种**ik_smart**和**ik_max_word**。
+**ik_smart会将“清华大学”整个分为一个词，而ik_max_word会将“清华大学”分为“清华大学”，“清华”和“大学”，按需选其中之一就可以了。**
 修改默认分词方法(这里修改school_index索引的默认分词为：ik_max_word)：
 
 ```txt
@@ -472,7 +482,7 @@ PUT /school_index
 
 ES是面向文档(document oriented)的，这意味着它可以存储整个对象或文档(document)。然而它不仅仅是存储，还会索引(index)每个文档的内容使之可以被搜索。
 在ES中，你可以对文档（而非成行成列的数据）进行索引、搜索、排序、过滤。
-ES使用JSON作为文档序列化格式。
+**ES使用JSON作为文档序列化格式。**
 JSON现在已经被大多语言所支持，而且已经成为NoSQL领域的标准格式。
 ES存储的一个员工文档的格式示例：
 
@@ -620,82 +630,81 @@ Post http://localhost:8080/employee/1
 
 ## 10.1 查询当前类型中的所有文档 _search
 
-```txt
-格式: GET /索引名称/类型/_search
-举例: GET /es_db/_doc/_search
-SQL: select * from student
-```
+**格式**: `GET /索引名称/类型/_search`
+
+**举例:** `GET /es_db/_doc/_search`
+
+**对应SQL:**`SQL: select * from student`
 
 ## 10.2 条件查询,如要查询age等于28岁的 _search?q=*:***
 
-```txt
-格式: GET /索引名称/类型/_search?q=*:***
-举例: GET /es_db/_doc/_search?q=age:28
-SQL: select * from student where age = 28
-```
+**格式:** `GET /索引名称/类型/_search?q=*:***`
+**举例:** `GET /es_db/_doc/_search?q=age:28`
+**SQL:** `select * from student where age = 28`
+
+
 
 ## 10.3 范围查询,如要查询age在25至26岁之间的 _search?q=***[** TO **] 注意: TO 必须为大写
 
-```txt
-格式: GET /索引名称/类型/_search?q=***[25 TO 26]
-举例: GET /es_db/_doc/_search?q=age[25 TO 26]
-SQL: select * from student where age between 25 and 26
-```
+**格式:** `GET /索引名称/类型/_search?q=***[25 TO 26]`
+**举例:** `GET /es_db/_doc/_search?q=age[25 TO 26]`
+**SQL:**` select * from student where age between 25 and 26`
+
+
 
 ## 10.4 根据多个ID进行批量查询 _mget
 
+**格式:** `GET /索引名称/类型/_mget`
 
+**举例:** 
 
 ```txt
-格式: GET /索引名称/类型/_mget
-举例: GET /es_db/_doc/_mget
+GET /es_db/_doc/_mget
 {
 "ids":["1","2"]
 }
-SQL: select * from student where id in (1,2)
 ```
+
+> 中括号内也可以不写双引号：[1,2]`
+
+**SQL:** `select * from student where id in (1,2)`
 
 ## 10.5 查询年龄小于等于28岁的 :<=
 
-```txt
-1 格式: GET /索引名称/类型/_search?q=age:<=**
-2 举例: GET /es_db/_doc/_search?q=age:<=28
-3 SQL: select * from student where age <= 28
-```
+**格式:** `GET /索引名称/类型/_search?q=age:<=**`
 
-## 10.6 查询年龄大于28前的 :>
+ **举例:** `GET /es_db/_doc/_search?q=age:<=28`
 
-```txt
-格式: GET /索引名称/类型/_search?q=age:>**
-举例: GET /es_db/_doc/_search?q=age:>28
-SQL: select * from student where age > 28
-```
+**SQL:**` select * from student where age <= 28`
+
+## 10.6 查询年龄大于27的 :>
+
+**格式:** `GET /索引名称/类型/_search?q=age:>**`
+**举例:** `GET /es_db/_doc/_search?q=age:>27`
+**SQL:**` select * from student where age > 27`
+
+
 
 ## 10.7 分页查询 from=*&size=*
 
-```txt
-格式: GET /索引名称/类型/_search?q=age[25 TO 26]&from=0&size=1
-举例: GET /es_db/_doc/_search?q=age[25 TO 26]&from=0&size=1
-SQL: select * from student where age between 25 and 26 limit 0, 1
-```
+**格式:**` GET /索引名称/类型/_search?q=age[25 TO 26]&from=0&size=1`
+**举例:**` GET /es_db/_doc/_search?q=age[25 TO 26]&from=0&size=1`
+**SQL:**` select * from student where age between 25 and 26 limit 0, 1`
+
+
 
 ## 10.8 对查询结果只输出某些字段 _source=字段,字段
 
-```txt
-格式: GET /索引名称/类型/_search?_source=字段,字段
-举例: GET /es_db/_doc/_search?_source=name,age
-SQL: select name,age from student
-```
+**格式:** `GET /索引名称/类型/_search?_source=字段,字段`
+**举例:**` GET /es_db/_doc/_search?_source=name,age`
+**SQL:**` select name,age from student`
 
 ## 10.9 对查询结果排序 sort=字段:desc/asc
 
-```txt
-格式: GET /索引名称/类型/_search?sort=字段 desc
-举例: GET /es_db/_doc/_search?sort=age:desc
-SQL: select * from student order by age desc
-```
+**格式:** `GET /索引名称/类型/_search?sort=字段:desc`
+**举例:**` GET /es_db/_doc/_search?sort=age:desc`
+**SQL:**` select * from student order by age desc`
 
 第一天笔记：
 文档：01 ElasticSearch笔记.note
-链接：http://note.youdao.com/noteshare?
-id=83ea7925e0a1ae40e037f682b98d9874&sub=07E63083340A409683C3D8B26786C549
+链接：http://note.youdao.com/noteshare?id=83ea7925e0a1ae40e037f682b98d9874&sub=07E63083340A409683C3D8B26786C549
