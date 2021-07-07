@@ -242,11 +242,11 @@ bootstrap.system_call_filter: false
 bootstrap.memory_lock: false
 http.cors.enabled: true
 #载安装的时候，配置下面的参数，会报错
-http.cors.allow‐origin: "*"
+http.cors.allow-origin: "*"
 ```
 
-> #载安装的时候，配置下面的参数，会报错
-> http.cors.allow‐origin: "*"
+> #载安装的时候，配置下面的参数，会报错,是因为中线格式的问题
+> http.cors.allow-origin: "*"
 >
 > ```txt
 > uncaught exception in thread [main]
@@ -408,7 +408,7 @@ http://ip:5601/app/kibana
 
 ## 6.1 下载Elasticsearch IK分词器
 
-[https://github.com/medcl/elasticsearch-analysis-ik/releases](https://github.com/medcl/elasticsearch-analysis-ik/releases)
+[ik](https://github.com/medcl/elasticsearch-analysis-ik/releases)
 
 > 注意 es的目录不能出现中文或空格，不然这里要出现错误 
 >
