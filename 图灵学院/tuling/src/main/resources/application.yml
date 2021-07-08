@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  # json日期格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/jpa?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: l(=8gp_04h*&
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
