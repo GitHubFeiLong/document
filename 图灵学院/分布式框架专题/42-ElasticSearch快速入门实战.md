@@ -1,5 +1,7 @@
 # 42-ElasticSearch快速入门实战
 
+[中文文档](https://www.kancloud.cn/yiyanan/elasticsearch_7_6/1651637)
+
 # 1.ElasticSearch简介
 
 ## 1.1 ElasticSearch（简称ES）
@@ -241,17 +243,10 @@ cluster.initial_master_nodes: ["节点名"]
 bootstrap.system_call_filter: false
 bootstrap.memory_lock: false
 http.cors.enabled: true
-#载安装的时候，配置下面的参数，会报错
 http.cors.allow-origin: "*"
 ```
 
-> #载安装的时候，配置下面的参数，会报错,是因为中线格式的问题
-> http.cors.allow-origin: "*"
->
-> ```txt
-> uncaught exception in thread [main]
-> java.lang.IllegalArgumentException: unknown setting [http.cors.allow‐origin] did you mean [http.cors.allow-origin]?
-> ```
+
 
 #### 4.1.3.2 修改jvm.option
 
@@ -433,6 +428,15 @@ unzip elasticsearch‐analysis‐ik‐7.6.1.zip
 
 ## 6.5 测试分词效果
 
+> `_analyze` 是一个API
+>
+> _analyze是Elasticsearch一个非常有用的API，它可以帮助你分析每一个field或者某个analyzer/tokenizer是如何分析和索引一段文字。
+> 返回结果字段含义：
+> token是一个实际被存储在索引中的词
+> position指明词在原文本中是第几个出现的
+> start_offset和end_offset表示词在原文本中占据的位置
+>
+
 ```txt
 POST _analyze
 {
@@ -440,6 +444,18 @@ POST _analyze
  "text":"我爱你中国"
 }
 ```
+
+> 单字拆分
+
+```txt
+POST _analyze
+{
+  "analyzer" : "whitespace",
+  "text" : "床前 明月光"
+}
+```
+
+> 按照空格拆分
 
 ```txt
 POST _analyze
