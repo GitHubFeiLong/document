@@ -91,3 +91,10 @@ elasticsearch.hosts: ["http://IP:9200"] #这里是elasticsearch的访问地址
 
 4. 重启elasticsearch 和 kibana。
 
+### 安装 elasticsearch-head
+
+[进入github下载 elasticsearch-head](https://github.com/mobz/elasticsearch-head/releases)
+
+下载完成后，解压进入目录，使用`npm i`命令进行下载包文件，然后使用启动命令`npm run start` 启动即可。当启动完成后，浏览器访问 http://localhost:9100 即可。
+
+> 注意:需要Node环境
