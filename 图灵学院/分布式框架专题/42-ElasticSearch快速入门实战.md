@@ -681,7 +681,9 @@ GET /es_db/_doc/_mget
 }
 ```
 
-> 中括号内也可以不写双引号：[1,2]`
+> 中括号内也可以不写双引号：[1,2]
+>
+> 注意：目前只发现对id生效，names使用无效
 
 **SQL:** `select * from student where id in (1,2)`
 

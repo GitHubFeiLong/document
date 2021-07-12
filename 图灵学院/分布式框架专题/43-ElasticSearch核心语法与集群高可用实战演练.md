@@ -6,7 +6,9 @@
 
 ## 1.批量获取文档数据
 
-批量获取文档数据是通过`_mget`的API来实现的
+批量获取文档数据是通过`_mget`的API来实现的。
+
+> 注意：只能使用`_id`;`_type`新版本可以省略
 
 **(1) 在URL中不指定`index`和`type`**
 
@@ -156,40 +158,16 @@ GET /es_db/_doc/_mget
 
 + actionName：表示操作类型，主要有create,index,delete和update
 
-
+> 注意：不要使用格式化后的json！！！(不要换行)
 
 **(1)批量创建文档create**
 
 ```json
 POST _bulk
-{
-  "create": {
-    "_index": "article",
-    "_type": "_doc",
-    "_id": 3
-  }
-}
-{
-  "id": 3,
-  "title": "白起老师1",
-  "content": "白起老师666",
-  "tags": ["java", "面向对"],
-  "create_time":1554015482530
-}
-{
-    "create": {
-        "_index": "article",
-        "_type": "_doc",
-        "_id": 4
-    }
-}
-{
-    "id": 4,
-    "title": "白起老师2",
-    "content": "白起老师NB",
-    "tags": ["java","面向对像"],
-    "create_time":1554015482530
-},
+{"create": {"_index": "article","_type": "_doc","_id": 3}}
+{"id": 3,"title": "白起老师1","content": "白起老师666","tags": ["java", "面向对"],"create_time":1554015482530}
+{"create": {"_index": "article","_type": "_doc","_id": 4}}
+{"id": 4,"title": "白起老师2", "content": "白起老师NB","tags": ["java","面向对像"],"create_time":1554015482530}
 ```
 
 **(2)普通创建或全量替换index**
@@ -197,11 +175,9 @@ POST _bulk
 ```json
 POST _bulk
 {"index":{"_index":"article", "_type":"_doc", "_id":3}}
-{"id":3,"title":"图灵徐庶老师(一)","content":"图灵学院徐庶老师666","tags":["j
-ava", "面向对象"],"create_time":1554015482530}
+{"id":3,"title":"图灵徐庶老师(一)","content":"图灵学院徐庶老师666","tags":["java", "面向对象"],"create_time":1554015482530}
 {"index":{"_index":"article", "_type":"_doc", "_id":4}}
-{"id":4,"title":"图灵诸葛老师(二)","content":"图灵学院诸葛老师NB","tags":["ja
-va", "面向对象"],"create_time":1554015482530}
+{"id":4,"title":"图灵诸葛老师(二)","content":"图灵学院诸葛老师NB","tags":["java", "面向对象"],"create_time":1554015482530}
 ```
 
 + 如果原文档不存在，则是创建
@@ -225,7 +201,7 @@ POST _bulk
 {"doc":{"create_time":1554018421008}}
 ```
 
-# 二.DSL语言高级查询1
+# 二.DSL语言高级查询
 
 ## 1.Query DSL概述
 
