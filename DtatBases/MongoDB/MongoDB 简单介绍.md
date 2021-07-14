@@ -30,7 +30,7 @@
 
 ### [数据库](https://docs.mongodb.com/manual/core/databases-and-collections/#databases)
 
-​		在MongoDB中，数据库保存一个或多个文档集合。为了选择要使用的数据库，在mongo shell中，发出use <db>语句，如下例所示:
+​		在MongoDB中，数据库保存一个或多个文档集合。为了选择要使用的数据库，在mongo shell中，发出use\<db>语句，如下例所示:
 
 ```bash
 use myDB
@@ -232,7 +232,7 @@ For [indexed collections](https://docs.mongodb.com/manual/indexes/), the values 
 1. 文件大小限制
 
      		2. 文档字段顺序
-     		3. _id字段
+     	 		3. _id字段
 
 #### 文件大小限制
 
