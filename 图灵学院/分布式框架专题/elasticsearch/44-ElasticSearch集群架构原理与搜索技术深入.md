@@ -381,11 +381,11 @@ GET /es_db/_search
 
 **best fields策略**： 搜索的document中的某一个field，尽可能多的匹配搜索条件。与之相反的是，尽可能多的字段匹配到搜索条件（**most fields策略**）。如百度搜索使用这种策略。
 
-**优点：精确匹配的数据可以尽可能的排列在最前端，且可以通过minimum_should_match来去除长尾数据，避免长尾数据字段对排序结果的影响。**
-
-**长尾数据**比如说我们搜索4个关键词，但很多文档只匹配1个，也显示出来了，这些文档其实不是我们想要的
-
-**缺点：相对排序不均匀。**
+> **优点：精确匹配的数据可以尽可能的排列在最前端，且可以通过minimum_should_match来去除长尾数据，避免长尾数据字段对排序结果的影响。**
+>
+> **长尾数据**比如说我们搜索4个关键词，但很多文档只匹配1个，也显示出来了，这些文档其实不是我们想要的。
+>
+> **缺点：相对排序不均匀。**
 
 **dis_max语法： 直接获取搜索的多条件中的，单条件query相关度分数最高的数据，以这个数据做相关度排序。**
 
@@ -415,7 +415,7 @@ GET /es_db/_search
 
 ### **5.5、基于tie_breaker参数优化dis_max搜索效果**
 
-dis_max是将多个搜索query条件中相关度分数最高的用于结果排序，忽略其他query分数，在某些情况下，可能还需要其他query条件中的相关度介入最终的结果排序，这个时候可以使用tie_breaker参数来优化dis_max搜索。tie_breaker参数代表的含义是：将其他query搜索条件的相关度分数乘以参数值，再参与到结果排序中。如果不定义此参数，相当于参数值为0。所以其他query条件的相关度分数被忽略。
+dis_max是将多个搜索query条件中相关度分数最高的用于结果排序，忽略其他query分数，在某些情况下，可能还需要其他query条件中的相关度介入最终的结果排序，这个时候可以使用tie_breaker参数来优化dis_max搜索。**tie_breaker**参数代表的含义是：将其他query搜索条件的相关度分数乘以参数值，再参与到结果排序中。如果不定义此参数，相当于参数值为0。所以其他query条件的相关度分数被忽略。
 
 ```txt
 GET /es_db/_search
@@ -489,7 +489,9 @@ GET /es_db/_search
 
 ### **5.7、cross fields搜索**
 
-**cross fields** ： 一个唯一的标识，分部在多个fields中，使用这种唯一标识搜索数据就称为cross fields搜索。如：人名可以分为姓和名，地址可以分为省、市、区县、街道等。那么使用人名或地址来搜索document，就称为cross fields搜索。
+**cross fields** ： 一个唯一的标识，分布在多个fields中，使用这种唯一标识搜索数据就称为cross fields搜索。
+
+如：人名可以分为姓和名，地址可以分为省、市、区县、街道等。那么使用人名或地址来搜索document，就称为cross fields搜索。
 
 实现这种搜索，一般都是使用most fields搜索策略。因为这就不是一个field的问题。
 
@@ -513,13 +515,13 @@ GET /es_db/_search
 
 上述语法代表的是，搜索条件中的java必须在name或remark字段中匹配，developer也必须在name或remark字段中匹配。
 
-**most field策略问题：most fields策略是尽可能匹配更多的字段，所以会导致精确搜索结果排序问题。又因为cross fields搜索，不能使用minimum_should_match来去除长尾数据。**
+> **most field策略问题：most fields策略是尽可能匹配更多的字段，所以会导致精确搜索结果排序问题。又因为cross fields搜索，不能使用minimum_should_match来去除长尾数据。所以在使用most fields和cross fields策略搜索数据的时候，都有不同的缺陷。所以商业项目开发中，都推荐使用best fields策略实现搜索。**
 
-**所以在使用most fields和cross fields策略搜索数据的时候，都有不同的缺陷。所以商业项目开发中，都推荐使用best fields策略实现搜索。**
+
 
 ### **5.8、copy_to组合fields**
 
-京东中，如果在搜索框中输入“手机”，点击搜索，那么是在商品的类型名称、商品的名称、商品的卖点、商品的描述等字段中，哪一个字段内进行数据的匹配？如果使用某一个字段做搜索不合适，那么使用_all做搜索是否合适？也不合适，因为_all字段中可能包含图片，价格等字段。
+京东中，如果在搜索框中输入“手机”，点击搜索，那么是在商品的类型名称、商品的名称、商品的卖点、商品的描述等字段中，哪一个字段内进行数据的匹配？如果使用某一个字段做搜索不合适，那么使用`_all`做搜索是否合适？也不合适，因为`_all`字段中可能包含图片，价格等字段。
 
 假设，有一个字段，其中的内容包括(但不限于)：商品类型名称、商品名称、商品卖点等字段的数据内容。是否可以在这个特殊的字段上进行数据搜索匹配？
 
@@ -589,8 +591,6 @@ GET _search
 }
 ```
 
-
-
 如果需要的结果是有特殊要求，如：hello world必须是一个完整的短语，不可分割；或document中的field内，包含的hello和world单词，且两个单词之间离的越近，相关度分数越高。那么这种特殊要求的搜索就是近似搜索。包括hell搜索条件在hello world数据中搜索，包括h搜索提示等都数据近似搜索的一部分。
 
 如何上述特殊要求的搜索，使用match搜索语法就无法实现了。
@@ -614,7 +614,7 @@ GET _search
 
 #### **1)、 match phrase原理 -- term position**
 
-ES是如何实现match phrase短语搜索的？其实在ES中，使用match phrase做搜索的时候，也是和match类似，首先对搜索条件进行分词-analyze。将搜索条件拆分成hello和world。既然是分词后再搜索，ES是如何实现短语搜索的？
+ES是如何实现match phrase短语搜索的？其实在ES中，使用match phrase做搜索的时候，也是和match类似，首先对搜索条件进行分词`_analyze`。将搜索条件拆分成hello和world。既然是分词后再搜索，ES是如何实现短语搜索的？
 
 这里涉及到了倒排索引的建立过程。在倒排索引建立的时候，ES会先对document数据进行分词，如：
 
@@ -687,15 +687,12 @@ hello  spark
 
 接下来，可以根据slop参数执行单词的移动。
 
-下标 ：	0		1		2		3
-
-doc  ：	hello	        world	      java		spark
-
-搜索 ：     hello	        spark
-
-移动1：	hello			      spark
-
-移动2：	hello					       spark
+| 下标  | 0     | 1     | 2     | 3     |
+| ----- | ----- | ----- | ----- | ----- |
+| doc   | hello | world | java  | spark |
+| 搜索  | hello | spark |       |       |
+| 移动1 | hello |       | spark |       |
+| 移动2 | hello |       |       | spark |
 
 匹配成功，不需要移动第三次即可匹配。
 
@@ -713,19 +710,14 @@ spark   hello
 
 接下来，可以根据slop参数执行单词的移动。
 
-下标 ：	0		1		2		3
-
-doc  ：	hello	        world	       java	      spark
-
-搜索 ：     spark	        hello
-
-移动1：			spark/hello
-
-移动2：	hello	        spark
-
-移动3：	hello			        spark
-
-移动4：	hello					      spark
+| 下标  | 0     | 1           | 2     | 3     |
+| ----- | ----- | ----------- | ----- | ----- |
+| doc   | hello | world       | java  | spark |
+| 搜索  | spark | hello       |       |       |
+| 移动1 |       | spark/hello |       |       |
+| 移动2 | hello | spark       |       |       |
+| 移动3 | hello |             | spark |       |
+| 移动4 | hello |             |       | spark |
 
 匹配成功，不需要移动第五次即可匹配。
 
@@ -815,13 +807,13 @@ GET /test_a/_search
 
 ## **六.经验分享**
 
-使用match和proximity search实现召回率和精准度平衡。
+使用**match**和**proximity search**实现召回率和精准度平衡。
 
-召回率：召回率就是搜索结果比率，如：索引A中有100个document，搜索时返回多少个document，就是召回率（recall）。
+**召回率**：召回率就是搜索结果比率，如：索引A中有100个document，搜索时返回多少个document，就是召回率（recall）。
 
-精准度：就是搜索结果的准确率，如：搜索条件为hello java，在搜索结果中尽可能让短语匹配和hello java离的近的结果排序靠前，就是精准度（precision）。
+**精准度**：就是搜索结果的准确率，如：搜索条件为hello java，在搜索结果中尽可能让短语匹配和hello java离的近的结果排序靠前，就是精准度（precision）。
 
-如果在搜索的时候，只使用match phrase语法，会导致召回率底下，因为搜索结果中必须包含短语（包括proximity search）。
+如果在搜索的时候，只使用match phrase语法，会导致召回率低下，因为搜索结果中必须包含短语（包括proximity search）。
 
 如果在搜索的时候，只使用match语法，会导致精准度底下，因为搜索结果排序是根据相关度分数算法计算得到。
 
@@ -914,9 +906,9 @@ ES中也有通配符。但是和java还有数据库不太一样。通配符可�
 
 常用通配符： 
 
-? - 一个任意字符
+`?` - 一个任意字符
 
-\* - 0~n个任意字符
+`*` - 0~n个任意字符
 
 ```txt
 GET /test_a/_search
@@ -939,11 +931,11 @@ ES支持正则表达式。可以在倒排索引或keyword类型字段中使用�
 
 常用符号：
 
-[] - 范围，如： [0-9]是0~9的范围数字
+`[]` - 范围，如： [0-9]是0~9的范围数字
 
-. - 一个字符
+`. `- 一个字符
 
-\+ - 前面的表达式可以出现多次。
+`+` - 前面的表达式可以出现多次。
 
 ```txt
 GET /test_a/_search
