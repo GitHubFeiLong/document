@@ -4,19 +4,19 @@
 
 ### **1、Elasticsearch的节点类型**
 
-在Elasticsearch主要分成两类节点，一类是Master，一类是DataNode。
+​		在Elasticsearch主要分成两类节点，一类是**Master**，一类是**DataNode**。
 
 #### **1.1  Master节点**
 
-在Elasticsearch启动时，会选举出来一个Master节点。当某个节点启动后，然后使用`Zen Discovery`机制找到集群中的其他节点，并建立连接。
+​		在Elasticsearch启动时，会选举出来一个Master节点。当某个节点启动后，然后使用`Zen Discovery`机制找到集群中的其他节点，并建立连接。
 
-discovery.seed_hosts: ["192.168.21.130", "192.168.21.131", "192.168.21.132"]
+> discovery.seed_hosts: ["192.168.21.130", "192.168.21.131", "192.168.21.132"]
 
-并从候选主节点中选举出一个主节点。
+​	并从候选主节点中选举出一个主节点。
 
-cluster.initial_master_nodes: ["node1", "node2","node3"]
+> cluster.initial_master_nodes: ["node1", "node2","node3"]
 
-**Master节点主要负责：**
+**Master节点：**
 
 1. 管理索引（创建索引、删除索引）、分配分片
 2.  维护元数据
@@ -28,11 +28,9 @@ cluster.initial_master_nodes: ["node1", "node2","node3"]
 
 #### **1.2  DataNode节点**
 
-在Elasticsearch集群中，会有N个DataNode节点。DataNode节点主要负责：**数据写入、数据检索**。
+​		在Elasticsearch集群中，会有N个DataNode节点。DataNode节点主要负责：**数据写入、数据检索**。大部分Elasticsearch的压力都在DataNode节点上
 
-大部分Elasticsearch的压力都在DataNode节点上
-
-**在生产环境中，内存最好配置大一些**
+>  在生产环境中，内存最好配置大一些
 
 ## **二 、分片和副本机制**
 
@@ -97,7 +95,7 @@ GET /_cat/indices?v
 
    `shard = hash(routing) % number_of_primary_shards`
 
-   routing 是一个可变值，默认是文档的 _id
+   > routing 是一个可变值，默认是文档的 _id
 
 3. coordinating node会进行路由，将请求转发给对应的primary shard所在的DataNode（假设primary shard在node1、replica shard在node2）
 
@@ -109,13 +107,13 @@ GET /_cat/indices?v
 
 ![image-20210713090431044](44-ElasticSearch集群架构原理与搜索技术深入.assets/image-20210713090431044.png)
 
- client发起查询请求，某个DataNode接收到请求，该DataNode就会成为**协调节点（Coordinating Node）**。
+1. client发起查询请求，某个DataNode接收到请求，该DataNode就会成为**协调节点（Coordinating Node）**。
 
- 协调节点（Coordinating Node）将查询请求广播到每一个数据节点，这些数据节点的分片会处理该查询请求每个分片进行数据查询，将符合条件的数据放在一个优先队列中，并将这些数据的文档ID、节点信息、分片信息返回给协调节点。
+2. 协调节点（Coordinating Node）将查询请求广播到每一个数据节点，这些数据节点的分片会处理该查询请求每个分片进行数据查询，将符合条件的数据放在一个优先队列中，并将这些数据的文档ID、节点信息、分片信息返回给协调节点。
 
-协调节点将所有的结果进行汇总，并进行全局排序。
+3. 协调节点将所有的结果进行汇总，并进行全局排序。
 
-协调节点向包含这些文档ID的分片发送get请求，对应的分片将文档数据返回给协调节点，最后协调节点将数据返回给客户端。
+4. 协调节点向包含这些文档ID的分片发送get请求，对应的分片将文档数据返回给协调节点，最后协调节点将数据返回给客户端。
 
 ## **四、Elasticsearch准实时索引实现**
 
@@ -123,7 +121,7 @@ GET /_cat/indices?v
 
 当数据写入到ES分片时，会首先写入到内存中，然后通过内存的buffer生成一个**segment**，并刷到**文件系统缓存**中，数据可以被检索（注意不是直接刷到磁盘）
 
-**ES中默认1秒，refresh一次**
+> ES中默认1秒，refresh一次
 
 ### **4.2  写translog保障容错**
 
@@ -172,7 +170,7 @@ GET /es_db/_search
 
 上述语法中，如果将`operator`的值改为`or`。则与第一个案例搜索语法效果一致。默认的ES执行搜索的时候，operator就是or。
 
-如果在搜索的结果document中，需要remark字段中包含多个搜索词条中的一定比例，可以使用下述语法实现搜索。其中`minimum_should_match`可以使用百分比或固定数字。百分比代表query搜索条件中词条百分比，如果无法整除，**向下匹配**（如，query条件有3个单词，如果使用百分比提供精准度计算，那么是无法除尽的，如果需要至少匹配两个单词，则需要用67%来进行描述。如果使用66%描述，ES则认为匹配一个单词即可。）。固定数字代表query搜索条件中的词条，至少需要匹配多少个。
+如果在搜索的结果document中，需要remark字段中包含多个搜索词条中的一定比例，可以使用下述语法实现搜索。其中**`minimum_should_match`**可以使用百分比或固定数字。百分比代表query搜索条件中词条百分比，如果无法整除，**向下匹配**（如，query条件有3个单词，如果使用百分比提供精准度计算，那么是无法除尽的，如果需要至少匹配两个单词，则需要用67%来进行描述。如果使用66%描述，ES则认为匹配一个单词即可。）。固定数字代表query搜索条件中的词条，至少需要匹配多少个。
 
 ```txt
 GET /es_db/_search
@@ -415,7 +413,7 @@ GET /es_db/_search
 }
 ```
 
-**5.5、基于tie_breaker参数优化dis_max搜索效果**
+### **5.5、基于tie_breaker参数优化dis_max搜索效果**
 
 dis_max是将多个搜索query条件中相关度分数最高的用于结果排序，忽略其他query分数，在某些情况下，可能还需要其他query条件中的相关度介入最终的结果排序，这个时候可以使用tie_breaker参数来优化dis_max搜索。tie_breaker参数代表的含义是：将其他query搜索条件的相关度分数乘以参数值，再参与到结果排序中。如果不定义此参数，相当于参数值为0。所以其他query条件的相关度分数被忽略。
 
@@ -442,7 +440,7 @@ GET /es_db/_search
 }
 ```
 
-**5.6、使用multi_match简化dis_max+tie_breaker**
+### **5.6、使用multi_match简化dis_max+tie_breaker**
 
 ES中相同结果的搜索也可以使用不同的语法语句来实现。不需要特别关注，只要能够实现搜索，就是完成任务！
 
@@ -489,9 +487,9 @@ GET /es_db/_search
 }
 ```
 
-**5.7、cross fields搜索**
+### **5.7、cross fields搜索**
 
-cross fields ： 一个唯一的标识，分部在多个fields中，使用这种唯一标识搜索数据就称为cross fields搜索。如：人名可以分为姓和名，地址可以分为省、市、区县、街道等。那么使用人名或地址来搜索document，就称为cross fields搜索。
+**cross fields** ： 一个唯一的标识，分部在多个fields中，使用这种唯一标识搜索数据就称为cross fields搜索。如：人名可以分为姓和名，地址可以分为省、市、区县、街道等。那么使用人名或地址来搜索document，就称为cross fields搜索。
 
 实现这种搜索，一般都是使用most fields搜索策略。因为这就不是一个field的问题。
 
@@ -519,7 +517,7 @@ GET /es_db/_search
 
 **所以在使用most fields和cross fields策略搜索数据的时候，都有不同的缺陷。所以商业项目开发中，都推荐使用best fields策略实现搜索。**
 
-**5.8、copy_to组合fields**
+### **5.8、copy_to组合fields**
 
 京东中，如果在搜索框中输入“手机”，点击搜索，那么是在商品的类型名称、商品的名称、商品的卖点、商品的描述等字段中，哪一个字段内进行数据的匹配？如果使用某一个字段做搜索不合适，那么使用_all做搜索是否合适？也不合适，因为_all字段中可能包含图片，价格等字段。
 
@@ -539,7 +537,7 @@ GET /es_db/_search
 
 
 
-copy_to : 就是将多个字段，复制到一个字段中，实现一个多字段组合。copy_to可以解决cross fields搜索问题，在商业项目中，也用于解决搜索条件默认字段问题。
+**copy_to** : 就是将多个字段，复制到一个字段中，实现一个多字段组合。copy_to可以解决cross fields搜索问题，在商业项目中，也用于解决搜索条件默认字段问题。
 
 如果需要使用copy_to语法，则需要在定义index的时候，手工指定mapping映射策略。
 
@@ -574,7 +572,7 @@ PUT /es_db/_mapping
 
 上述的mapping定义中，是新增了4个字段，分别是provice、city、street、address，其中provice、city、street三个字段的值，会自动复制到address字段中，实现一个字段的组合。那么在搜索地址的时候，就可以在address字段中做条件匹配，从而避免most fields策略导致的问题。在维护数据的时候，不需对address字段特殊的维护。因为address字段是一个组合字段，是由ES自动维护的。类似java代码中的推导属性。在存储的时候，未必存在，但是在逻辑上是一定存在的，因为address是由3个物理存在的属性province、city、street组成的。
 
-**5.9、近似匹配**
+### **5.9、近似匹配**
 
 前文都是精确匹配。如doc中有数据java assistant，那么搜索jave是搜索不到数据的。因为jave单词在doc中是不存在的。
 
@@ -597,7 +595,7 @@ GET _search
 
 如何上述特殊要求的搜索，使用match搜索语法就无法实现了。
 
-**5.10、match phrase**
+### **5.10、match phrase**
 
 短语搜索。就是搜索条件不分词。代表搜索条件不可分割。
 
@@ -614,7 +612,7 @@ GET _search
 }
 ```
 
-**-1)、 match phrase原理 -- term position**
+#### **1)、 match phrase原理 -- term position**
 
 ES是如何实现match phrase短语搜索的？其实在ES中，使用match phrase做搜索的时候，也是和match类似，首先对搜索条件进行分词-analyze。将搜索条件拆分成hello和world。既然是分词后再搜索，ES是如何实现短语搜索的？
 
@@ -667,7 +665,7 @@ GET _analyze
 
 从上述结果中，可以看到。ES在做分词的时候，除了将数据切分外，还会保留一个position。position代表的是这个词在整个数据中的下标。当ES执行match phrase搜索的时候，首先将搜索条件hello world分词为hello和world。然后在倒排索引中检索数据，如果hello和world都在某个document的某个field出现时，那么检查这两个匹配到的单词的position是否是连续的，如果是连续的，代表匹配成功，如果是不连续的，则匹配失败。
 
-**-2). match phrase搜索参数 -- slop**
+#### **2). match phrase搜索参数 -- slop**
 
 在做搜索操作的是，如果搜索参数是hello spark。而ES中存储的数据是hello world, java spark。那么使用match phrase则无法搜索到。在这个时候，可以使用match来解决这个问题。但是，当我们需要在搜索的结果中，做一个特殊的要求：hello和spark两个单词距离越近，document在结果集合中排序越靠前，这个时候再使用match则未必能得到想要的结果。
 
@@ -815,7 +813,7 @@ GET /test_a/_search
 
 
 
-**六.经验分享**
+## **六.经验分享**
 
 使用match和proximity search实现召回率和精准度平衡。
 
@@ -887,7 +885,7 @@ GET /test_a/_search
 }
 ```
 
-七、前缀搜索 prefix search
+## 七、前缀搜索 prefix search
 
 使用前缀匹配实现搜索能力。通常针对keyword类型字段，也就是不分词的字段。
 
@@ -910,7 +908,7 @@ GET /test_a/_search
 
 前缀搜索效率比较低。前缀搜索不会计算相关度分数。前缀越短，效率越低。如果使用前缀搜索，建议使用长前缀。因为前缀搜索需要扫描完整的索引内容，所以前缀越长，相对效率越高。
 
-**八、通配符搜索**
+## **八、通配符搜索**
 
 ES中也有通配符。但是和java还有数据库不太一样。通配符可以在倒排索引中使用，也可以在keyword类型字段中使用。
 
@@ -935,7 +933,7 @@ GET /test_a/_search
 
 性能也很低，也是需要扫描完整的索引。不推荐使用。
 
-**九、正则搜索**
+## **九、正则搜索**
 
 ES支持正则表达式。可以在倒排索引或keyword类型字段中使用。
 
@@ -960,7 +958,7 @@ GET /test_a/_search
 
 性能也很低，需要扫描完整索引。
 
-**十、搜索推荐**
+## **十、搜索推荐**
 
 搜索推荐： search as your type， 搜索提示。如：索引中有若干数据以“hello”开头，那么在输入hello的时候，推荐相关信息。（类似百度输入框）
 
@@ -989,7 +987,7 @@ GET /test_a/_search
 
 因为效率较低，如果必须使用，则一定要使用参数max_expansions。
 
-**十一、fuzzy模糊搜索技术**
+## **十一、fuzzy模糊搜索技术**
 
 搜索的时候，可能搜索条件文本输入错误，如：hello world -> hello word。这种拼写错误还是很常见的。fuzzy技术就是用于解决错误拼写的（在英文中很有效，在中文中几乎无效。）。其中fuzziness代表value的值word可以修改多少个字母来进行拼写错误的纠正（修改字母的数量包含字母变更，增加或减少字母。）。f代表要搜索的字段名称。
 
