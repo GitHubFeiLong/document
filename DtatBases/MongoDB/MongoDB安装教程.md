@@ -110,7 +110,7 @@ D:\work\databases\mongodb-windows-x86_64-4.4.2-rc1\mongodb-win32-x86_64-windows-
 > Error opening config file: Is a directory
 > try 'mongod --help' for more information
 >
-> 是因为path里面有空格，此时需要使用双引号将路径包起来：
+> 是因为path里面有空格（相对路径也不可以），此时需要使用双引号将**绝对路径**包起来：
 >
 > D:\>mongod -f  "Program Files (x86)\\mongod.conf"
 

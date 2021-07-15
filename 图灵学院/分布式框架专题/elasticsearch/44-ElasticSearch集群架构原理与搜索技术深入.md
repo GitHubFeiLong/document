@@ -415,7 +415,9 @@ GET /es_db/_search
 
 ### **5.5、基于tie_breaker参数优化dis_max搜索效果**
 
-dis_max是将多个搜索query条件中相关度分数最高的用于结果排序，忽略其他query分数，在某些情况下，可能还需要其他query条件中的相关度介入最终的结果排序，这个时候可以使用tie_breaker参数来优化dis_max搜索。**tie_breaker**参数代表的含义是：将其他query搜索条件的相关度分数乘以参数值，再参与到结果排序中。如果不定义此参数，相当于参数值为0。所以其他query条件的相关度分数被忽略。
+**dis_max**是将多个搜索query条件中相关度分数最高的用于结果排序，忽略其他query分数，在某些情况下，可能还需要其他query条件中的相关度介入最终的结果排序，这个时候可以使用**tie_breaker**参数来优化dis_max搜索。
+
+**tie_breaker**参数代表的含义是：将其他query搜索条件的相关度分数乘以参数值，再参与到结果排序中。如果不定义此参数，相当于参数值为0。所以其他query条件的相关度分数被忽略。
 
 ```txt
 GET /es_db/_search
@@ -663,13 +665,13 @@ GET _analyze
 }
 ```
 
-从上述结果中，可以看到。ES在做分词的时候，除了将数据切分外，还会保留一个position。position代表的是这个词在整个数据中的下标。当ES执行match phrase搜索的时候，首先将搜索条件hello world分词为hello和world。然后在倒排索引中检索数据，如果hello和world都在某个document的某个field出现时，那么检查这两个匹配到的单词的position是否是连续的，如果是连续的，代表匹配成功，如果是不连续的，则匹配失败。
+从上述结果中，可以看到。ES在做分词的时候，除了将数据切分外，还会保留一个**position**。position代表的是这个词在整个数据中的下标。当ES执行match phrase搜索的时候，首先将搜索条件hello world分词为hello和world。然后在倒排索引中检索数据，如果hello和world都在某个document的某个field出现时，那么检查这两个匹配到的单词的position是否是连续的，如果是连续的，代表匹配成功，如果是不连续的，则匹配失败。
 
 #### **2). match phrase搜索参数 -- slop**
 
 在做搜索操作的是，如果搜索参数是hello spark。而ES中存储的数据是hello world, java spark。那么使用match phrase则无法搜索到。在这个时候，可以使用match来解决这个问题。但是，当我们需要在搜索的结果中，做一个特殊的要求：hello和spark两个单词距离越近，document在结果集合中排序越靠前，这个时候再使用match则未必能得到想要的结果。
 
-ES的搜索中，对match phrase提供了参数slop。slop代表match phrase短语搜索的时候，单词最多移动多少次，可以实现数据匹配。在所有匹配结果中，多个单词距离越近，相关度评分越高，排序越靠前。
+ES的搜索中，对match phrase提供了参数**slop**。slop代表match phrase短语搜索的时候，单词最多移动多少次，可以实现数据匹配。在所有匹配结果中，多个单词距离越近，相关度评分越高，排序越靠前。
 
 这种使用slop参数的match phrase搜索，就称为近似匹配（proximity search）
 
