@@ -34,6 +34,7 @@ bootstrap.system_call_filter: false
 bootstrap.memory_lock: false
 http.cors.enabled: true
 http.cors.allow-origin: "*"
+action.destructive_requires_name: true #为了安全起见，防止恶意删除索引，删除时必须指定索引名：
 ```
 
 修改`config\jvm.options`,指定jvm内存大小
@@ -75,6 +76,7 @@ http.cors.allow-origin: "*"
 server.port: 5601
 server.host: "服务器IP"
 elasticsearch.hosts: ["http://IP:9200"] #这里是elasticsearch的访问地址
+i18n.locale: "zh-CN" #设置界面语言为中文
 ```
 
 启动 `bin\kibana.bat`，访问 http://localhost:5601

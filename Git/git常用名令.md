@@ -41,6 +41,9 @@ $ git commit
 
 # 附加消息提交
 $ git commit -m 'commit message'
+
+# 修改提交的注释
+$ git commit --amend
 ```
 
 
@@ -176,7 +179,7 @@ $ git commit -m 'commit message'
    ![image-20210714124912275](git常用名令.assets/image-20210714124912275.png)
 
    ```cmd
-D:\test>type txt.txt
+   D:\test>type txt.txt
    add line 1
    ```
 
@@ -218,9 +221,9 @@ D:\test>type txt.txt
    ![image-20210714125420380](git常用名令.assets/image-20210714125420380.png)
 
    ```cmd
-D:\test>type txt.txt
+   D:\test>type txt.txt
    add line 1
-add line 2
+   add line 2
    add line 3
    ```
 
@@ -348,6 +351,9 @@ $ git log --author="username"
 
 # 显示某个文件的所有修改
 $ git log -p <file>
+
+# 指定显示最近几条log
+$ git log -n 1
 ```
 
 显示搜索内容：
