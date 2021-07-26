@@ -72,5 +72,11 @@
             <artifactId>elasticsearch</artifactId>
             <version>${es.version}</version>
         </dependency>
+        <!--sql功能-->
+        <dependency>
+            <groupId>org.elasticsearch.plugin</groupId>
+            <artifactId>x-pack-sql-jdbc</artifactId>
+            <version>7.13.2</version>
+        </dependency>
     </dependencies>
 </project>

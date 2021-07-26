@@ -169,5 +169,6 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.13.3" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch:jna:5.7.0-1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.elasticsearch:elasticsearch-plugin-classloader:7.13.2" level="project" />
+    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:x-pack-sql-jdbc:7.13.2" level="project" />
   </component>
 </module>
