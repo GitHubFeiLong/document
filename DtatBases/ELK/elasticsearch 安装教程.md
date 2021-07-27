@@ -1,20 +1,16 @@
-# elasticsearch 安装教程
+# ELK安装教程
 
-## 下载
+## Windows
 
-进入网站 [官网下载](https://www.elastic.co/cn/start)，下载:elasticsearch和 Kibana
+### Elasticsearch
 
-进入GitHub下载ik分词插件
+#### 下载解压
 
-> 注意：版本都要一致
+[官方下载]([Past Releases of Elastic Stack Software | Elastic](https://www.elastic.co/cn/downloads/past-releases#elasticsearch))， 选择指定的产品和版本，将下载好的压缩包进行解压，**解压后的目录，不能出现中文和空格！**
 
-## Windows下安装配置教程
+#### 修改配置文件
 
-以下所有软件和插件的解压目录，均不能出现中文和空格！
-
-### 配置elasticsearch
-
-修改`config\elasticsearch.yml`
+1. 修改`config\elasticsearch.yml`
 
 ```yaml
 #配置集群名称
@@ -37,16 +33,16 @@ http.cors.allow-origin: "*"
 action.destructive_requires_name: true #为了安全起见，防止恶意删除索引，删除时必须指定索引名：
 ```
 
-修改`config\jvm.options`,指定jvm内存大小
+2. 修改`config\jvm.options`,指定jvm内存大小
 
 ```txt
 -Xms500m
 -Xmx500m
 ```
 
-启动`bin\elasticsearch.bat`
+#### 启动
 
-访问 http://localhost:9200
+启动`bin\elasticsearch.bat`，访问 http://localhost:9200
 
 ```json
 {
@@ -68,9 +64,33 @@ action.destructive_requires_name: true #为了安全起见，防止恶意删除�
 }
 ```
 
-### 配置Kibana
 
-解压文件，修改配置文件`config\kibana.yml`
+
+### 插件安装
+
+##### IK分词器
+
+1. 在plugins下新建文件夹`ik`
+
+2. 将下载的IK分词器压缩包复制到elasticsearch根目录的`plugins\ik`下。
+
+3. 将压缩文件内容，提取到当前文件下即可,然后删除压缩包。
+
+   ![image-20210707213040354](ELK安装教程.assets/image-20210707213040354.png)
+
+4. 重启elasticsearch
+
+
+
+### Kibana
+
+#### 下载解压
+
+[下载](https://www.elastic.co/cn/downloads/past-releases#kibana)， 选择指定的产品和版本，将下载好的压缩包进行解压，**解压后的目录，不能出现中文和空格！**
+
+#### 修改配置文件
+
+`config\kibana.yml`
 
 ```yaml
 server.port: 5601
@@ -81,17 +101,7 @@ i18n.locale: "zh-CN" #设置界面语言为中文
 
 启动 `bin\kibana.bat`，访问 http://localhost:5601
 
-### 配置分词器
-
-1. 在plugins下新建文件夹`ik`
-
-2. 将下载的IK分词器压缩包复制到elasticsearch根目录的`plugins\ik`下。
-
-3. 将压缩文件内容，提取到当前文件下即可,然后删除压缩包。
-
-   ![image-20210707213040354](elasticsearch 安装教程.assets/image-20210707213040354.png)
-
-4. 重启elasticsearch 和 kibana。
+4. 
 
 ### 安装 elasticsearch-head
 
