@@ -70,6 +70,8 @@ action.destructive_requires_name: true #为了安全起见，防止恶意删除�
 
 ##### IK分词器
 
+[github下载](https://github.com/medcl/elasticsearch-analysis-ik/releases)， 选择和Elasticsearch相同的版本号下载。
+
 1. 在plugins下新建文件夹`ik`
 
 2. 将下载的IK分词器压缩包复制到elasticsearch根目录的`plugins\ik`下。
@@ -101,8 +103,6 @@ i18n.locale: "zh-CN" #设置界面语言为中文
 
 启动 `bin\kibana.bat`，访问 http://localhost:5601
 
-4. 
-
 ### 安装 elasticsearch-head
 
 [进入github下载 elasticsearch-head](https://github.com/mobz/elasticsearch-head/releases)
@@ -110,3 +110,12 @@ i18n.locale: "zh-CN" #设置界面语言为中文
 下载完成后，解压进入目录，使用`npm i`命令进行下载包文件，然后使用启动命令`npm run start` 启动即可。当启动完成后，浏览器访问 http://localhost:9100 即可。
 
 > 注意:需要Node环境
+
+
+
+### 安装Logstash
+
+#### 下载解压
+
+[官方下载](https://www.elastic.co/cn/downloads/past-releases#logstash)，选择Elasticsearch相同的版本进行下载，将下载好的压缩包进行解压，**解压后的目录，不能出现中文和空格！**
+
