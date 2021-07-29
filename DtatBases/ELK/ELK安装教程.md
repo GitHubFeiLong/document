@@ -119,3 +119,10 @@ i18n.locale: "zh-CN" #设置界面语言为中文
 
 [官方下载](https://www.elastic.co/cn/downloads/past-releases#logstash)，选择Elasticsearch相同的版本进行下载，将下载好的压缩包进行解压，**解压后的目录，不能出现中文和空格！**
 
+#### 启动
+
+```bash
+cd logstash-7.13.2
+.\bin\logstash.bat -e "input { stdin { } } output { stdout {} }"
+```
+
