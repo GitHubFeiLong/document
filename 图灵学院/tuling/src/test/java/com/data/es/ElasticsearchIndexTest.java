@@ -187,7 +187,7 @@ public class ElasticsearchIndexTest {
         };
 
         //执行创建索引库
-        client.indices().createAsync(createIndexRequest, RequestOptions.DEFAULT, listener);
+        indices.createAsync(createIndexRequest, RequestOptions.DEFAULT, listener);
 
         try {
             Thread.sleep(5000);
@@ -219,7 +219,7 @@ public class ElasticsearchIndexTest {
      * @throws IOException
      */
     @Test
-    public void testDeleteIndexAsync() throws IOException, InterruptedException {
+    public void testDeleteIndexAsync() throws InterruptedException {
         //创建删除索引请求
         DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("itheima_book");
         //        执行

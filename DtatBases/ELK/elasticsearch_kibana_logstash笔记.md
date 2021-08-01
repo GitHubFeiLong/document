@@ -129,6 +129,8 @@ l  不能分词。如搜索“笔记本电脑”，只能搜索完全和关键�
 
 倒排索引。数据存储时，经行分词建立term索引库。见画图。
 
+![03-全文检索](elasticsearch_kibana_logstash笔记.assets/03-全文检索.jpg)
+
 倒排索引源于实际应用中需要根据属性的值来查找记录。这种索引表中的每一项都包括一个属性值和具有该属性值的各记录的地址。由于不是由记录来确定属性值，而是由属性值来确定记录的位置，因而称为倒排索引(inverted index)。带有倒排索引的文件我们称为倒排[索引文件](https://baike.baidu.com/item/索引文件)，简称[倒排文件](https://baike.baidu.com/item/倒排文件/4137688)(inverted file)。
 
 #### Lucene
@@ -234,7 +236,7 @@ Elasticsearch：基于lucene，封装了许多lucene底层功能，提供简单�
 
 #### 2 Cluster：集群
 
-包含一个或多个启动着es实例的机器群。通常一台机器起一个es实例。同一网络下，集名一样的多个es实例自动组成集群，自动均衡分片等行为。默认集群名为“elasticsearch”。
+包含一个或多个启动着es实例的机器群。通常一台机器起一个es实例。同一网络下，集群名一样的多个es实例自动组成集群，自动均衡分片等行为。默认集群名为“elasticsearch”。
 
 #### 3 Node：节点
 
@@ -414,7 +416,7 @@ node.max_local_storage_nodes:
 
 日志文件设置，ES使用log4j，注意日志级别的配置。
 
-### 4、启动Elasticsearch：bin\elasticsearch.bat，es的特点就是开箱即，无需配置，启动即可。
+### 4、启动Elasticsearch：bin\elasticsearch.bat，es的特点就是开箱即用，无需配置，启动即可。
 
 注意：es7 windows版本不支持机器学习，所以elasticsearch.yml中添加如下几个参数：
 
@@ -423,7 +425,7 @@ node.name: node-1
 cluster.initial_master_nodes: ["node-1"]  
 xpack.ml.enabled: false 
 http.cors.enabled: true
-http.cors.allow-origin: /.*/
+http.cors.allow-origin: "*"
 ```
 
 ### 5、检查ES是否启动成功：浏览器访问http://localhost:9200
@@ -780,41 +782,23 @@ PUT /book/_doc/3
 {
   "_index" : "book",
   "_type" : "_doc",
-
   "_id" : "1",
-
-  "_version" : 4,
-
-  "_seq_no" : 5,
-
+  "_version" : 1,
+  "_seq_no" : 0,
   "_primary_term" : 1,
-
   "found" : true,
-
   "_source" : {
-
     "name" : "Bootstrap开发",
-
     "description" : "Bootstrap是由Twitter推出的一个前台页面开发css框架，是一个非常流行的开发框架，此框架集成了多种页面效果。此开发框架包含了大量的CSS、JS程序代码，可以帮助开发者（尤其是不擅长css页面开发的程序人员）轻松的实现一个css，不受浏览器限制的精美界面css效果。",
-
     "studymodel" : "201002",
-
     "price" : 38.6,
-
     "timestamp" : "2019-08-25 19:11:35",
-
     "pic" : "group1/M00/00/00/wKhlQFs6RCeAY0pHAAJx5ZjNDEM428.jpg",
-
     "tags" : [
-
       "bootstrap",
-
-      "开发"
-
+      "dev"
     ]
-
   }
-
 }
 ```
 
@@ -857,12 +841,17 @@ PUT /book/_doc/1
 
 ### 5.4.5 修改图书：更新文档
 
-语法：POST  /{index}/type /{id}/_update
-
-或者POST  /{index}/_update/{id}
+语法：`POST  /{index}/type /{id}/_update` 或者`POST  /{index}/_update/{id}`
 
 ```json
-POST /book/_update/1/ 
+POST /book/_doc/1/_update
+{
+  "doc": {
+   "name": " Bootstrap开发教程高级"
+  }
+}
+
+POST /book/_update/1
 {
   "doc": {
    "name": " Bootstrap开发教程高级"
@@ -949,11 +938,11 @@ DELETE /book/_doc/1
 
 -  含义：此文档属于哪个索引
 -  原则：类似数据放在一个索引中。数据库中表的定义规则。如图书信息放在book索引中，员工信息放在employee索引中。各个索引存储和搜索时互不影响。
--  定义规则：英文小写。尽量不要使用特殊字符。order user 
+-  定义规则：英文小写。尽量不要使用特殊字符。
 
 ### 6.1.2 _type
 
--  含义：类别。book java node
+-  含义：类别。
 -  注意：以后的es9将彻底删除此字段，所以当前版本在不断弱化type。不需要关注。见到_type都为doc。
 
 ### 6.1.3 _id
@@ -977,7 +966,14 @@ PUT /test_index/_doc/1
 {
   "test_field": "test"
 }
+
+POST /test_index/_doc/1
+{
+  "test_field": "test1"
+}
 ```
+
+> PUT 方式必须指定id不然会报405,而POST可以指定id也可以不指定id，不指定时，id会自动生产
 
 ### 6.2.2 自动生成id
 
@@ -1025,7 +1021,7 @@ GET  /book/_doc/1
 
 就像sql不要select *,而要select name,price from book …一样。
 
-GET  /book/_doc/1?__source_includes=name,price    
+`GET  /book/_doc/1?__source_includes=name,price`  
 
 ```json
 {
@@ -1047,7 +1043,7 @@ GET  /book/_doc/1?__source_includes=name,price
 
 ### 6.4.1全量替换
 
-执行两次，返回结果中版本号（_version）在不断上升。此过程为全量替换。
+执行两次，返回结果中版本号（_version）在不断上升。此过程为**全量替换**。
 
 ```json
 PUT /test_index/_doc/1
@@ -1060,9 +1056,9 @@ PUT /test_index/_doc/1
 
 ### 6.4.2 强制创建
 
-为防止覆盖原有数据，我们在新增时，设置为强制创建，不会覆盖原有文档。
+为防止覆盖原有数据，我们在新增时，设置为强制创建，不会覆盖原有文档(意思就是，如果存在id为1的文档，创建会报错409，这样就不会进行覆盖修改)。
 
-语法：PUT /index/ _doc/id/_create
+语法：`PUT /index/_doc/id/_create`
 
 ```json
 PUT /test_index/_doc/1/_create
@@ -1099,26 +1095,33 @@ PUT /test_index/_doc/1/_create
 
 ### 6.4.3 删除
 
-DELETE /index/_doc/id
+`DELETE /index/_doc/id`
 
 ```
-DELETE  /test_index/_doc/1/
+DELETE /test_index/_doc/1
 ```
 
 实质：旧文档的内容不会立即删除，只是标记为deleted。适当的时机，集群会将这些文档删除。
 
-lazy delete
+> 懒删除 lazy delete
 
 ## 6.5． 局部替换 partial update
 
-使用 PUT /index/type/id 为文档全量替换，需要将文档所有数据提交。
+使用 `PUT /index/type/id` 为文档**全量替换**，需要将文档所有数据提交。
 
-partial update局部替换则只修改变动字段。
+**partial update**局部替换则只修改变动字段。
 
-用法：
+两种用法：
 
 ```json
 post /index/type/id/_update 
+{
+   "doc": {
+      "field"："value"
+   }
+}
+
+post /index/_update/id
 {
    "doc": {
       "field"："value"
@@ -1269,9 +1272,13 @@ Painless是内置支持的。脚本内容可以通过多种途径传给 es，包
 
 如同秒杀，多线程情况下，es同样会出现并发冲突问题。
 
+![10-es并发冲突问题](elasticsearch_kibana_logstash笔记.assets/10-es并发冲突问题.jpg)
+
 ## 6.8． 图解悲观锁与乐观锁机制
 
 为控制并发问题，我们通常采用锁机制。分为悲观锁和乐观锁两种机制。
+
+![11-图解悲观锁与乐观锁机制](elasticsearch_kibana_logstash笔记.assets/11-图解悲观锁与乐观锁机制.jpg)
 
 悲观锁：很悲观，所有情况都上锁。此时只有一个线程可以操作数据。具体例子为数据库中的行级锁、表级锁、读锁、写锁等。
 
@@ -1284,6 +1291,8 @@ Painless是内置支持的。脚本内容可以通过多种途径传给 es，包
 ## 6.9． 图解es内部基于_version乐观锁控制
 
 #### 实验基于_version的版本控制
+
+![12-图解es内部基于_version乐观锁控制](elasticsearch_kibana_logstash笔记.assets/12-图解es内部基于_version乐观锁控制.jpg)
 
 es对于文档的增删改都是基于版本号。
 
@@ -1384,23 +1393,26 @@ GET /test_index/_doc/5
 更新文档
 
 ```
-PUT /test_index/_doc/5?version=1
-{
-  "test_field": "itcast1"
-}
 PUT /test_index/_doc/5?if_seq_no=21&if_primary_term=1
 {
   "test_field": "itcast1"
 }
 ```
 
+> 使用下面的方式报错400(7.13.2)
+>
+> ```json
+> PUT /test_index/_doc/5?version=1
+> {
+>   "test_field": "itcast1"
+> }
+> ```
+
+
+
 #### 客户端2并发修改。带版本号1。
 
 ```
-PUT /test_index/_doc/5?version=1
-{
-  "test_field": "itcast2"
-}
 PUT /test_index/_doc/5?if_seq_no=21&if_primary_term=1
 {
   "test_field": "itcast1"
@@ -1408,6 +1420,30 @@ PUT /test_index/_doc/5?if_seq_no=21&if_primary_term=1
 ```
 
 报错。
+
+```json
+{
+  "error" : {
+    "root_cause" : [
+      {
+        "type" : "version_conflict_engine_exception",
+        "reason" : "[1]: version conflict, required seqNo [10], primary term [1]. current document has seqNo [11] and primary term [1]",
+        "index_uuid" : "w2jdUr94RQ643uWkipxVBw",
+        "shard" : "0",
+        "index" : "test_index"
+      }
+    ],
+    "type" : "version_conflict_engine_exception",
+    "reason" : "[1]: version conflict, required seqNo [10], primary term [1]. current document has seqNo [11] and primary term [1]",
+    "index_uuid" : "w2jdUr94RQ643uWkipxVBw",
+    "shard" : "0",
+    "index" : "test_index"
+  },
+  "status" : 409
+}
+```
+
+
 
 #### 客户端2重新查询。得到最新版本为2。seq_no=22
 
@@ -1440,6 +1476,8 @@ PUT /test_index/_doc/5?if_seq_no=22&if_primary_term=1
 对比：基于_version时，修改的文档version等于当前文档的版本号。
 
 使用?version=1&version_type=external
+
+> 可以将文档的`_version`更新至指定的数，相同或小于原值的话会报错409。
 
 #### 新建文档
 
@@ -1537,7 +1575,7 @@ POST /test_index/_doc/5/_update?retry_on_conflict=3&version=22&version_type=exte
 
 ## 6.13． 批量查询 mget
 
-单条查询 GET  /test_index/_doc/1，如果查询多个id的文档一条一条查询，网络开销太大。
+单条查询 `GET  /test_index/_doc/1`，如果查询多个id的文档一条一条查询，网络开销太大。
 
 #### mget 批量查询：
 
@@ -1592,7 +1630,7 @@ GET /_mget
 }
 ```
 
-提示去掉type
+#### 提示去掉type
 
 ```
 GET /_mget
@@ -1626,7 +1664,9 @@ GET /test_index/_mget
 }
 ```
 
-#### 第三种写法：搜索写法
+#### 搜索写法
+
+**使用post或get都可以**
 
 ```
 post /test_index/_doc/_search
@@ -1664,18 +1704,18 @@ POST /_bulk
 
 总结：
 
-1功能：
+1. 功能：
 
 -  delete：删除一个文档，只要1个json串就可以了
--  create：相当于强制创建  PUT /index/type/id/_create 
+-  create：相当于强制创建  `PUT /index/type/id/_create `
 -  index：普通的put操作，可以是创建文档，也可以是全量替换文档
 -  update：执行的是局部更新partial update操作
 
-2格式：每个json不能换行。相邻json必须换行。
+2. 格式：每个json不能换行。相邻json必须换行。
 
-3隔离：每个操作互不影响。操作失败的行会返回其失败信息。
+3. 隔离：每个操作互不影响。操作失败的行会返回其失败信息。
 
-4实际用法：bulk请求一次不要太大，否则一下积压到内存中，性能会下降。所以，一次请求几千个操作、大小在几M正好。
+4. 实际用法：bulk请求一次不要太大，否则一下积压到内存中，性能会下降。所以，一次请求几千个操作、大小在几M正好。
 
 ## 6.15． 文档概念学习总结
 
@@ -1694,7 +1734,7 @@ POST /_bulk
 一个分布式的文档数据存储系统distributed document store。es看做一个分布式nosql数据库。如redis\mongoDB\hbase。
 
 文档数据：es可以存储和操作json文档类型的数据，而且这也是es的核心数据结构。
-		存储系统：es可以对json文档类型的数据进行存储，查询，创建，更新，删除，等等操作。
+存储系统：es可以对json文档类型的数据进行存储，查询，创建，更新，删除，等等操作。
 
 **应用场景**
 
@@ -1724,27 +1764,27 @@ java api 文档 https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7
 
 low : 偏向底层。
 
-high：高级封装。足够。
+high：高级封装。
 
-1导包
+1导包，导入es对应的版本依赖
 
 ```xml
-    <dependency>
-        <groupId>org.elasticsearch.client</groupId>
-        <artifactId>elasticsearch-rest-high-level-client</artifactId>
-        <version>7.3.0</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.elasticsearch</groupId>
-                <artifactId>elasticsearch</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-    <dependency>
-        <groupId>org.elasticsearch</groupId>
-        <artifactId>elasticsearch</artifactId>
-        <version>7.3.0</version>
-    </dependency>
+<dependency>
+    <groupId>org.elasticsearch.client</groupId>
+    <artifactId>elasticsearch-rest-high-level-client</artifactId>
+    <version>7.3.0</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>org.elasticsearch</groupId>
+    <artifactId>elasticsearch</artifactId>
+    <version>7.3.0</version>
+</dependency>
 ```
 2代码
 
@@ -1776,7 +1816,7 @@ high：高级封装。足够。
 ```
 ## 7.3 结合spring-boot-test测试文档查询
 
-0为什么使用spring boot test
+为什么使用spring boot test
 
 - ​	当今趋势
 - ​	方便开发
@@ -1785,17 +1825,17 @@ high：高级封装。足够。
 1导包
 
 ```xml
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>2.0.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <version>2.0.6.RELEASE</version>
-        </dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+    <version>2.0.6.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+    <version>2.0.6.RELEASE</version>
+</dependency>
 ```
 
 2配置 application.yml
@@ -1804,9 +1844,8 @@ high：高级封装。足够。
 spring:
   application:
     name: service-search
-heima:
-  elasticsearch:
-    hostlist: 127.0.0.1:9200 #多个结点中间用逗号分隔
+es:
+  host: 127.0.0.1:9200
 ```
 
 3代码
@@ -1815,12 +1854,37 @@ heima:
 
 配置类
 
+```java
+@Configuration
+public class EsConfig {
+
+    @Value("${es.host}")
+    private String host;
+
+    @Bean
+    public RestHighLevelClient setRestHighLevelClient () {
+        System.out.println("host => " + host);
+        String[] split = host.split(":");
+        RestHighLevelClient client = new RestHighLevelClient(
+                RestClient.builder(new HttpHost(split[0], Integer.parseInt(split[1])))
+        );
+
+        return client;
+    }
+}
+```
+
+
+
 测试类
 
 ```java
 @SpringBootTest
 @RunWith(SpringRunner.class)
-//查询文档
+public class EsTest {
+    @Autowired
+    private RestHighLevelClient client;
+    //查询文档
        @Test
     public void testGet() throws IOException {
         //构建请求
@@ -1887,6 +1951,8 @@ heima:
         }
 
     }
+}
+
 ```
 
 ## 7.4 结合spring-boot-test测试文档新增
@@ -2037,7 +2103,6 @@ post /test_posts/_doc/3/_update
 //        2执行
 //        同步
         UpdateResponse updateResponse = client.update(request, RequestOptions.DEFAULT);
-//        异步
 
 //        3获取数据
         updateResponse.getId();
@@ -2146,6 +2211,8 @@ POST /_bulk
 
 ## 8.1． 图解es分布式基础
 
+![0201-图解es分布式基础](elasticsearch_kibana_logstash笔记.assets/0201-图解es分布式基础.jpg)
+
 ### 8.1.1es对复杂分布式机制的透明隐藏特性
 
 -   分布式机制：分布式数据存储及共享。
@@ -2179,6 +2246,8 @@ POST /_bulk
 
 ## 8.2． 图解分片shard、副本replica机制
 
+![0202-图解分片shard、副本replica机制](elasticsearch_kibana_logstash笔记.assets/0202-图解分片shard、副本replica机制.jpg)
+
 ### 8.2.1shard&replica机制
 
 （1）每个index包含一个或多个shard
@@ -2201,10 +2270,12 @@ POST /_bulk
 
 ## 8.3图解单node环境下创建index是什么样子的
 
+![0203-图解单node环境下创建index是什么样子的](elasticsearch_kibana_logstash笔记.assets/0203-图解单node环境下创建index是什么样子的.jpg)
+
 （1）单node环境下，创建一个index，有3个primary shard，3个replica shard
-		（2）集群status是yellow
-		（3）这个时候，只会将3个primary shard分配到仅有的一个node上去，另外3个replica shard是无法分配的
-		（4）集群可以正常工作，但是一旦出现节点宕机，数据全部丢失，而且集群不可用，无法承接任何请求
+（2）集群status是yellow
+（3）这个时候，只会将3个primary shard分配到仅有的一个node上去，另外3个replica shard是无法分配的
+（4）集群可以正常工作，但是一旦出现节点宕机，数据全部丢失，而且集群不可用，无法承接任何请求
 
 ```
 PUT /test_index1
@@ -2218,11 +2289,15 @@ PUT /test_index1
 
 ## 8.4图解2个node环境下replica shard是如何分配的
 
+![0204-图解2个node环境下replica shard是如何分配的](elasticsearch_kibana_logstash笔记.assets/0204-图解2个node环境下replica shard是如何分配的.jpg)
+
 （1）replica shard分配：3个primary shard，3个replica shard，1 node
-		（2）primary ---> replica同步
-		（3）读请求：primary/replica
+（2）primary ---> replica同步
+（3）读请求：primary/replica
 
 ## 8.5图解横向扩容
+
+![0205-图解横向扩容](elasticsearch_kibana_logstash笔记.assets/0205-图解横向扩容.jpg)
 
 - 分片自动负载均衡，分片向空闲机器转移。
 - 每个节点存储更少分片，系统资源给与每个分片的资源更多，整体集群性能提高。
@@ -2231,6 +2306,8 @@ PUT /test_index1
 -  容错性：只要一个索引的所有主分片在，集群就就可以运行。
 
 ## 8.6 图解es容错机制 master选举，replica容错，数据恢复
+
+![0206-图解es容错机制 master选举，replica容错，数据恢复](elasticsearch_kibana_logstash笔记.assets/0206-图解es容错机制 master选举，replica容错，数据恢复.jpg)
 
 以3分片，2副本数，3节点为例介绍。
 
@@ -2241,6 +2318,8 @@ PUT /test_index1
 # 9． 图解文档存储机制
 
 ## 9.1． 数据路由
+
+![0207-数据路由](elasticsearch_kibana_logstash笔记.assets/0207-数据路由.jpg)
 
 ### 9.1.1文档存储如何路由到相应分片
 
@@ -2286,6 +2365,8 @@ PUT /test_index/_doc/15?routing=num
 
 ## 9.2． 图解文档的增删改内部机制
 
+![0208-图解文档的增删改内部机制](elasticsearch_kibana_logstash笔记.assets/0208-图解文档的增删改内部机制-1627713154210.jpg)
+
 增删改可以看做update,都是对数据的改动。一个改动请求发送到es集群，经历以下四个步骤：
 
 （1）客户端选择一个node发送请求过去，这个node就是coordinating node（协调节点）
@@ -2297,6 +2378,8 @@ PUT /test_index/_doc/15?routing=num
 （4）coordinating node，如果发现primary node和所有replica node都搞定之后，就返回响应结果给客户端。
 
 ## 9.3．图解文档的查询内部机制
+
+![0208-图解文档的增删改内部机制](elasticsearch_kibana_logstash笔记.assets/0208-图解文档的增删改内部机制-1627713123573.jpg)
 
 1、客户端发送请求到任意一个node，成为coordinate node
 
@@ -2316,7 +2399,6 @@ POST /_bulk
 {"data"}\n
 {"action": {"meta"}}\n
 {"data"}\n
-
 [
     {
         "action":{
@@ -2339,7 +2421,6 @@ POST /_bulk
         }
     }       
 ]
-
 ```
 
 1、bulk中的每个操作都可能要转发到不同的node的shard去执行
@@ -2843,7 +2924,7 @@ index属性指定是否索引。
 
 3）store
 
-是否在source之外存储，每个文档索引后会在 ES中保存一份原始文档，存放在"_source"中，一般情况下不需要设置store为true，因为在_source中已经有一份原始文档了。
+是否在source之外存储，每个文档索引后会在 ES中保存一份原始文档，存放在`_source`中，一般情况下不需要设置store为true，因为在`_source`中已经有一份原始文档了。
 
 测试
 
@@ -3185,7 +3266,7 @@ object
 
 ### 11.1.1. 为什么我们要手动创建索引
 
-直接put数据 PUT index/_doc/1,es会自动生成索引，并建立动态映射dynamic mapping。
+直接put数据 `PUT index/_doc/1`,es会自动生成索引，并建立动态映射dynamic mapping。
 
 在生产上，我们需要自己手动建立索引和映射，为了更好地管理索引。就像数据库的建表语句一样。
 
@@ -3249,15 +3330,15 @@ POST /my_index/_doc/1
 
 查询数据 都可以查到
 
-GET /my_index/_doc/1
+`GET /my_index/_doc/1`
 
-GET /default_index/_doc/1
+`GET /default_index/_doc/1`
 
 #### 11.1.2.2查询索引
 
-GET /my_index/_mapping
+`GET /my_index/_mapping`
 
-GET /my_index/_settings
+`GET /my_index/_settings`
 
 #### 11.1.2.3修改索引
 
@@ -3404,7 +3485,7 @@ PUT /my_index/_mapping/
 
 type，是一个index中用来区分类似的数据的，类似的数据，但是可能有不同的fields，而且有不同的属性来控制索引建立、分词器.
 		field的value，在底层的lucene中建立索引的时候，全部是opaque bytes类型，不区分类型的。
-		lucene是没有type的概念的，在document中，实际上将type作为一个document的field来存储，即_type，es通过_type来进行type的过滤和筛选。
+		lucene是没有type的概念的，在document中，实际上将type作为一个document的field来存储，即`_type`，es通过`_type`来进行type的过滤和筛选。
 
 ### 11.3.2es中不同type存储机制
 
@@ -3524,11 +3605,11 @@ es9中，将会彻底删除type。
 
 ### 11.4.1定制dynamic策略
 
-true：遇到陌生字段，就进行dynamic mapping
+1. true：遇到陌生字段，就进行dynamic mapping
 
-false：新检测到的字段将被忽略。这些字段将不会被索引，因此将无法搜索，但仍将出现在返回点击的源字段中。这些字段不会添加到映射中，必须显式添加新字段。
+2. false：新检测到的字段将被忽略。这些字段将不会被索引，因此将无法搜索，但仍将出现在返回点击的源字段中。这些字段不会添加到映射中，必须显式添加新字段。
 
-strict：遇到陌生字段，就报错
+3. strict：遇到陌生字段，就报错
 
 创建mapping
 
@@ -4655,13 +4736,17 @@ GET /book/_search?q=name:java&sort=price:desc
 
 ### 14.1.3图解timeout
 
-GET /book/_search?timeout=10ms
+`GET /book/_search?timeout=10m`
+
+![0301-搜索语法入门timeout](elasticsearch_kibana_logstash笔记.assets/0301-搜索语法入门timeout.jpg)
 
 全局设置：配置文件中设置 search.default_search_timeout：100ms。默认不超时。
 
 ## 14.2．multi-index 多索引搜索
 
 ### 14.2.1multi-index搜索模式
+
+![0302-multi-index 多索引搜索](elasticsearch_kibana_logstash笔记.assets/0302-multi-index 多索引搜索.jpg)
 
 告诉你如何一次性搜索多个index和多个type下的数据
 
@@ -4702,7 +4787,7 @@ GET /book/_search?size=10&from=20
 
 
 
-GET /book_search?from=0&size=3
+GET /book/_search?from=0&size=3
 
 ### 14.3.2deep paging
 
@@ -4739,7 +4824,7 @@ GET /book/_search?q=java
 
 直接可以搜索所有的field，任意一个field包含指定的关键字就可以搜索出来。我们在进行中搜索的时候，难道是对document中的每一个field都进行一次搜索吗？不是的。
 
-es中_all元数据。建立索引的时候，插入一条docunment，es会将所有的field值经行全量分词，把这些分词，放到_all field中。在搜索的时候，没有指定field，就在_all搜索。
+es中`_all`元数据。建立索引的时候，插入一条docunment，es会将所有的field值经行全量分词，把这些分词，放到`_all field`中。在搜索的时候，没有指定field，就在`_all`搜索。
 
 举例
 
@@ -5632,47 +5717,578 @@ scroll是用户系统内部操作，如下载批量数据，数据转移。零�
 
 # 15． java api实现搜索
 
+```java
+package com.data.es;
+
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
+import org.junit.Test;
+import org.junit.runner.Request;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * 类描述：
+ * Elasticsearch 搜索测试
+ * @Author msi
+ * @Date 2021-07-25 14:24
+ * @Version 1.0
+ */
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class ElasticsearchSearchTest {
+
+    @Autowired
+    private RestHighLevelClient client;
+
+    /**
+     * 搜索全部记录
+     */
+    @Test
+    public void testSearchAll() throws IOException {
+    //        GET book/_search
+    //        {
+    //            "query": {
+    //                "match_all": {}
+    //             }
+    //        }
+        // 1.构建请求
+        SearchRequest searchRequest = new SearchRequest("book");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+
+        // 获取某些字段
+//        searchSourceBuilder.fetchSource(new String[]{"name"}, new String[]{});
+
+        searchRequest.source(searchSourceBuilder);
+
+        // 2.执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        // 3.获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        // 数据
+        SearchHit[] hits1 = hits.getHits();
+        System.out.println("-----------------");
+        for (int i = 0; i < hits1.length; i++) {
+            String id = hits1[i].getId();
+            float score = hits1[i].getScore();
+            Map<String, Object> sourceAsMap = hits1[i].getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+        }
+    }
+
+    /**
+     * 测试搜索分页
+     */
+    @Test
+    public void testSearchPage() throws IOException {
+        //    GET book/_search
+        //    {
+        //        "query": {
+        //          "match_all": {}
+        //       },
+        //        "from": 0,
+        //        "size": 2
+        //    }
+
+        // 1.构建搜索请求
+        SearchRequest searchRequest = new SearchRequest("book");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        searchSourceBuilder.from(0);
+        searchSourceBuilder.size(2);
+
+        searchRequest.source(searchSourceBuilder);
+
+        // 执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+    }
+
+    /**
+     * 测试 Ids 搜索
+     */
+    @Test
+    public void testSearchIds() throws IOException {
+        //    GET /book/_search
+        //    {
+        //        "query": {
+        //           "ids" : {
+        //             "values" : ["1", "4", "100"]
+        //           }
+        //        }
+        //    }
+
+        // 1. 构建请求
+        SearchRequest searchRequest = new SearchRequest("book");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.idsQuery().addIds("1","2","3"));
+
+        searchRequest.source(searchSourceBuilder);
+
+        // 2.执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+    }
+
+    /**
+     * 测试 match搜索
+     */
+    @Test
+    public void testSearchMatch() throws IOException {
+        //    GET /book/_search
+        //    {
+        //        "query": {
+        //           "match": {
+        //            "description": "java程序员"
+        //        }
+        //      }
+        //    }
+
+        // 1.构建请求
+        SearchRequest searchRequest = new SearchRequest();
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchQuery("description", "java程序员"));
+
+        searchRequest.source(searchSourceBuilder);
+
+        // 2.执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+    }
+
+    /**
+     * term 搜索
+     */
+    @Test
+    public void testSearchTerm() throws IOException {
+        //    GET /book/_search
+        //    {
+        //        "query": {
+        //           "term": {
+        //            "description": "java程序员"
+        //        }
+        //      }
+        //    }
+
+        // 1.构建请求
+        SearchRequest searchRequest = new SearchRequest("book");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.termQuery("description", "java程序员"));
+
+        searchRequest.source(searchSourceBuilder);
+        // 2. 执行请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+    }
+
+    /**
+     * multi_match
+     */
+    @Test
+    public void testSearchMultiMatch() throws IOException {
+        //    GET /book/_search
+        //    {
+        //        "query": {
+        //          "multi_match": {
+        //            "query": "java程序员",
+        //            "fields": ["name", "description"]
+        //        }
+        //      }
+        //    }
+
+        // 1.构建请求
+        SearchRequest searchRequest = new SearchRequest("book");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.multiMatchQuery("java程序员", "name", "description"));
+
+        searchRequest.source(searchSourceBuilder);
+
+        // 2.执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+
+    }
+
+    /**
+     * bool搜索
+     * @throws IOException
+     */
+    @Test
+    public void testSearchBool() throws IOException {
+//    GET /book/_search
+//      {
+//        "query": {
+//            "bool": {
+//                "must": [
+//                  {
+//                    "multi_match": {
+//                          "query": "java程序员",
+//                          "fields": ["name","description"]
+//                     }
+//                  }
+//               ],
+//                "should": [
+//                  {
+//                    "match": {
+//                          "studymodel": "201001"
+//                     }
+//                  }
+//                 ]
+//              }
+//          }
+//        }
+
+        //1构建搜索请求
+        SearchRequest searchRequest = new SearchRequest("book");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        //构建multiMatch请求
+        MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery("java程序员", "name", "description");
+        //构建match请求
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("studymodel", "201001");
+
+        BoolQueryBuilder boolQueryBuilder=QueryBuilders.boolQuery();
+        boolQueryBuilder.must(multiMatchQueryBuilder);
+        boolQueryBuilder.should(matchQueryBuilder);
+
+        searchSourceBuilder.query(boolQueryBuilder);
 
 
 
 
+        searchRequest.source(searchSourceBuilder);
+
+        //2执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+    }
+
+    /**
+     * filter搜索
+     * @throws IOException
+     */
+    @Test
+    public void testSearchFilter() throws IOException {
+//    GET /book/_search
+//    {
+//        "query": {
+//          "bool": {
+//            "must": [
+//                  {
+//                      "multi_match": {
+//                          "query": "java程序员",
+//                          "fields": ["name","description"]
+//                      }
+//                  }
+//              ],
+//            "should": [
+//                  {
+//                      "match": {
+//                          "studymodel": "201001"
+//                      }
+//                  }
+//              ],
+//            "filter": {
+//                "range": {
+//                    "price": {
+//                        "gte": 50,
+//                         "lte": 90
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
+//    }
+        //1构建搜索请求
+        SearchRequest searchRequest = new SearchRequest("book");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        //构建multiMatch请求
+        MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery("java程序员", "name", "description");
+        //构建match请求
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("studymodel", "201001");
+
+        BoolQueryBuilder boolQueryBuilder=QueryBuilders.boolQuery();
+        boolQueryBuilder.must(multiMatchQueryBuilder);
+        boolQueryBuilder.should(matchQueryBuilder);
+
+        boolQueryBuilder.filter(QueryBuilders.rangeQuery("price").gte(50).lte(90));
+
+        searchSourceBuilder.query(boolQueryBuilder);
 
 
+        searchRequest.source(searchSourceBuilder);
+
+        //2执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
+
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+
+        }
+    }
 
 
+    /**
+     * sort搜索
+     * @throws IOException
+     */
+    @Test
+    public void testSearchSort() throws IOException {
+//    GET /book/_search
+//    {
+//        "query": {
+//        "bool": {
+//            "must": [
+//                  {
+//                      "multi_match": {
+//                          "query": "java程序员",
+//                          "fields": ["name","description"]
+//                      }
+//                  }
+//              ],
+//            "should": [
+//                  {
+//                      "match": {
+//                          "studymodel": "201001"
+//                      }
+//                  }
+//              ],
+//            "filter": {
+//                "range": {
+//                    "price": {
+//                        "gte": 50,
+//                         "lte": 90
+//                    }
+//                }
+//            }
+//        }
+//    },
+//    "sort": [
+//        {
+//            "price": {
+//                  "order": "asc"
+//              }
+//        }
+//      ]
+// }
+        //1构建搜索请求
+        SearchRequest searchRequest = new SearchRequest("book");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        //构建multiMatch请求
+        MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery("java程序员", "name", "description");
+        //构建match请求
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("studymodel", "201001");
+
+        BoolQueryBuilder boolQueryBuilder=QueryBuilders.boolQuery();
+        boolQueryBuilder.must(multiMatchQueryBuilder);
+        boolQueryBuilder.should(matchQueryBuilder);
+
+        boolQueryBuilder.filter(QueryBuilders.rangeQuery("price").gte(50).lte(90));
+
+        searchSourceBuilder.query(boolQueryBuilder);
+
+        //按照价格升序
+        searchSourceBuilder.sort("price", SortOrder.ASC);
 
 
+        searchRequest.source(searchSourceBuilder);
 
+        //2执行搜索
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
+        //3获取结果
+        SearchHits hits = searchResponse.getHits();
 
+        //数据数据
+        SearchHit[] searchHits = hits.getHits();
+        System.out.println("--------------------------");
+        for (SearchHit hit : searchHits) {
+            String id = hit.getId();
+            float score = hit.getScore();
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            String name = (String) sourceAsMap.get("name");
+            String description = (String) sourceAsMap.get("description");
+            Double price = (Double) sourceAsMap.get("price");
+            System.out.println("id:" + id);
+            System.out.println("name:" + name);
+            System.out.println("description:" + description);
+            System.out.println("price:" + price);
+            System.out.println("==========================");
+        }
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 # 16． 评分机制详解
 
@@ -5717,6 +6333,8 @@ doc2 更相关
 doc1 : {"title":"hello article","content ":"balabalabal 1万个"}
 
 doc2 : {"title":"my article","content ":"balabalabal 1万个,world"}
+
+doc1更相关
 
 ### 16.1.2 _score是如何被计算出来的
 
@@ -6294,8 +6912,7 @@ city  name
         北京 李四
         天津 王五
         天津 赵六
-
-天津 王麻子
+		天津 王麻子
 
 划分出来两个bucket，一个是北京bucket，一个是天津bucket
 北京bucket：包含了2个人，张三，李四
@@ -6939,14 +7556,13 @@ GET /tvs/_search
 简单聚合，多种聚合，详见代码。
 
 ```java
-package com.itheima.es;
+package com.data.es;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.*;
@@ -6964,11 +7580,15 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * creste by itheima.itcast
+ * 类描述：
+ * 测试Elasticsearch聚合
+ * @Author msi
+ * @Date 2021-07-26 19:55
+ * @Version 1.0
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class TestAggs {
+public class ElasticsearchAggsTest {
     @Autowired
     RestHighLevelClient client;
 
@@ -7006,25 +7626,25 @@ public class TestAggs {
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
         //3 获取结果
-      //   "aggregations" : {
-      //       "group_by_color" : {
-      //           "doc_count_error_upper_bound" : 0,
-      //           "sum_other_doc_count" : 0,
-      //            "buckets" : [
-      //           {
-      //               "key" : "红色",
-      //               "doc_count" : 4
-      //           },
-      //           {
-      //               "key" : "绿色",
-      //                   "doc_count" : 2
-      //           },
-      //           {
-      //               "key" : "蓝色",
-      //                   "doc_count" : 2
-      //           }
-      // ]
-      //       }
+        //   "aggregations" : {
+        //       "group_by_color" : {
+        //           "doc_count_error_upper_bound" : 0,
+        //           "sum_other_doc_count" : 0,
+        //            "buckets" : [
+        //           {
+        //               "key" : "红色",
+        //               "doc_count" : 4
+        //           },
+        //           {
+        //               "key" : "绿色",
+        //                   "doc_count" : 2
+        //           },
+        //           {
+        //               "key" : "蓝色",
+        //                   "doc_count" : 2
+        //           }
+        // ]
+        //       }
         Aggregations aggregations = searchResponse.getAggregations();
         Terms group_by_color = aggregations.get("group_by_color");
         List<? extends Terms.Bucket> buckets = group_by_color.getBuckets();
@@ -7320,7 +7940,7 @@ public class TestAggs {
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
 
         DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram("date_histogram").field("sold_date").calendarInterval(DateHistogramInterval.QUARTER)
-                .format("yyyy-MM-dd").minDocCount(0).extendedBounds(new ExtendedBounds("2019-01-01", "2020-12-31"));
+                .format("yyyy-MM-dd").minDocCount(0).extendedBounds(new LongBounds("2019-01-01", "2020-12-31"));
         SumAggregationBuilder sumAggregationBuilder = AggregationBuilders.sum("income").field("price");
         dateHistogramAggregationBuilder.subAggregation(sumAggregationBuilder);
 
