@@ -344,6 +344,8 @@ stringCollection
 // "aaa2", "aaa1"
 ```
 
+> 注：当stringCollection为空集合时不会报错。
+
 ### Sorted
 
 Sorted是返回已排序的流视图的中间操作。元素按自然顺序排序，除非传递自定义比较器。
