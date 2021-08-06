@@ -428,7 +428,7 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 PIDFile=/apps/mongodb4.4/mongodb-linux-x86_64-rhel80-4.4.1/pid/mongod.pid
-ExecStart=mongod --config /apps/mongodb4.4/mongodb-linux-x86_64-rhel80-4.4.1/config/mongod.conf
+ExecStart=/apps/mongodb4.4/mongodb-linux-x86_64-rhel80-4.4.1/bin/mongod --config /apps/mongodb4.4/mongodb-linux-x86_64-rhel80-4.4.1/config/mongod.conf
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/apps/mongodb4.4/mongodb-linux-x86_64-rhel80-4.4.1/bin/mongod --shutdown --config /apps/mongodb4.4/mongodb-linux-x86_64-rhel80-4.4.1/config/mongod.conf
 PrivateTmp=true
