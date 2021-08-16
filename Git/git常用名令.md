@@ -60,9 +60,12 @@ git init
    Enter passphrase for key '/c/Users/e-Feilong.Chen/.ssh/id_rsa': #这里就是设置的密码
    ```
 
-   
 
+### 将HTTPS修改成SSH
 
+```bash
+git remote set-url origin git@github.com:你的GitHub账户/仓库名字.git
+```
 
 ## 添加修改
 
