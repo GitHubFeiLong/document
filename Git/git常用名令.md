@@ -13,6 +13,55 @@ git clone http://domain.com/user/repo.git
 git init
 ```
 
+> https 使用很方便（经常403），每次还要输入密码，输入正确的也会403，心态炸了
+
+### ssh使用
+
+1. 创建SSH Key
+
+   ```bash
+   $ ssh-keygen -t rsa -C "你的邮箱"
+   ```
+
+   期间会让你输入三次设置，也可以都不设置，使用默认值
+
+   + 输入一个文件名，用于保存刚才生成的 SSH key 代码
+   + 输入密码，使用key时会提示输入这个密码
+   + 重复上面的密码
+
+
+
+![image-20210816084759087](git常用名令.assets/image-20210816084759087.png)
+
+2. 添加SSH Key到GitHub，步骤如图
+
+   ![image-20210816085833256](git常用名令.assets/image-20210816085833256.png)
+
+   成功后，创建key的命令中邮箱会收到成功邮件
+
+3. 测试
+
+   ```bash
+   $ ssh -T git@github.com
+   C:\Users\e-Feilong.Chen>ssh -T git@github.com
+   The authenticity of host 'github.com (52.74.223.119)' can't be established.
+   RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+   Are you sure you want to continue connecting (yes/no)? yes
+   Warning: Permanently added 'github.com,52.74.223.119' (RSA) to the list of known hosts.
+   Enter passphrase for key 'C:\Users\e-Feilong.Chen/.ssh/id_rsa':
+   Hi GitHubFeiLong! You've successfully authenticated, but GitHub does not provide shell access.
+   ```
+
+4. 最后使用 ssh方式clone仓库，如果创建key时设置了密码，那么会提示输入密码
+
+   ```bash
+   D:\workspace\my-workspace>git clone git@github.com:GitHubFeiLong/goudong-java.git
+   Cloning into 'goudong-java'...
+   Enter passphrase for key '/c/Users/e-Feilong.Chen/.ssh/id_rsa': #这里就是设置的密码
+   ```
+
+   
+
 
 
 ## 添加修改
