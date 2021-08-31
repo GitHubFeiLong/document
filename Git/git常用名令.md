@@ -60,8 +60,9 @@ git init
    Enter passphrase for key '/c/Users/e-Feilong.Chen/.ssh/id_rsa': #这里就是设置的密码
    ```
 
-
 ### 将HTTPS修改成SSH
+
+将已经使用https方式clone的仓库，修改成ssh方式
 
 ```bash
 git remote set-url origin git@github.com:你的GitHub账户/仓库名字.git
@@ -349,9 +350,9 @@ $ git reset --hard <commit-hash>
 $ git push -f
 ```
 
-### 更新与推送
+## 更新与推送
 
-更新：
+### 更新
 
 ```bash
 # 下载远程端版本，但不合并到HEAD中
@@ -364,11 +365,14 @@ $ git pull origin master
 $ git pull --rebase <remote> <branch>
 ```
 
-推送：
+### 推送
 
 ```bash
 # 将本地版本推送到远程端
 $ git push remote <remote> <branch>
+
+# 覆盖远程分支
+$ git push remote branch --force
 
 # 删除远程端分支
 $ git push <remote> :<branch> (since Git v1.5.0)
@@ -418,7 +422,7 @@ $ git grep "Hello"
 $ git grep "Hello" v2.5
 ```
 
-### 分支
+## 分支
 
 增删查分支：
 
@@ -460,7 +464,7 @@ $ git checkout -b branch
 
 
 
-### 标签
+## 标签
 
 ```bash
 # 给当前版本打标签
@@ -470,7 +474,7 @@ $ git tag tag-name
 $ git tag -a tag-name
 ```
 
-### 合并与变基
+## 合并与变基
 
 > merge 与 rebase 虽然是 git 常用功能，但是强烈建议不要使用 git 命令来完成这项工作。
 >
