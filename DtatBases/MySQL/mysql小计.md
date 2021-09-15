@@ -46,3 +46,20 @@ ON DUPLICATE KEY UPDATE percentage=#{percentage}, deleted=0,update_user_id=#{cre
 ```
 
 > 备注：现用来在出现唯一约束时，会更新数据
+
+
+
+## 杀掉死锁
+
+有时使用修改MySQL表字段，或修改表时，MySQL会锁死表，此时需要进行如下操作。
+
+```mysql
+-- 查看哪些表被使用中
+show OPEN TABLES where In_use > 0;
+-- 查看进程
+show full processlist;  
+-- 杀掉上一步进程id
+kill 32344;
+-- 重启mysql
+```
+
