@@ -33,7 +33,7 @@ JPA通过JDK 5.0注解描述对象－关系表的映射关系，并将运行期�
 
 1. 加载配置文件创建实体管理器工厂
    			Persisitence：静态方法（根据持久化单元名称创建实体管理器工厂）createEntityMnagerFactory（持久化单元名称）
-   			作用：创建实体管理器工厂
+      			作用：创建实体管理器工厂
 
    ```java
    // 1. 加载配置文件创建工厂（实体管理器工厂）对象
@@ -42,7 +42,7 @@ JPA通过JDK 5.0注解描述对象－关系表的映射关系，并将运行期�
 
 2. 根据实体管理器工厂，创建实体管理器
    		EntityManagerFactory ：获取EntityManager对象
-   		方法：createEntityManager
+      		方法：createEntityManager
 
    ```java
    // 2. 通过尸体管理类工厂获取实体管理器
@@ -103,13 +103,32 @@ transaction.rollback();
 | @Table          | 指定实体类和表之间的对应关系。                     | name：指定数据库表的名称                                     |
 | @Id             | 指定当前字段是主键。                               | 无                                                           |
 | @GeneratedValue | 指定主键的生成方式                                 | strategy ：指定主键生成策略。(GenerationType.IDENTITY：自增，底层数据库必须支持自动增长；<br />GenerationType.SEQUENCE: 序列，底层数据库必须支持序列；<br />GenerationType.TABLE，jpa提供的一种机制，通过一张数据库表的形式帮助我们完成自增；<br />GenerationType.AUTO，程序自动的帮助我们选择主键生成策略) |
-| @Column         | 指定实体类属性和数据库表之间的对应关系             | name：指定数据库表的列名称。<br />unique：是否唯一<br />nullable：是否可以为空<br />inserttable：是否可以插入<br />updateable：是否可以更新<br />columnDefinition: 定义建表时创建此列的DDL<br />secondaryTable: 从表名。如果此列不建在主表上（默认建在主表），该属性定义该列所在从表的名字搭建开发环境[重点] |
+| @Column         | 指定实体类属性和数据库表之间的对应关系             | name：指定数据库表的列名称。<br />unique：是否唯一<br />nullable：是否可以为空<br />inserttable：是否可以插入<br />updateable：是否可以更新<br />columnDefinition: 定义建表时创建此列的DDL<br /><br />table：当映射多个表时,指在哪张表的字段，默认为主表<br />length：字段长度,字段类型为VARCHAR时有效<br />precision：精度，当字段类型为double时候, precision表示数值总长度<br />scale： 精度, 当字段类型为double时候, scale表示小数位数<br />secondaryTable: 从表名。如果此列不建在主表上（默认建在主表），该属性定义该列所在从表的名字搭建开发环境[重点] |
+| @Temporal       | 用来设置Date 类型的属性映射到对应精度的字段        | @Temporal(Temporal.DATE) 映射为日期<br /><br /> @Temporal(Temporal.TIME):映射为日期(只有时间)<br /> @Temporal(Temporal.TIMESTAMP):映射为日期(日期+时间) |
 | @Query          | 自定义SQL或者JPQL                                  | value: sql语句或者jpql语句。<br />nativeQuery：值为布尔类型，true时value是sql，false时value是jpql。<br />countQuery: 分页时使用 |
 | @Modifying      | 当dao方法是更新删除时，需要加上该注解              |                                                              |
 | @Transactional  | 使用更新/删除操作，必须要该注解                    |                                                              |
 | @Rollback       | 默认执行完成后，事务会自动回滚。导致数据库没更新。 | value：false，使用@Rollback(value = false) 关闭自动回滚      |
+| @OneToOne       | 一对一关联关系                                     | targetEntity:关系目标实体, 默认为void.class, 可选<br />cascade:级联操作策略， PERSIST(级联新增)、REMOVE(级联删除)、REFRESH(级联刷新)、MERGE(级联更新)、ALL(全选).<br />fetch:数据获取方式，EAGER(立即加载)、LAZY(延迟加载).<br />optional:是否允许空。<br />mappedBy：关联关系被谁维护，非必填，一遍不需要特别指定。<br />orphanRemoval：是否级联删除，和CascadeType.REMOVE 效果一样，任意配置一种即可生效 |
+| @OneToMany      | 建立一对多关系                                     | targetEntity：对方实体（多的一方）的类对象；<br />mappedBy：指定从表实体类中引用主表对象的名称；<br />cascade：指定要使用的级联操作;<br />fetch：指定是否采用延迟加载<br />orphanRemoval：是否使用孤儿删除 |
+| @ManyToOne      | 建立多对一关系                                     | targetEntityClass：指定一的一方实体类字节码<br />cascade：指定要使用的级联操作<br />fetch：指定是否采用延迟加载<br />optional：关联是否可选。如果设置为false，则必须始终存在非空关系。 |
+| @JoinColumn     | 用于定义主键字段和外键字段的对应关系               | name：目标表的字段名，必填；<br /> referencedColumnName：本实体类的字段名, 非必填, 默认本表ID；<br />unique：外键字段是否唯一, 可选<br />nullable：外键字段是否允许为空。默认值允许。<br />insertable：是否允许插入。默认值允许。<br />updatable：是否允许更新。默认值允许。<br />columnDefinition：列的定义信息。 |
+| @ManyToMany     | 建立多对多关系                                     | cascade：配置级联操作。<br />fetch：配置是否采用延迟加载<br />targetEntity：配置目标的实体类。映射多对多的时候不用写。 |
+| @JoinTable      | 针对中间表的配置                                   | name：配置中间表的名称<br />joinColumns：中间表的外键字段关联当前实体类所对应表的主键字段<br />inverseJoinColumns：中间表的外键字段关联对方表的主键字段。<br />foreignKey：主连接外键约束类别<br />inverseForeignKey：被连接外键约束类别<br />uniqueConstraints：唯一约束 |
 
-
+> cascade:配置级联操作:
+>
+> 1. CascadeType.MERGE  级联更新
+> 2. CascadeType.PERSIST 级联保存：
+> 3. CascadeType.REFRESH 级联刷新：
+> 4. CascadeType.REMOVE 级联删除：
+> 5. CascadeType.ALL   包含所有
+>
+> mappedBy不能与@JoinColumn或者@JoinTable同时使用
+>
+> mappedBy的值是指另一方的实体里面属性的字段，而不是数据库字段，也不是实体的对象的名字，即另一方配置了@JoinColumn或者@JoinTable注解的属性的字段名称
+>
+> 注意：在多对多的时候，有时会出现栈溢出，这时去掉其中一方的toString方法即可
 
 ## Spring Data JPA 编写持久层
 
