@@ -99,14 +99,6 @@ $ git commit -m 'commit message'
 $ git commit --amend
 ```
 
-## HEAD
-
-修改git的游标到指定分支
-
-```bash
-$ git remote set-head origin main
-```
-
 
 
 ## 合并多次提交(高级)
@@ -450,18 +442,14 @@ $ git branch --track new-branch remote-branch
 # 将本地分支push到github
 git push origin new-branch
 
-# 删除github上的分支(:符号不能少)
+# 删除github上的分支
 $ git push origin :new-branch
-
-# 删除远程分支
-$ git push origin --delete branch_name
 
 # 删除本地分支
 $ git branch -d branch
 
 # 强制删除本地分支，将会丢失未合并的修改
 $ git branch -D branch
-
 ```
 
 切换分支：
