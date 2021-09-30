@@ -553,3 +553,26 @@ $ git rebase <branch>
 git pull origin master --allow-unrelated-histories
 ```
 
+
+
+## 高级教程
+
+### 恢复删除的分支
+
+#### 恢复删除的本地分支
+
+```bash
+# 查看历史提交
+$ git reflog show --date=iso
+```
+
+> ***git reflog用来记录你的每一次命令，--date=iso 表示以标准时间显示。***
+> ***不能使用git log ， git log 在分支删除后，log 也无法显示。***
+
+```bash
+# 查看指定commit的详情
+$ git show commitID
+#恢复本地分支
+$ git checkout -b  要恢复的分支名  commitId
+```
+
