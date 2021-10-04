@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07b8b752-93e5-4d1b-8634-6c1315ce4b4d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DtatBases/PostgreSQL/postgreSQL.md" beforeDir="false" afterPath="$PROJECT_DIR$/DtatBases/PostgreSQL/postgreSQL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jenkins/Jenkins.md" beforeDir="false" afterPath="$PROJECT_DIR$/jenkins/Jenkins.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Linux/1.linux基础，基础命令.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/1.linux基础，基础命令.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Linux/3.文件操作.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/3.文件操作.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Linux/4.vim文本编辑器.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/4.vim文本编辑器.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Linux/6.用户，组和权限.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/6.用户，组和权限.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Linux/7.文本处理工具和正则表达式以及sed.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/7.文本处理工具和正则表达式以及sed.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +29,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -41,10 +44,52 @@
       <updated>1598940699257</updated>
       <workItem from="1598940700494" duration="6000" />
       <workItem from="1607304862967" duration="568000" />
+      <workItem from="1633167354214" duration="1519000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="bfc2c724-f92e-46ca-8fd5-c4c06c128ccd">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:D:/workspaces/github-repository/document/Linux" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="bfc2c724-f92e-46ca-8fd5-c4c06c128ccd" value="TOOL_WINDOW" />
+      </map>
+    </option>
   </component>
 </project>

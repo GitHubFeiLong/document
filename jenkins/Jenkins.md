@@ -219,6 +219,8 @@ $ sudo rpm -ivh gitlab-ce-13.6.1-ce.0.el8.x86_64.rpm
 
 > 注意：
 >
+> 上面的版本记得跟服务器操作系统版本一致
+>
 > 出现下面的错误，使用`yum install policycoreutils-python`
 >
 > ```text
@@ -918,11 +920,11 @@ echo "编译和打包结束"
 >    ```java
 >    @SpringBootApplication
 >    public class DemoApplication extends SpringBootServletInitializer {
->    
+>       
 >        public static void main(String[] args) {
 >            SpringApplication.run(DemoApplication.class, args);
 >        }
->    
+>       
 >        @Override
 >        protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 >            return super.configure(builder);
