@@ -407,7 +407,7 @@ sudo systemctl daemon-reload
 3)修改Jenkins配置
 
 ```bash
-vim /etc/syscofig/jenkins
+$ vim /etc/sysconfig/jenkins
 ```
 
 > 修改内容如下:
@@ -424,6 +424,28 @@ $ sudo vim hudson.model.UpdateCenter.xml
 ```
 
 > 将url的值改为 `https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json`，然后重启`systemctl restart jenkins`
+
+
+
+如果是自己安装手动安装的java，那么安装目录需要配置到jenkins配置文件中
+
+```bash
+vim /etc/init.d/jenkins
+
+# 在candidates中添加java安装目录
+candidates="
+/usr/programe_files/jdk1.8.0_121/bin/java
+/etc/alternatives/java
+/usr/lib/jvm/java-1.8.0/bin/java
+/usr/lib/jvm/jre-1.8.0/bin/java
+/usr/lib/jvm/java-1.7.0/bin/java
+/usr/lib/jvm/jre-1.7.0/bin/java
+/usr/bin/java
+/usr/local/apps/jdk1.8/bin/java
+"
+```
+
+
 
 5),启动Jenkins
 
@@ -742,7 +764,7 @@ JAVA_HOM、M2_HOME、PATH+EXTRA
 
 
 
-#### 修改Mayen的settings.xml
+#### 修改Maven的settings.xml
 
 ​		创建本地仓库目录
 
@@ -920,11 +942,11 @@ echo "编译和打包结束"
 >    ```java
 >    @SpringBootApplication
 >    public class DemoApplication extends SpringBootServletInitializer {
->       
+>          
 >        public static void main(String[] args) {
 >            SpringApplication.run(DemoApplication.class, args);
 >        }
->       
+>          
 >        @Override
 >        protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 >            return super.configure(builder);
@@ -1506,7 +1528,7 @@ stage('code checking') {
 2）先安装docker-compose
 
 ```bash
-$ sudo cur1 -L https: / /github.com/docker/compose/releases/down1oad/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/loca1/bin/docker-compose
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 $ sudo chmod +x /usr/loca1/bin/docker-compose
 ```
