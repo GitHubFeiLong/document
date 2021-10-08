@@ -101,187 +101,6 @@ $ git commit --amend
 
 
 
-## 合并多次提交(高级)
-
-本地提交多次后，可以进行合并后，再提交到远程分支，下面进行一个demo示例：
-
-1. 新建一个文件夹 test，在下面进行git初始化
-
-   ```cmd
-   D:\test>git init
-   Initialized empty Git repository in D:/test/.git/
-   ```
-
-2. 新建文本文件txt.txt,进行编辑,新增一行内容为 `add line 1`，然后保存提交:
-
-   ```cmd
-   D:\test>type txt.txt
-   add line 1
-   
-   D:\test>git add .
-   
-   D:\test>git commit -m "add line 1"
-   [master (root-commit) 0242373] add line 1
-    1 file changed, 1 insertion(+)
-    create mode 100644 txt.txt
-   ```
-
-   > type命令是windws的一个命令，用来查看文本内容。
-
-   
-
-3. 继续编辑txt文件，在第二行新增 `add line 2`，然后保存再commit
-
-   ```cmd
-   D:\test>type txt.txt
-   add line 1
-   add line 2
-   
-   D:\test>git add .
-   
-   D:\test>git commit -m "add line 2"
-   [master 5947b25] add line 2
-    1 file changed, 2 insertions(+), 1 deletion(-)
-   ```
-
-4. 继续上面的步骤，新增 add line 3 ，然后保存提交：
-
-   ```cmd
-   D:\test>type txt.txt
-   add line 1
-   add line 2
-   add line 3
-   
-   D:\test>git add .
-   
-   D:\test>git commit -m "add line 3"
-   [master 8a7f426] add line 3
-    1 file changed, 2 insertions(+), 1 deletion(-)
-   ```
-
-5. 查看提交日志记录（三条commit log，按照时间降序排列）：
-
-   ![image-20210714124340234](git常用名令.assets/image-20210714124340234.png)
-
-6. 进行rebase（变基），这里的 024237... 就是提交的commitid，这里我们使用的第一次提交的commitid
-
-   ```cmd
-   git rebase -i 02423736e2e978061bd89dc750f98e3f21d518ce
-   ```
-
-   执行后，会让我们编辑一个文件（输入小写的i，即可进入编辑模式）：
-
-   ![image-20210714124508525](git常用名令.assets/image-20210714124508525.png)
-
-   这里，我们将这两个`pick`修改成 `squash`,然后在文件第一行新增一行，然后保存退出（: , wq, 回车），最后结果如下：
-
-![image-20210714124733959](git常用名令.assets/image-20210714124733959.png)
-
-> 翻译：
->
-> ```txt
-> # Commands:
-> # p, pick <commit> = use commit
-> # r, reword <commit> = use commit, but edit the commit message
-> # e, edit <commit> = use commit, but stop for amending
-> # s, squash <commit> = use commit, but meld into previous commit
-> # f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
-> #                    commit's log message, unless -C is used, in which case
-> #                    keep only this commit's message; -c is same as -C but
-> #                    opens the editor
-> # x, exec <command> = run command (the rest of the line) using shell
-> # b, break = stop here (continue rebase later with 'git rebase --continue')
-> # d, drop <commit> = remove commit
-> # l, label <label> = label current HEAD with a name
-> # t, reset <label> = reset HEAD to a label
-> # m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
-> # .       create a merge commit using the original merge commit's
-> # .       message (or the oneline, if no original merge commit was
-> # .       specified); use -c <commit> to reword the commit message
-> #
-> # These lines can be re-ordered; they are executed from top to bottom.
-> #
-> # If you remove a line here THAT COMMIT WILL BE LOST.
-> #
-> # However, if you remove everything, the rebase will be aborted.
-> ```
->
-> ```txt
-> #命令:
-> # p, pick <commit> = 使用提交
-> # r, reword <commit> = 使用提交，但是编辑commit消息
-> # e, edit <commit> = 使用提交，但停止修改
-> # s, squash <commit> = 使用提交，但合并到之前的commit中 # 合并多次commit使用此命令
-> # f, fixup [-C | -C] <commit> = 类似`squash`,但是只保留前一个的提交日志消息，除非使用-C，在这种情况下只保存这个提交信息;-c和-C一样,但-c打开编辑器
-> # x, exec <command> = run命令(其余部分行)使用shell
-> # b, break = 在这里停止(使用'git rebase -continue'继续rebase)
-> # d, drop <commit> = 删除提交
-> # l, label <label> = 用名称标记当前HEAD
-> # t, reset <label> = reset HEAD to a label
-> # m, merge(-C <commit> | -c <commit>]<label> [# < oneline >)
-> #。使用原始的合并提交创建一个合并提交消息(或者一行，如果没有指原始的合并提交);使用-c <commit>来重写提交消息
-> # 这些行可以重新排序;他们从上到下执行。
-> ＃如果你在这里删除了一行，这个提交将会丢失。
-> ＃但是，如果你删除了所有内容，rebase将被终止。
-> ```
->
-> 
-
-7. 此时，重新查看日志,关闭文本文件后重新打开文本查看内容，会发现之前的commit2 和commit3 都不见了，此时不要着急。
-
-   ![image-20210714124912275](git常用名令.assets/image-20210714124912275.png)
-
-   ```cmd
-   D:\test>type txt.txt
-   add line 1
-   ```
-
-
-
-8. 执行命令：
-
-   ```cmd
-   D:\test>git status
-   interactive rebase in progress; onto 0242373
-   Last command done (1 command done):
-      pick 0242373 add line
-   Next commands to do (2 remaining commands):
-      squash 5947b25 add line 2
-      squash 8a7f426 add line 3
-     (use "git rebase --edit-todo" to view and edit)
-   You are currently rebasing branch 'master' on '0242373'.
-     (all conflicts fixed: run "git rebase --continue")
-   
-   nothing to commit, working tree clean
-   ```
-
-   这里提示我们了，可以修改(`git rebase --edit-todo`)也可以继续(`git rebase --continue`)，我们执行继续：
-
-   ```cmd
-   git rebase --continue
-   ```
-
-   这里显示了三次commit 的 message，我们可以将其编辑：
-
-   ![image-20210714125116939](git常用名令.assets/image-20210714125116939.png)
-
-   ​	将提交的message，进行修改如下,然后保存退出：
-
-![image-20210714125225575](git常用名令.assets/image-20210714125225575.png)
-
-9. 再次查看提交日志，再次关闭文本文件，然后重新打开查看文件内容以恢复：
-
-   ![image-20210714125420380](git常用名令.assets/image-20210714125420380.png)
-
-   ```cmd
-   D:\test>type txt.txt
-   add line 1
-   add line 2
-   add line 3
-   ```
-
-
-
 
 
 ## 储藏
@@ -421,6 +240,14 @@ $ git grep "Hello"
 # 在某一版本中搜索文本
 $ git grep "Hello" v2.5
 ```
+
+显示今天你写了多少行代码
+
+```bash
+$ git diff --shortstat "@{0 day ago}"
+```
+
+
 
 ## 分支
 
@@ -575,4 +402,187 @@ $ git show commitID
 #恢复本地分支
 $ git checkout -b  要恢复的分支名  commitId
 ```
+
+### 合并多次提交
+
+本地提交多次后，可以进行合并后，再提交到远程分支，下面进行一个demo示例：
+
+1. 新建一个文件夹 test，在下面进行git初始化
+
+   ```cmd
+   D:\test>git init
+   Initialized empty Git repository in D:/test/.git/
+   ```
+
+2. 新建文本文件txt.txt,进行编辑,新增一行内容为 `add line 1`，然后保存提交:
+
+   ```cmd
+   D:\test>type txt.txt
+   add line 1
+   
+   D:\test>git add .
+   
+   D:\test>git commit -m "add line 1"
+   [master (root-commit) 0242373] add line 1
+    1 file changed, 1 insertion(+)
+    create mode 100644 txt.txt
+   ```
+
+   > type命令是windws的一个命令，用来查看文本内容。
+
+   
+
+3. 继续编辑txt文件，在第二行新增 `add line 2`，然后保存再commit
+
+   ```cmd
+   D:\test>type txt.txt
+   add line 1
+   add line 2
+   
+   D:\test>git add .
+   
+   D:\test>git commit -m "add line 2"
+   [master 5947b25] add line 2
+    1 file changed, 2 insertions(+), 1 deletion(-)
+   ```
+
+4. 继续上面的步骤，新增 add line 3 ，然后保存提交：
+
+   ```cmd
+   D:\test>type txt.txt
+   add line 1
+   add line 2
+   add line 3
+   
+   D:\test>git add .
+   
+   D:\test>git commit -m "add line 3"
+   [master 8a7f426] add line 3
+    1 file changed, 2 insertions(+), 1 deletion(-)
+   ```
+
+5. 查看提交日志记录（三条commit log，按照时间降序排列）：
+
+   ![image-20210714124340234](git常用名令.assets/image-20210714124340234.png)
+
+6. 进行rebase（变基），这里的 024237... 就是提交的commitid，这里我们使用的第一次提交的commitid
+
+   ```cmd
+   git rebase -i 02423736e2e978061bd89dc750f98e3f21d518ce
+   ```
+
+   > 开发环境时，我们在使用上面的命令时，参数commitid 使用别人的最新的一个分支，这样我们才能编辑所有自己的commit。
+
+   执行后，会让我们编辑一个文件（输入小写的i，即可进入编辑模式）：
+
+   ![image-20210714124508525](git常用名令.assets/image-20210714124508525.png)
+
+   这里，我们将这两个`pick`修改成 `squash` （也可以简写成 `s`）,然后在文件第一行新增一行，然后保存退出（:  wq, 回车），最后结果如下：
+
+![image-20210714124733959](git常用名令.assets/image-20210714124733959.png)
+
+> 翻译：
+>
+> ```txt
+> # Commands:
+> # p, pick <commit> = use commit
+> # r, reword <commit> = use commit, but edit the commit message
+> # e, edit <commit> = use commit, but stop for amending
+> # s, squash <commit> = use commit, but meld into previous commit
+> # f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
+> #                    commit's log message, unless -C is used, in which case
+> #                    keep only this commit's message; -c is same as -C but
+> #                    opens the editor
+> # x, exec <command> = run command (the rest of the line) using shell
+> # b, break = stop here (continue rebase later with 'git rebase --continue')
+> # d, drop <commit> = remove commit
+> # l, label <label> = label current HEAD with a name
+> # t, reset <label> = reset HEAD to a label
+> # m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+> # .       create a merge commit using the original merge commit's
+> # .       message (or the oneline, if no original merge commit was
+> # .       specified); use -c <commit> to reword the commit message
+> #
+> # These lines can be re-ordered; they are executed from top to bottom.
+> #
+> # If you remove a line here THAT COMMIT WILL BE LOST.
+> #
+> # However, if you remove everything, the rebase will be aborted.
+> ```
+>
+> ```txt
+> #命令:
+> # p, pick <commit> = 使用提交
+> # r, reword <commit> = 使用提交，但是编辑commit消息
+> # e, edit <commit> = 使用提交，但停止修改
+> # s, squash <commit> = 使用提交，但合并到之前的commit中 # 合并多次commit使用此命令
+> # f, fixup [-C | -C] <commit> = 类似`squash`,但是只保留前一个的提交日志消息，除非使用-C，在这种情况下只保存这个提交信息;-c和-C一样,但-c打开编辑器
+> # x, exec <command> = run命令(其余部分行)使用shell
+> # b, break = 在这里停止(使用'git rebase -continue'继续rebase)
+> # d, drop <commit> = 删除提交
+> # l, label <label> = 用名称标记当前HEAD
+> # t, reset <label> = reset HEAD to a label
+> # m, merge(-C <commit> | -c <commit>]<label> [# < oneline >)
+> #。使用原始的合并提交创建一个合并提交消息(或者一行，如果没有指原始的合并提交);使用-c <commit>来重写提交消息
+> # 这些行可以重新排序;他们从上到下执行。
+> ＃如果你在这里删除了一行，这个提交将会丢失。
+> ＃但是，如果你删除了所有内容，rebase将被终止。
+> ```
+>
+> 
+
+7. 此时，重新查看日志,关闭文本文件后重新打开文本查看内容，会发现之前的commit2 和commit3 都不见了，此时不要着急。
+
+   ![image-20210714124912275](git常用名令.assets/image-20210714124912275.png)
+
+   ```cmd
+   D:\test>type txt.txt
+   add line 1
+   ```
+
+
+
+8. 执行命令：
+
+   ```cmd
+   D:\test>git status
+   interactive rebase in progress; onto 0242373
+   Last command done (1 command done):
+      pick 0242373 add line
+   Next commands to do (2 remaining commands):
+      squash 5947b25 add line 2
+      squash 8a7f426 add line 3
+     (use "git rebase --edit-todo" to view and edit)
+   You are currently rebasing branch 'master' on '0242373'.
+     (all conflicts fixed: run "git rebase --continue")
+   
+   nothing to commit, working tree clean
+   ```
+
+   这里提示我们了，可以修改(`git rebase --edit-todo`)也可以继续(`git rebase --continue`)，我们执行继续：
+
+   ```cmd
+   git rebase --continue
+   ```
+
+   这里显示了三次commit 的 message，我们可以将其编辑：
+
+   ![image-20210714125116939](git常用名令.assets/image-20210714125116939.png)
+
+   ​	将提交的message，进行修改如下,然后保存退出：
+
+![image-20210714125225575](git常用名令.assets/image-20210714125225575.png)
+
+9. 再次查看提交日志，再次关闭文本文件，然后重新打开查看文件内容以恢复：
+
+   ![image-20210714125420380](git常用名令.assets/image-20210714125420380.png)
+
+   ```cmd
+   D:\test>type txt.txt
+   add line 1
+   add line 2
+   add line 3
+   ```
+
+
 
