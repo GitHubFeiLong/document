@@ -109,7 +109,7 @@ transaction.rollback();
 | @Modifying      | 当dao方法是更新删除时，需要加上该注解              |                                                              |
 | @Transactional  | 使用更新/删除操作，必须要该注解                    |                                                              |
 | @Rollback       | 默认执行完成后，事务会自动回滚。导致数据库没更新。 | value：false，使用@Rollback(value = false) 关闭自动回滚      |
-| @OneToOne       | 一对一关联关系                                     | targetEntity:关系目标实体, 默认为void.class, 可选<br />cascade:级联操作策略， PERSIST(级联新增)、REMOVE(级联删除)、REFRESH(级联刷新)、MERGE(级联更新)、ALL(全选).<br />fetch:数据获取方式，EAGER(立即加载)、LAZY(延迟加载).<br />optional:是否允许空。<br />mappedBy：关联关系被谁维护，非必填，一遍不需要特别指定。<br />orphanRemoval：是否级联删除，和CascadeType.REMOVE 效果一样，任意配置一种即可生效 |
+| @OneToOne       | 一对一关联关系                                     | targetEntity:关系目标实体, 默认为void.class, 可选<br />cascade:级联操作策略， PERSIST(级联新增)、REMOVE(级联删除)、REFRESH(级联刷新)、MERGE(级联更新)、ALL(全选).<br />fetch:数据获取方式，EAGER(立即加载)、LAZY(延迟加载).<br />optional:是否允许空。<br />mappedBy：关联关系被谁维护，非必填，一般不需要特别指定。<br />orphanRemoval：是否级联删除，和CascadeType.REMOVE 效果一样，任意配置一种即可生效 |
 | @OneToMany      | 建立一对多关系                                     | targetEntity：对方实体（多的一方）的类对象；<br />mappedBy：指定从表实体类中引用主表对象的名称；<br />cascade：指定要使用的级联操作;<br />fetch：指定是否采用延迟加载<br />orphanRemoval：是否使用孤儿删除 |
 | @ManyToOne      | 建立多对一关系                                     | targetEntityClass：指定一的一方实体类字节码<br />cascade：指定要使用的级联操作<br />fetch：指定是否采用延迟加载<br />optional：关联是否可选。如果设置为false，则必须始终存在非空关系。 |
 | @JoinColumn     | 用于定义主键字段和外键字段的对应关系               | name：目标表的字段名，必填；<br /> referencedColumnName：本实体类的字段名, 非必填, 默认本表ID；<br />unique：外键字段是否唯一, 可选<br />nullable：外键字段是否允许为空。默认值允许。<br />insertable：是否允许插入。默认值允许。<br />updatable：是否允许更新。默认值允许。<br />columnDefinition：列的定义信息。 |
