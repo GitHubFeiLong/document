@@ -1,6 +1,8 @@
 # spring boot 配置文件提示
 
-[Configuration Metadata (spring.io)](https://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html)
+[官网 Configuration Metadata (spring.io)](https://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html)
+
+[spring boot starter 江南一点雨-万字详解](https://mp.weixin.qq.com/s/AfotfXlVT2HE4Q8jmkkK4A)
 
 在编辑spring的配置文件时，我们发现有些属性是有提示的。接下来，我们将自己编写一个自动配置类.
 
