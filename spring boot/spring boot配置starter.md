@@ -62,13 +62,14 @@ public class FileUploadProperties {
 
 >注意事项：
 >
->使用@ConfigurationProperties注解后，需要将其放入Spring容器中，不然预编译时会报错。
+>1. 使用@ConfigurationProperties注解后，需要将其放入Spring容器中，不然预编译时会报错。
 >
->使用文档注释，在项目构建时会自动将文档注释解析成属性注释。
+>2. 使用文档注释，在项目构建时会自动将文档注释解析成属性注释。
 >
->必须要有getter、setter方法。
+>3. 必须要有getter、setter方法。
 >
->rootDir="files"：当配置文件不配置该属性值时，使用默认值。
+>4. rootDir="files"：当配置文件不配置该属性值时，使用默认值。
+>5. @NestedConfigurationProperty注解：代表该属性不是简单的类型，加上后丰富提示信息
 
 ### 配置文件简单介绍
 
