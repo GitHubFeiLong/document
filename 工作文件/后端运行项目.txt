@@ -1,3 +1,0 @@
-start  javaw -jar xxxx.jar      (winds)
-
-nohup java -jar xxxx.jar      (centos)
