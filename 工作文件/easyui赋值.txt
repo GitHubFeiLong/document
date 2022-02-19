@@ -1,2 +1,0 @@
-input
-$("#code").textbox("setValue",'sdfsdfdsf');
