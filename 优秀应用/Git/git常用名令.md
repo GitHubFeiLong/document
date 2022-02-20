@@ -271,6 +271,8 @@ git push origin new-branch
 
 # 删除github上的分支
 $ git push origin :new-branch
+# 和上面一样的效果
+$ git push origin :refs/heads/new-branch
 
 # 删除本地分支
 $ git branch -d branch
@@ -293,13 +295,62 @@ $ git checkout -b branch
 
 ## 标签
 
-```bash
-# 给当前版本打标签
-$ git tag tag-name
+标签分为轻量标签和附注标签。
 
-# 给当前版本打标签并附加消息
-$ git tag -a tag-name
+创建轻量标签：
+
+```shell
+# 给当前分支打上轻量标签
+$ git tag tag-name
 ```
+
+创建附注标签：
+
+```bash
+# 给当前版本打标签并附加消息（）
+$ git tag -a tag-name
+
+# 快速创建
+$ git tag -a tag-name -m "附注信息"
+```
+
+查看所有标签：
+
+```shell
+$ git tag -l
+
+$ git tag --list
+```
+
+查看标签信息：
+
+```shell
+$ git show tag-name
+```
+
+推送标签到远程仓库：
+
+```shell
+# 推送本地指定tag到远程
+$ git push origin tag-name
+
+# 推送本地所有tag到远程
+$ git push origin --tags
+```
+
+删除本地标签：
+
+```shell
+$ git tag -d tag-name
+```
+
+删除远程标签：
+
+```shell
+$ git push origin :refs/tags/tag-name
+```
+
+
 
 ## 合并与变基
 
