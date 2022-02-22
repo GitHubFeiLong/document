@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Promise封装ajax请求</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 接口地址 https://api.apiopen.top/getJoke
+    // 1. 创建对象
+    const xhr = new XMLHttpRequest();
+
+    const p = new Promise((resolve, reject) => {
+        // 2. 初始化
+        xhr.open('GET', 'https://api.apiopen.top/getJoke')
+        // 3. 发送
+        xhr.send();
+        // 4. 绑定事件，处理响应结果
+        xhr.onreadystatechange = function () {
+            // 判断
+            if (xhr.readyState === 4) {
+                // 判断响应状态码 200 -299
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(xhr.response);
+                } else {
+                    reject(xhr.status);
+                }
+            }
+        }
+    });
+
+    p.then((value)=>{
+        console.log(value);
+    }, (reason)=>{
+        console.log(reason);
+    })
+
+    
+</script>
+</html>

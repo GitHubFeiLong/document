@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Promise catch 方法</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    const p = new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            // 设置p对象的状态为失败，并设置失败的值
+            reject('出错了');
+        }, 1000)
+    })
+    // p.then(value=>{
+    //     console.log(value);
+    // }, reason=>{
+    //     console.error(reason);
+    // })
+
+    // 使用catch， 不用第一个回调。
+    p.catch(reason=>{
+        console.error(reason);
+    })
+</script>
+</html>

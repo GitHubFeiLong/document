@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>generator 生成器</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 生成器其实就是一个特殊函数，异步编程
+    // yield:函数代码的分隔符
+    function * gen() {
+        console.log(1);
+        yield '一只没有耳朵',
+        console.log(2);
+        yield '一只没有尾巴',
+        console.log(3);
+        yield '真奇怪',
+        console.log(4);
+    }
+
+    let iterator = gen();
+    // console.log(iterator);
+
+    // 执行gen()方法
+    console.log(iterator.next());
+    console.log(iterator.next());
+    console.log(iterator.next());
+    console.log(iterator.next());
+    // 变量
+    for (const v of gen()) {
+        console.log(v);
+    }
+    // 使用迭代器循环，返回值的value是 yield的值如：{value: "一只没有耳朵", done: false}
+</script>
+</html>

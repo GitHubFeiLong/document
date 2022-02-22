@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>generator 生成器函数参数</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    function * gen(arg){
+        let one =  yield 111;
+        console.log(one);
+        let two = yield 222;
+        console.log(two);
+        let three = yield 333;
+        console.log(three);
+    }
+    // 执行获取迭代器对象
+    let iterator = gen('AAA');
+    console.log(iterator.next());
+    // next 方法可以传递实参: 本次传递的参数值，就是上次yield的返回值
+    console.log(iterator.next('BBB'));
+    console.log(iterator.next('CCC'));
+    console.log(iterator.next('DDD'));
+</script>
+</html>

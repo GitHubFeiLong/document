@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>使用迭代器自定义遍历数据</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 声明一个对象
+    const banji = {
+        name : '终极一班',
+        stus:[
+            'xiaoming',
+            'xiaoning',
+            'xiaotian',
+        ],
+        // 自定义迭代器循环
+        [Symbol.iterator](){
+            // 索引变量
+            let index = -1;
+            return {
+                next: () => {
+                    index++;
+                    return {value:this.stus[index], done:index>this.stus.length}
+                }
+            };
+        }
+    }
+    // 遍历对象
+    for (let v of banji) {
+        console.log(v);
+    }
+</script>
+</html>

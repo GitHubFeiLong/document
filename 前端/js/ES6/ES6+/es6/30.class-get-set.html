@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>get-set</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    //get 和 set
+    class Phone {
+        get pirce(){
+            console.log('价格数据被读取了');
+            return '1999';
+        }
+
+        set pirce(newVal){
+            console.log('价格数据被修改了');
+        }
+
+    }
+
+    let s = new Phone();
+    console.log(s);
+    console.log(s.pirce);
+</script>
+</html>

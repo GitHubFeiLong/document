@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>类声明</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // ES5
+    // 手机
+    // function Phone (brand, pirce) {
+    //      this.brand = brand;
+    //      this.pirce = pirce;   
+    // }
+
+    // // 添加方法
+    // Phone.prototype.call = function () {
+    //     console.log("我可以打电话");
+    // }
+
+    // let Huawei = new Phone('华为', 5999);
+    // Huawei.call()
+    // console.log(Huawei);
+
+    // ES6
+    class Phone {
+        constructor (brand, pirce) {
+            this.brand = brand;
+            this.pirce = pirce;
+        }
+        // 方法必须是这个格式
+        call () {
+            console.log('我可以打电话');
+        }
+    }
+    let onePlush = new Phone('一加', 1999);
+    onePlush.call();
+    console.log(onePlush);
+</script>
+</html>

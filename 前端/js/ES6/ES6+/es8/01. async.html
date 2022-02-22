@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>async</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // async 函数 返回的结果是一个 Promise对象
+    async function fn () {
+        // 1. 返回的结果不是一个 Promise 类型的对象，其结果就是一个成功的Promise对象。
+        // return '尚硅谷';
+        // 2. 抛出异常：返回的结果是一个失败的Premise
+        // throw new Error('出错了')
+        // 3. 返回的结果是一个Promise对象
+        return new Promise((resolve, reject) => {
+            reject('成功');
+        })
+    }
+    const result = fn();
+
+    console.log(result);
+</script>
+</html>

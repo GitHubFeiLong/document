@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>对象方法扩展</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    //1. Object.is判断两个值是否完全相等
+    console.log(Object.is(123,123));
+    //2. Object.assign对象的合并
+    // const cfg1 = {
+    //     host:'localhost',
+    //     port:3306,
+    //     name:'root',
+    //     password:'root',
+    // }
+    // const cfg2 = {
+    //     host:'127.0.0.1',
+    //     port:33060,
+    //     name:'root111',
+    //     da:'root111',
+    // }
+    // let result =  Object.assign(cfg1, cfg2);
+    // console.log(result);
+    //3. Object.setPrototypeOf 设置原型对象 Object.getPrototypeof
+    const school = {
+        name : '尚硅谷',
+    }
+    const cities = {
+        xiaoqu : ['北京', '上海', '深圳'],
+    }
+    Object.setPrototypeOf(school, cities);
+    console.log(school);
+
+</script>
+</html>

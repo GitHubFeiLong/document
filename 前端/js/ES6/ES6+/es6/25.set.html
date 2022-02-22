@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>set</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 声明一个 set
+    // let s = new Set();
+    // let s2 = new Set(['A','B', 'A', 'AB']);
+    // console.log(s, typeof s); //Set(0) "object"
+    // console.log(s2); // Set(3) {"A", "B", "AB"}
+    // // 元素个个数
+    // console.log(s2.size);
+    // // 添加新的元素
+    // s2.add('AABB');
+    // // 删除元素
+    // s2.delete('A');
+    // // 检测元素是否存在
+    // console.log(s2.has('B'));
+    // // 清空集合
+    // s2.clear();
+    
+    // console.log(s2);
+
+    // for(let v of s2) {
+    //     console.log(v);
+    // }
+
+    // 实践
+    let arr = [1, 2, 3, 4, 5, 4, 5, 2, 1];
+    // 1. 数组去重
+    // let result = [...new Set(arr)]
+    // console.log(result);
+    // 2. 交集
+    let arr2 = [4,5,6,5,6]
+    // let s2 = new Set(arr2);
+    // let result = [...new Set(arr)].filter(item => s2.has(item));
+    // console.log(result);
+    // 2. 并集
+    let union = [...new Set([...arr, ...arr2])]
+    // 2. 差集
+    let result = [...new Set(arr)].filter(item => !new Set(arr2).has(item));
+    console.log(result);    
+
+</script>
+</html>

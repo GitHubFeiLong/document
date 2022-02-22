@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>dome</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 声明变量
+    let a;
+    let b,c,d;
+    let f= 521, g = 'iloveyou', h = [];
+    // 1. 变量不能重复声明(Uncaught SyntaxError: Identifier 'star' has already been declared)
+    // let star = '罗志祥';
+    // let star = '罗志祥';
+
+    // 2. 块级作用域，全局作用域，函数作用域， eval作用域
+    // {
+    //     // girl is not defined
+    //     let girl = '周扬青';
+    //     // var girl = '周扬青';
+    // }
+    // console.log(girl);
+
+    // 3. 不存在变量提升
+    // undefined
+    // console.log(song);
+    // var song = '恋爱达人';
+    // Cannot access 'song' before initialization
+    // let song = '恋爱达人';
+
+    // 4. 不影响作用域链(fn没有变量，会往上层找该变量)
+    {
+        let school = '尚硅谷';
+        function fn () {
+            console.log(school);
+        }
+        fn();
+    }
+</script>
+</html>

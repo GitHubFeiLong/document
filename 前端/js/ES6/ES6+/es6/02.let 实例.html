@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>dome</title>
+    <style>
+        .outer-div {
+            width:300px;
+            height:300px;
+            position: relative;
+            display: flex;
+        }
+        .inner-div{
+            width:70px;
+            height:50px;
+            position: relative;
+            margin-right:10px;
+            border:1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>点击切换颜色</h2>
+    <div class="outer-div">
+        <div class='inner-div'></div>
+        <div class='inner-div'></div>
+        <div class='inner-div'></div>
+    </div>
+</body>
+<script>
+    // 1. 获取div元素
+    let divs = document.getElementsByClassName('inner-div');
+    // 遍历绑定事件
+    // for (var i = 0; i < divs.length; i++) {
+    //     // 点击事件
+    //     divs[i].onclick = function () {
+    //         // 修改当前元素的背景色
+    //         // * 这种可以
+    //         // this.style.background = 'pink';
+    //         // *  Cannot read property 'style' of undefined
+    //         divs[i].style.background = 'pink';
+    //     }
+    // }
+    // 因为i没有块级作用域，循环结束后，i自增变为了3
+    // console.log(window.i);
+
+    // 结语：var 没有块级作用，let有块级作用域。上面的循环将var变成let 就会每个块级都有自己的i
+    
+</script>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>dome</title>
+
+    <style>
+        #wrap{
+            width:400px;
+            height:400px;
+            border:1px solid;
+            /* position: absolute;
+            top: 0;
+            left: 0;
+            right:0;
+            bottom:0;
+            margin:auto; */
+
+            position: absolute;
+            top: 50%;
+            left:50%;
+            margin-top: -200px;
+            margin-left:-200px;
+            /* position: absolute;
+            top: 50%;
+            left:50%;
+            transform:translate3d(-50%, -50%, 0); */
+
+            perspective: 200px;
+            transform-style: preserve-3d;
+        }
+        #wrap > .box{
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				margin: auto;
+				width: 100px;
+				height: 100px;
+				transition:3s ;
+				transform-style: preserve-3d;
+				transform-origin: center center -50px; 
+                /* transform:perspective(100px) */
+			}
+        #wrap > .box > div {
+            width:100px;
+            height:100px;
+            position: absolute;
+            background-color:pink;
+            text-align: center;
+            font:bold 18px/100px '微软雅黑';
+            transform-origin: center center -50px;
+            /* backface-visibility: hidden; */
+        }
+        #wrap > .box > div:nth-child(1) {
+            z-index:1;
+        }
+        #wrap > .box  > div:nth-child(2) {
+            transform-origin:bottom;
+            top: -100px;
+            transform:rotateX(90deg);
+        }
+        #wrap > .box  > div:nth-child(3) {
+            transform-origin:top;
+            transform:rotateX(-90deg);
+            bottom:-100px
+        }
+        #wrap > .box  > div:nth-child(4) {
+            left:-100px;
+            transform-origin:right;
+            transform:rotateY(-90deg);
+        }
+        #wrap > .box  > div:nth-child(5) {
+            right:-100px;
+            transform-origin:left;
+            transform:rotateY(90deg);
+        }
+        #wrap > .box  > div:nth-child(6) {
+            /* transform-origin:center; */
+            transform: rotateY(180DEG) rotate(180DEG);
+        }
+        #wrap:hover .box{
+            transform: rotateX(360deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div class="box">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+        </div>
+    </div>
+</body>
+<script>
+
+</script>
+</html>

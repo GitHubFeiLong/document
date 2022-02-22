@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>简写对象写法</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // ES6 允许再大括号里面，直接写入变量和函数，作为对象的属性和方法，这样的书写更加简洁
+    let name = '尚硅谷';
+    let change = function () {
+        console.log('我们可以改变你！！');
+    }
+    
+    // 原来
+    const SCHOOL = {
+        name:name,
+        change:change,
+        // 方法
+        myMethod: function (){
+            console.log('我是自定义方法！！');
+        }
+    }
+
+    const SCHOOL = {
+        // name:name,
+        // change:change
+        name,
+        change,
+        // 方法
+        myMethod(){
+            console.log('我是自定义方法！！');
+        }
+    }
+
+    console.log(SCHOOL);
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>generator 生成器函数实例</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 模拟获取 用户数据 订单数据 商品数据
+    function getUsers () {
+        setTimeout(()=>{
+            let data = '用户数据';
+            iterator.next(data);
+        }, 1000);
+    }
+    function getOrders () {
+        setTimeout(()=>{
+            let data = '订单数据';
+            iterator.next(data);
+        }, 1000);
+    }
+    function getGoods () {
+        setTimeout(()=>{
+            let data = '商品数据';
+            iterator.next(data);
+        }, 1000);
+    }
+
+    function * gen(){
+        let users = yield getUsers();
+        console.log(users);
+        let orders = yield getOrders();
+        console.log(orders);
+        let goods = yield getGoods();
+        console.log(goods);
+    }
+    let iterator = gen();
+    iterator.next();
+</script>
+</html>

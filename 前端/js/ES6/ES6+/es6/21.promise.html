@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>promise</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 实例化 Promise 对象
+    const p = new Promise(function(resolve, reject){
+        setTimeout(()=>{
+            let data = '数据库中的用户数据';
+            // resolve (成功)
+            // resolve(data);
+            let err = '数据读取失败';
+            reject(err);
+        }, 1000)
+    })
+
+    // 调用 Promise 对象的 then方法，第一个回调函数是成功回调函数，第二个是失败回调函数
+    p.then((value)=>{
+        console.log(value);
+    },(reason)=>{
+        console.log(reason);
+    })
+
+</script>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>迭代器</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 申明一个数组
+    const xiyou = ['ts', 'swk', 'zbj', 'ss'];
+
+    // 使用 for ... of 遍历数组
+    for (let v of xiyou) {
+        console.log(v);//'ts', 'swk', 'zbj', 'ss'
+    }
+    // 使用 for ... in 遍历数组
+    for (let v in xiyou) {
+        console.log(v); // 0,1,2,3
+    }
+    // _proto 有 Symbol(Symbol.iterator) 方法
+    console.log(xiyou);
+
+    // 获取迭代器对象
+    let iterator = xiyou[Symbol.iterator]();
+    console.log(iterator);
+    // 调用迭代器对象的next方法,返回 {value: "ts", done: false} 对象，value表示当前值，done表示是否迭代完成
+    console.log(iterator.next());
+    console.log(iterator.next());
+    console.log(iterator.next());
+    console.log(iterator.next());
+    console.log(iterator.next()); // done 变为 true
+</script>
+</html>

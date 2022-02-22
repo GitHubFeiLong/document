@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>静态成员</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    class Phone {
+        static name = '手机';
+        static change () {
+            console.log("我可以改变世界");
+        }
+    }
+    console.log(new Phone().name);
+    console.log(Phone.name);
+</script>
+</html>

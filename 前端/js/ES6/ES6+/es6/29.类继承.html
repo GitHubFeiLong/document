@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>继承</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    class Phone {
+        constructor (brand, pirce) {
+            this.brand = brand;
+            this.pirce = pirce;
+        }
+        call () {
+            console.log('我可以打电话');
+        }
+        
+    }
+
+    class SmartPhone extends Phone {
+        constructor ( brand, pirce, color, size) {
+            super(brand, pirce);
+            this.color = color;
+            this.size = size;
+        }
+        photo(){
+            console.log('我可以拍照');
+        }
+        game(){
+            console.log('我可以玩游戏');
+        }
+        // 重写call方法
+        call() {
+            console.log(`${this.brand} 可以打电话哦`);
+        }
+    }
+    const xiaomi = new SmartPhone('小米', 799, 'red', '5.6yc');
+    console.log(xiaomi);
+    xiaomi.call();
+</script>
+</html>

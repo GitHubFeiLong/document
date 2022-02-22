@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>对象展开</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // Rest参数与:spread扩展运算符在ES6中已经引入，不过ES6中只针对于数组，在ES9中为对象提供了像数组一样的rest 参数和扩展运算符
+
+    // function connect({host, port, ...user}){
+    //     console.log(host);
+    //     console.log(port);
+    //     console.log(user);
+    // }
+    // connect({
+    //     host:'127.0.0.1', 
+    //     port:3306,
+    //     username:'root', 
+    //     password:'root'
+    // })
+
+    // 对象合并
+    const skillOne = {
+        q : '天音波'
+    }
+    const skillTwo = {
+        w : '金钟罩'
+    }
+    const skillThree = {
+        e : '天雷破'
+    }
+    const skillFour = {
+        r : '猛龙摆尾'
+    }
+    // ...skillOne => q:'天音波'
+    const mangseng = {...skillOne,...skillTwo,...skillThree,...skillFour}
+    console.log(mangseng);
+</script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>dome</title>
+</head>
+    <ul>
+        <li>
+            <a>肖生克的救赎</a>
+            <p>上映日期：1994-09-10</p>
+        </li>
+        <li>
+            <a>阿甘正传</a>
+            <p>上映日期：1994-07-06</p>
+        </li>
+    </ul>
+<body>
+
+</body>
+<script>
+    // dot . 元字符 除换行符以外的任意单个字符
+    let str = `
+        <ul>
+            <li>
+                <a>肖生克的救赎</a>
+                <p>上映日期：1994-09-10</p>
+            </li>
+            <li>
+                <a>阿甘正传</a>
+                <p>上映日期：1994-07-06</p>
+            </li>
+        </ul>
+    `;
+
+    // const reg = /<li>\s+<a>(.*?)<\/a>\s+<p>(.*?)<\/p>/;
+    // const reg = /<li>.*?<a>(.*?)<\/a>.*?<p>(.*?)<\/p>/s;
+    // const result = reg.exec(str);
+    // console.log(result);
+
+    // 全局
+    const reg = /<li>.*?<a>(.*?)<\/a>.*?<p>(.*?)<\/p>/gs;
+    let result;
+    while(result = reg.exec(str)){
+        console.log(result);
+    }
+        
+    
+</script>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>正则表达式-反向断言</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    let str = 'JS123123123ni阿斯123啦啦啦';
+    // 正向断言
+    // const reg = /\d+(?=啦)/;
+    // let result = reg.exec(str);
+    // 反向断言
+    const reg = /(?<=斯)\d+/;
+    let result = reg.exec(str);
+    console.log(result);
+</script>
+</html>

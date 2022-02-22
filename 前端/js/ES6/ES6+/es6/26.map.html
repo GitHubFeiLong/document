@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>map</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 声明map
+    let m = new Map();
+    // 添加元素
+    m.set('name', '尚硅谷');
+    m.set('key1', 'value1');
+    console.log(m);
+    console.log(m.get('key1'));
+
+    // size
+    // console.log(m.size);
+    // // 删除
+    // m.delete('name')
+    // console.log(m);
+    // // 获取
+    // console.log(m.get('key1'));
+    // // 清空
+    // m.clear();
+    // 遍历
+    for (let k of m) {
+        console.log(k);
+    }
+
+</script>
+</html>

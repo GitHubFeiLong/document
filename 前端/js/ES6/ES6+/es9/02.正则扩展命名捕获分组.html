@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>正则扩展命名捕获分组</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 声明一个字符串
+    // let str = '<a href="www.baidu.com">百度</a>';
+    // // 提取url 与 标签文本
+    // const reg = /<a href="(.*)">(.*)<\/a>/;
+    // let result = reg.exec(str);    
+    // console.log(result);
+
+    // console.log(result[1]);
+    // console.log(result[2]);
+
+    let str = '<a href="www.baidu.com">百度</a>';
+    const reg = /<a href="(?<url>.*)">(?<text>.*)<\/a>/;
+    let result = reg.exec(str);    
+    console.log(result);
+
+    console.log(result.groups.url);
+    console.log(result.groups.text);
+
+</script>
+</html>

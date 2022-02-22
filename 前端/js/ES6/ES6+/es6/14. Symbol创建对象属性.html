@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Symbol 创建对象属性</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 向对象中添加方法up down
+    let game = {
+        up(){
+            console.log("raw up");
+        },
+        down(){
+            console.log("raw down");
+        }
+    }
+    // 如果game本来就有up方法，就会覆盖原up
+    // game.up = function () {
+
+    // }
+
+    // 声明一个对象
+    // let methods = {
+    //     up: Symbol(),
+    //     down: Symbol()
+    // }
+    // game[methods.up] = function () {
+    //     console.log('new up 方法');
+    // }
+    // game[methods.down] = function () {
+    //     console.log('new down 方法');
+    // }
+    // console.log(game);
+
+    let youxi = {
+        name:'狼人杀',
+        [Symbol('say')]: function(){
+            console.log('say');
+        },
+        [Symbol('do')]: function(){
+            console.log('do');
+        }
+    }
+
+    console.log(youxi);
+
+</script>
+</html>

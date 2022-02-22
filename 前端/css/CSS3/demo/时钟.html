@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>dome</title>
+    <style>
+        #brow{
+            width:200px;
+            height:200px;
+            top:0;
+            right:0;
+            bottom:0;
+            left:0;
+            margin :auto;
+            border-radius:50%;
+            border:1px solid;
+            position: relative;
+        }
+       
+        #brow > ul > li{
+            list-style-type: none;
+            position: absolute;
+            display: inline-block;
+            height:5px;
+            width:2px;
+            background-color:black;
+            left: 99px;
+            top: 0;
+            transform-origin: center 100px; 
+        }
+        #brow > ul > li:nth-of-type(5n+1){
+            height:10px;
+        }
+
+        #time{
+            position: absolute;
+            width:20px;
+            height:20px;
+            background-color:deeppink;
+            top: 0;
+            bottom:0;
+            left:0;
+            right:0;
+            margin:auto;
+            border-radius:50%;
+        }
+        #time > div {
+            display: inline-block;
+            position: absolute;
+        }
+        #hour{
+            width:6px;
+            height:25px;
+            background-color:black;
+            top: -25px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            transform-origin: 3px 35px;
+        }
+        #minute{
+            width:4px;
+            height:45px;
+            background-color:blue;
+            top: -45px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            transform-origin: 2px 55px;
+        }
+        #second{
+            width:2px;
+            height:65px;
+            background-color:red;
+            top: -65px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            transform-origin: 1px 75px;
+        }
+    </style>
+    <style id="style">
+
+    </style>
+</head>
+
+<body>
+    <div id="brow">
+        <ul id="ul"></ul>
+        <div id="time">
+            <div id="hour"></div>
+            <div id="minute"></div>
+            <div id="second"></div>
+        </div>
+    </div>
+</body>
+<script>
+    window.onload = function(){
+        let ul = document.querySelector('ul');
+        let style = document.querySelector('#style');
+        let liStr = '';
+        let styleStr = '';
+        for (let i = 1; i <= 60; i++) {
+            liStr += `<li></li>`
+            styleStr += `
+                #brow > ul > li:nth-child(${i}){
+                    transform:rotate(${(i - 1) * 6}deg);
+                }
+            `
+        }
+        ul.innerHTML = liStr;
+        style.innerHTML = styleStr;
+        let hour = document.querySelector('#hour');
+        let minute = document.querySelector('#minute');
+        let second = document.querySelector('#second');
+        auto();
+        setInterval(auto, 1000);
+        function auto () {
+            console.log(1);
+            let date = new Date();
+            let s = date.getSeconds();
+            let m = date.getMinutes() + s/ 60;
+            let h = date.getHours() + m / 60;
+            hour.style.transform = `rotate(${30 * h}deg)`
+            minute.style.transform = `rotate(${6 * m}deg)`
+            second.style.transform = `rotate(${6 * s}deg)`
+        }
+    }
+</script>
+</html>
