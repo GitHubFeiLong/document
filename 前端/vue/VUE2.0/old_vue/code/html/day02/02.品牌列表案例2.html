@@ -82,8 +82,6 @@
         var month = dt.getMonth() + 1;
         var day = dt.getDate();
 
-        
-
         if(pattern && pattern.toLowerCase() === 'yyyy-mm-dd'){
             return `${year}-${month}-${day}`
         } else {
@@ -95,8 +93,7 @@
     })
 
     // 自定义全局按键修饰符
-    Vue.config.keyCodes.f2=113;
-
+    Vue.config.keyCodes.f2=13;
 
     // 使用 Vue.directive() 定义全局的指令
     // 其中：
