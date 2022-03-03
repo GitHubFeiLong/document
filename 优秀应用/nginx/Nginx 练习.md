@@ -68,24 +68,23 @@
 
 5. 测试(本机)
    
-
-   5.1 浏览器测试
+5.1 浏览器测试
    输入www.heytool.com
-
-   ![1590813608043](..\typora-user-images\1590813608043.png)
+   
+![1590813608043](..\..\typora-user-images\1590813608043.png)
    输入bbs.heytool.com
-
-   ![1590813691552](..\typora-user-images\1590813691552.png)
+   
+![1590813691552](..\..\typora-user-images\1590813691552.png)
    5.2 终端测试
-
-   ```bash
+   
+```bash
    [root@centos7: conf]#curl www.heytool.com
    this is a.ttlsa.com!
    [root@centos7: conf]#curl bbs.heytool.com
    this is a.ttlsa.com!
    ```
-
    
+
 
 ## Nginx配置虚拟主机
 
