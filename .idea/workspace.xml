@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07b8b752-93e5-4d1b-8634-6c1315ce4b4d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Linux/1.linux基础，基础命令.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/1.linux基础，基础命令.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Linux/3.文件操作.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/3.文件操作.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Linux/4.vim文本编辑器.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/4.vim文本编辑器.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Linux/6.用户，组和权限.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/6.用户，组和权限.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Linux/7.文本处理工具和正则表达式以及sed.md" beforeDir="false" afterPath="$PROJECT_DIR$/Linux/7.文本处理工具和正则表达式以及sed.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java/audition-project/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java/audition-project/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java/audition-project/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java/audition-project/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java/audition-project/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java/audition-project/.idea/vcs.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +44,16 @@
       <workItem from="1598940700494" duration="6000" />
       <workItem from="1607304862967" duration="568000" />
       <workItem from="1633167354214" duration="1519000" />
+      <workItem from="1648718203105" duration="1458000" />
     </task>
+    <task id="LOCAL-00001" summary="arthas">
+      <created>1648718460751</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1648718460751</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -91,5 +99,10 @@
         <entry key="bfc2c724-f92e-46ca-8fd5-c4c06c128ccd" value="TOOL_WINDOW" />
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="arthas" />
+    <option name="LAST_COMMIT_MESSAGE" value="arthas" />
   </component>
 </project>
