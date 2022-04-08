@@ -16,6 +16,6 @@ public class CountDownLatchDemo1 {
     //~methods
     //==================================================================================================================
     public static void main(String[] args) {
-        
+
     }
 }
