@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="07b8b752-93e5-4d1b-8634-6c1315ce4b4d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java/audition-project/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java/audition-project/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java/audition-project/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java/audition-project/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/java/audition-project/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java/audition-project/.idea/vcs.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +41,7 @@
       <workItem from="1607304862967" duration="568000" />
       <workItem from="1633167354214" duration="1519000" />
       <workItem from="1648718203105" duration="1458000" />
+      <workItem from="1649206700652" duration="2139000" />
     </task>
     <task id="LOCAL-00001" summary="arthas">
       <created>1648718460751</created>
@@ -64,7 +61,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
         <entry key="bfc2c724-f92e-46ca-8fd5-c4c06c128ccd">
