@@ -188,14 +188,17 @@ $ git pull --rebase <remote> <branch>
 
 ```bash
 # 将本地版本推送到远程端
-$ git push remote <remote> <branch>
+$ git push <remote> <branch>
 
 # 覆盖远程分支
-$ git push remote branch --force
+$ git push <remote> <branch> --force
 
 # 删除远程端分支
 $ git push <remote> :<branch> (since Git v1.5.0)
 $ git push <remote> --delete <branch> (since Git v1.7.0)
+
+# 当分支和标签重名时,推送分支到远程仓库
+$ git push origin refs/heads/需要提交的分支名
 
 # 发布标签
 $ git push --tags
@@ -336,6 +339,9 @@ $ git push origin tag-name
 
 # 推送本地所有tag到远程
 $ git push origin --tags
+
+# 当分支和标签重名时,推送标签到远程仓库
+$ git push origin refs/tags/需要推送的本地标签名
 ```
 
 删除本地标签：
