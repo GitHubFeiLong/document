@@ -4,7 +4,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * 类描述：
- * CountDownLatch  可以让主线程等待所有都执行完了才执行
+ *
  * @Author msi
  * @Date 2021-06-14 9:56
  * @Version 1.0
@@ -28,9 +28,8 @@ class CDemo1 implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("线程一等待执行");
+        System.out.println("线程一");
         countDownLatch.countDown();
-        System.out.println("线程一执行完成");
     }
 }
 class CDemo2 implements Runnable {
@@ -42,8 +41,7 @@ class CDemo2 implements Runnable {
     }
     @Override
     public void run() {
-        System.out.println("线程二等待执行");
+        System.out.println("线程二");
         countDownLatch.countDown();
-        System.out.println("线程二执行完成");
     }
 }
