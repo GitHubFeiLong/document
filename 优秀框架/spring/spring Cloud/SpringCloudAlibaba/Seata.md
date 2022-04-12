@@ -2,6 +2,8 @@
 
 [官网文档](https://seata.io/zh-cn/docs/overview/what-is-seata.html)
 
+[资源目录](https://github.com/seata/seata/tree/1.4.0/script)
+
 ## 下载
 
 下载时参考版本对照：
@@ -208,21 +210,128 @@ D:.
 
 ### 重要文件说明
 
+## 部署
 
+### db
 
-```sql
-CREATE TABLE `undo_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `branch_id` bigint(20) NOT NULL,
-  `xid` varchar(100) NOT NULL,
-  `context` varchar(128) NOT NULL,
-  `rollback_info` longblob NOT NULL,
-  `log_status` int(11) NOT NULL,
-  `log_created` datetime NOT NULL,
-  `log_modified` datetime NOT NULL,
-  `ext` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+#### 修改配置file.conf
+
+文件完整路径`D:\application\seata-server-1.3.0\seata\conf\file.conf`
+
+修改文件信息：
+
+1. 修改模式为数据库 db
+2. 修改数据库连接信息
+
+最后文件如下：
+
+```conf
+
+## transaction log store, only used in seata-server
+store {
+  ## store mode: file、db、redis
+  mode = "db"
+  ## database store property
+  db {
+    ## the implement of javax.sql.DataSource, such as DruidDataSource(druid)/BasicDataSource(dbcp)/HikariDataSource(hikari) etc.
+    datasource = "druid"
+    ## mysql/oracle/postgresql/h2/oceanbase etc.
+    dbType = "mysql"
+    driverClassName = "com.mysql.jdbc.Driver"
+    url = "jdbc:mysql://127.0.0.1:3306/seata"
+    user = "root"
+    password = "l(=8gp_04h*&"
+    minConn = 5
+    maxConn = 30
+    globalTable = "global_table"
+    branchTable = "branch_table"
+    lockTable = "lock_table"
+    queryLimit = 100
+    maxWait = 5000
+  }
+}
 ```
+
+
+
+
+
+#### 创建数据库
+
+1. 创建数据库
+2. 创建表，[表脚本](https://github.com/seata/seata/blob/1.3.0/script/server/db/mysql.sql)
+
+#### 修改注册中心和配置中心 registry.conf
+
+文件完整路径`D:\application\seata-server-1.3.0\seata\conf\registry.conf`
+
+1. 修改注册中心为nacos：`type = "nacos"`
+2. 修改nacos注册中心的配置信息
+3. 修改配置中心为nacos：`type = "nacos"`
+4. 修改nacos配置中心配置信息
+
+修改完后文件内容如下：
+
+```cnf
+registry {
+  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
+  type = "nacos"
+
+  nacos {
+    application = "seata-server"
+    serverAddr = "127.0.0.1:8848"
+    group = "SEATA_GROUP"
+    namespace = ""
+    cluster = "default"
+    username = "nacos"
+    password = "nacos"
+  }
+}
+
+config {
+  # file、nacos 、apollo、zk、consul、etcd3
+  type = "nacos"
+
+  nacos {
+    serverAddr = "127.0.0.1:8848"
+    namespace = ""
+    group = "SEATA_GROUP"
+    username = "nacos"
+    password = "nacos"
+  }
+}
+
+```
+
+
+
+事务分组：`service.vgroupMapping.my_test_tx_group=default`
+
+异地机房停电容错机制，my_test_tx_group可以自定义，比如guangzhou,shanghai，对应的client也要去设置
+
+default 必须要等与注册中心的cluster的值（registry.conf文件中的）
+
+```prop
+seata.service.vgroup-mapping.projectA=guangzhou
+```
+
+
+
+
+
+#### 修改脚本的config文件
+
+下载源代码，修改`D:\application\seata-1.3.0\script\config-center\config.txt`文件内容
+
+1. `store.mode=db`
+2. 删除关于file的内容
+3. 修改数据库信息
+
+#### 执行脚本，将配置设置到nacos中
+
+`D:\application\seata-1.3.0\script\config-center\nacos\nacos-config.sh`
+
+执行方式，使用Git-Bash打开即可。
+
+> 这个可以参考，自己写个脚本来玩。
 
