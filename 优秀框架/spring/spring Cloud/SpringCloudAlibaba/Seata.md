@@ -335,3 +335,45 @@ seata.service.vgroup-mapping.projectA=guangzhou
 
 > 这个可以参考，自己写个脚本来玩。
 
+
+
+```sql
+-- 注意此处0.3.0+ 增加唯一索引 ux_undo_log
+CREATE TABLE `undo_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) NOT NULL,
+  `context` varchar(128) NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime NOT NULL,
+  `log_modified` datetime NOT NULL,
+  `ext` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+```
+
+
+
+## 遇到的问题记录
+
+### 数据库相关错误
+
+#### MySQL版本
+
+**错误描述**：Could not retrieve transation read-only status server
+
+**解决步骤**：
+
+1. 修改`conf/file.conf`的`driverClassName = "com.mysql.cj.jdbc.Driver"`
+2. 修改nacos中配置项`store.db.driverClassName`的值为`com.mysql.cj.jdbc.Driver`
+3. 将MySQL数据库相同版本的jdbc驱动包复制到`lib/jdbc`下
+
+#### 数据库时区
+
+**错误描述**：The server time zone value '???ú±ê×??±??' is unrecognized or represents more than one time zone.
+
+**解决步骤**：
+
+1. 修改nacos中配置项`store.db.url`的值为`jdbc:mysql://127.0.0.1:3306/seata?useUnicode=true&serverTimezone=GMT`;
