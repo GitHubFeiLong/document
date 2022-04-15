@@ -369,8 +369,41 @@ $ sudo docker rm `docker ps -aq`
 #### 5.2.8、查看容器日志
 
 ```bash
+[root@localhost ~]# docker logs -h
+Flag shorthand -h has been deprecated, please use --help
+
+Usage:  docker logs [OPTIONS] CONTAINER
+
+Fetch the logs of a container
+
+Options:
+      --details        Show extra details provided to logs
+  -f, --follow         Follow log output
+      --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+  -n, --tail string    Number of lines to show from the end of the logs (default "all")
+  -t, --timestamps     Show timestamps
+      --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+```
+
+> -f 选项进行最终日志输出，类似tail -f。例如：docker logs -f container-name/container-id
+>
+> -n 指定输出最后多少行的日志。例如：docker logs -n 10 container-name/container-id
+>
+> -t 显示日志的时间戳，
+
+一次性查看容器所有日志：
+
+```bash
 $ sudo docker logs container-name/container-id
 ```
+
+使用监听的方式查看容器日志
+
+```bash
+$ sudo docker logs -f container-name/container-id
+```
+
+
 
 ### 5.3、容器拷贝
 
