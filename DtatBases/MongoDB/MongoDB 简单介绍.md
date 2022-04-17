@@ -30,7 +30,7 @@
 
 ### [数据库](https://docs.mongodb.com/manual/core/databases-and-collections/#databases)
 
-​		在MongoDB中，数据库保存一个或多个文档集合。为了选择要使用的数据库，在mongo shell中，发出use\<db>语句，如下例所示:
+​		在MongoDB中，数据库保存一个或多个文档集合。为了选择要使用的数据库，在mongo shell中，发出use \<db>语句，如下例所示:
 
 ```bash
 use myDB
@@ -149,7 +149,7 @@ var mydoc = {
 - `_id` 包含一个 [ObjectId](https://docs.mongodb.com/manual/reference/bson-types/#objectid).
 - `name` 包含一个 `first` 和 `last`字段的嵌入文档.
 - `birth` 和 `death` 是一个日期类型
-- `contribs` 十一字符串数组类型
+- `contribs` 是字符串数组类型
 - `views` NumberLong类型
 
 #### [字段名称](https://docs.mongodb.com/manual/core/document/#field-names)
@@ -230,9 +230,8 @@ For [indexed collections](https://docs.mongodb.com/manual/indexes/), the values 
 ​		文档有以下属性:
 
 1. 文件大小限制
-
-     		2. 文档字段顺序
-     	 		3. _id字段
+2. 文档字段顺序
+3. _id字段
 
 #### 文件大小限制
 
@@ -250,29 +249,29 @@ For [indexed collections](https://docs.mongodb.com/manual/indexes/), the values 
 
 #### _id字段
 
-​		在MongoDB中，每个存储在集合中的文档都需要一个唯一的_id字段，该字段充当主键。如果插入的文档省略了_id字段，MongoDB驱动程序会自动为_id字段生成一个ObjectId。
+​		在MongoDB中，每个存储在集合中的文档都需要一个唯一的`_id`字段，该字段充当主键。如果插入的文档省略了`_id`字段，MongoDB驱动程序会自动为`_id`字段生成一个ObjectId。
 
 ​		这也适用于通过[upsert: true](https://docs.mongodb.com/manual/reference/method/db.collection.update/#upsert-parameter)的更新操作插入的文档。
 
-​		_id字段有以下行为和约束:
+​		`_id`字段有以下行为和约束:
 
-1. 默认情况下，MongoDB在创建一个集合时在_id字段上创建一个唯一的索引。
-2. _id字段始终是文档中的第一个字段。如果服务器首先收到一个不包含_id字段的文档，那么服务器将把该字段移到开头。
-3. _id字段可以包含除数组以外的任何[BSON数据类型](https://docs.mongodb.com/manual/reference/bson-types/)的值。
+1. 默认情况下，MongoDB在创建一个集合时在`_id`字段上创建一个唯一的索引。
+2. `_id`字段始终是文档中的第一个字段。如果服务器首先收到一个不包含`_id`字段的文档，那么服务器将把该字段移到开头。
+3. `_id`字段可以包含除数组以外的任何[BSON数据类型](https://docs.mongodb.com/manual/reference/bson-types/)的值。
 
 > 警告:
 >
 > 为了确保功能复制，不要在_id字段中存储BSON正则表达式类型的值。
 
-​		下面是为_id存储值的常见选项:
+​		下面是为`_id`存储值的常见选项:
 
 1. 使用一个ObjectId。
 2. 如果可能的话，使用自然唯一标识符。这节省了空间并避免了额外的索引。
 3. 生成一个自动递增的数字。
-4. 在应用程序代码中生成UUID。为了在集合和_id索引中更有效地存储UUID值，将UUID存储为BSON BinData类型的值。
+4. 在应用程序代码中生成UUID。为了在集合和`_id`索引中更有效地存储UUID值，将UUID存储为BSON BinData类型的值。
 5. 使用驱动程序的BSON UUID功能来生成UUID。请注意，驱动程序实现UUID序列化和反序列化逻辑的方式可能不同，这可能与其他驱动程序不完全兼容。有关UUID互操作性的信息，请参阅驱动程序文档。
 
-> 大多数MongoDB驱动客户端在发送insert操作到MongoDB之前会包含_id字段并生成一个ObjectId;但是，如果客户端发送了一个没有_id字段的文档，mongod将添加_id字段并生成ObjectId。
+> 大多数MongoDB驱动客户端在发送insert操作到MongoDB之前会包含`_id`字段并生成一个ObjectId;但是，如果客户端发送了一个没有`_id`字段的文档，mongod将添加`_id`字段并生成ObjectId。
 
 ### [文档结构的其他用途](https://docs.mongodb.com/manual/core/document/#other-uses-of-the-document-structure)
 
@@ -282,7 +281,7 @@ For [indexed collections](https://docs.mongodb.com/manual/indexes/), the values 
 
 ​		查询筛选器文档指定确定为读取、更新和删除操作选择哪些记录的条件。
 
-​		您可以使用<字段>:<value>表达式来指定相等条件和查询操作符表达式。
+​		您可以使用`<字段>:<value>`表达式来指定相等条件和查询操作符表达式。
 
 ```bash
 {

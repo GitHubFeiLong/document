@@ -53,7 +53,7 @@ D:\work\databases\mongodb-windows-x86_64-4.4.2-rc1\mongodb-win32-x86_64-windows-
 ​		我们在启动信息中可以看到，MongoDB的默认端口是27017，如果我们想改变默认的启动端口，可以通过--port来指定端口。
 ​		为了方便我们每次启动，可以将安装目录的bin目录设置到环境变量的path中， bin 目录下是一些常用命令，比如 mongod 启动服务用的，mongo 客户端连接服务用的。  
 
-方式2：配置文件方式启动服务  
+方式二：配置文件方式启动服务  
 
 在解压目录中新建 config 文件夹，该文件夹中新建配置文件 mongod.conf ，内如参考如下（文件内容格式是yaml）： 
 

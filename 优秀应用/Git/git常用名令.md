@@ -15,6 +15,19 @@ git init
 
 > https 使用很方便（经常403），每次还要输入密码，输入正确的也会403，心态炸了
 
+将本地仓库添加远程仓库
+
+```shell
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:GitHubFeiLong/notable.git
+git push -u origin main
+```
+
+> 其中`notable`是仓库名`git@github.com:GitHubFeiLong/notable.git`是仓库地址
+
 ### ssh使用
 
 1. 创建SSH Key
