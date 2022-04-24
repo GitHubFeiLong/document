@@ -33,7 +33,7 @@ $ curl www.baidu.com
 $ curl -o 文件名 www.baidu.com
 ```
 
-上卖弄命令将`www.baidu,com`保存成`文件名`文件。
+上面命令将`www.baidu,com`保存成`文件名`文件。
 
 #### -O
 
