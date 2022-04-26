@@ -109,14 +109,14 @@
 	select/poll/epoll
 
 
-​	
-	select:
-		操作方式：遍历
-		底层实现：数组
-		IO效率：每次调用都进行线性变量，时间复杂度O(n)
-		最大连接数：1024（x86）或2048（x64）
-		fd拷贝：每次调用select，都需要把fd集合从用户态拷贝到内核态
-		
+​	select:
+​		操作方式：遍历
+​		底层实现：数组
+​		IO效率：每次调用都进行线性变量，时间复杂度O(n)
+​		最大连接数：1024（x86）或2048（x64）
+​		fd拷贝：每次调用select，都需要把fd集合从用户态拷贝到内核态
+​		
+
 	poll	
 		操作方式：遍历
 		底层实现：链表
@@ -220,32 +220,32 @@
 			配置文件修改重装载命令：nginx -s reload
 
 
-​		
-		nginx配置
-			配置文件的组成部分：
-				主配置文件：nginx.conf
-				子配置文件：include conf.d/*.conf
-				fastcgi,uwsgi,scgi等协议相关的配置文件
-				mime.types：支持mime类型
-			主配置文件的配置命令：
-				directive value [value2 ...]
-			注意：
-				1)指令必须以分号结尾
-				2)支持使用配置变量
-					内建变量：由Nginx模块引入，可直接引用。
-					自定义变量：由用户使用set命令定义
-								set variable_name value
-					引用变量：$variable_name
-		nginx配置文件
-			主配置文件结构：四部
-				1)main block：主配置段，即全局配置段，对http，mail都有效。
-					event{
-						...
-					} 时间驱动相关的配置
-				2)http{
-					....
-				} http/https协议相关配置段
-				
+​		nginx配置
+​			配置文件的组成部分：
+​				主配置文件：nginx.conf
+​				子配置文件：include conf.d/*.conf
+​				fastcgi,uwsgi,scgi等协议相关的配置文件
+​				mime.types：支持mime类型
+​			主配置文件的配置命令：
+​				directive value [value2 ...]
+​			注意：
+​				1)指令必须以分号结尾
+​				2)支持使用配置变量
+​					内建变量：由Nginx模块引入，可直接引用。
+​					自定义变量：由用户使用set命令定义
+​								set variable_name value
+​					引用变量：$variable_name
+​		nginx配置文件
+​			主配置文件结构：四部
+​				1)main block：主配置段，即全局配置段，对http，mail都有效。
+​					event{
+​						...
+​					} 事件驱动相关的配置
+​				2)http{
+​					....
+​				} http/https协议相关配置段
+​				
+
 				3)mail{
 					...
 				} mail协议(邮件协议)相关配置段
@@ -437,7 +437,7 @@
 				9）alias path;	
 					路径别名，文档映射的另一种机制；仅能用于location上下文。
 					示例：
-						http://www.magedu.com/bbs/index.php
+						http://www.magedu.com/bbs/index.html
 						location /bbs/{
 							alias /web/forum/;
 						}	-->/web/forum/index.html
@@ -472,7 +472,7 @@
 				13)keepalive_timeout timeout [heaer_timeout];
 					设定保持连接超时时长，0表示禁止连接，默认为75s
 				14) keepalive_requests number;
-					再一次长连接上所允许请求的资源的最大数量，默认为100.
+					在一次长连接上所允许请求的资源的最大数量，默认为100.
 				15）keepalive_disable none | browser ...
 					对哪种浏览器禁用长连接
 				16）send_timeout time;

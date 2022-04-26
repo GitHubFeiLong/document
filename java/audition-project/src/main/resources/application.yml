@@ -6,3 +6,6 @@ spring:
       # connect=replicaSet：自动到副本集中选择读写的主机。如果slaveOK是打开的，则实现了读写分离
       uri: mongodb://zs:123456@192.168.31.128:27017,192.168.31.129:27017,192.168.31.130:27017/db1?\
       replicaSet=myrs&slaveOk=true&connect=replicaSet&readPreference=secondaryPreferred&connectTimeoutMS=300000
+
+
+
