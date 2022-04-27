@@ -16,10 +16,10 @@ public class Demo1 {
 }
 class A {
     static {
-        System.out.println("static A");
+        System.out.println("static A"); // 1
     }
     public A () {
-        System.out.println("Constructor A");
+        System.out.println("Constructor A"); //2
     }
 }
 

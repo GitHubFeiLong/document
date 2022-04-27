@@ -18,7 +18,8 @@ public class MethodParameter {
     public static void main(String[] args) {
         Integer integer = new Integer(100000);
         changeVariable(integer);
-        System.out.println("integer = " + integer);
+
+        System.out.println("integer = " + integer); // 100000
 
         System.out.println("returnResult() = " + returnResult());
     }
@@ -28,13 +29,16 @@ public class MethodParameter {
         integer = 100;
     }
 
-    public static boolean returnResult() {
+    public static Integer returnResult() {
+        Integer i = 10;
         try {
-            return true;
+            // 异常
+            return i;
         } catch (Exception e){
-
+            return i;
         } finally {
-            return false;
+            i += 10;
+            return i;
         }
     }
 
