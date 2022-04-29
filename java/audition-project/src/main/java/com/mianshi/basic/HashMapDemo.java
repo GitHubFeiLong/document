@@ -20,8 +20,11 @@ public class HashMapDemo {
     //~methods
     //==================================================================================================================
     public static void main(String[] args) {
+        // Map<String, String> map = new HashMap<>();
+        // // 使用Collections 将其变为线程安全集合
+        // Collections.synchronizedMap(map);
+
         Map<String, String> map = new HashMap<>();
-        // 使用Collections 将其变为线程安全集合
-        Collections.synchronizedMap(map);
+        map.put("1", "1");
     }
 }
