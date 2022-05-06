@@ -102,7 +102,7 @@
 >
 > 1. 不能是子模块，意思是不能有parent标签，必须是独立的一个模块
 >
-> 2. 注意依赖jiar的scope值需要使用provided或test
+> 2. 注意依赖jar的scope值需要使用provided或test
 
 ### 编写maven插件
 
