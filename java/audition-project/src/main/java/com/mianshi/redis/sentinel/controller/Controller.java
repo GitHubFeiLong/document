@@ -19,12 +19,12 @@ public class Controller {
     //~fields
     //==================================================================================================================
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate stringRedisTemplate;
 
     //~methods
     //==================================================================================================================
     @GetMapping("/key/{key}")
-    public String getKey(@PathVariable String key) {
+    public Object getKey(@PathVariable String key) {
         return stringRedisTemplate.opsForValue().get(key);
     }
 

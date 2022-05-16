@@ -1,0 +1,32 @@
+spring:
+  redis:
+#    host: 192.168.31.128
+#    port: 6379
+    password: 123456
+    timeout: 30000
+    sentinel:
+      master: mymaster
+      nodes: 192.168.31.128:26379,192.168.31.128:26380,192.168.31.128:26381
+#      nodes:
+#        - 192.168.31.128:26379
+#        - 192.168.31.128:26380
+#        - 192.168.31.128:26381
+#      password: 123456
+    lettuce:
+      pool:
+        max-active: 100 # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 100 # 连接池中的最大空闲连接
+        min-idle: 50 # 连接池中的最小空闲连接
+        max-wait: 6000 # 连接池最大阻塞等待时间（使用负值表示没有限制
+
+
+#    mongodb:
+#      # 主机必须是副本集中所有的主机，包括主节点、副本节点、仲裁节点。
+#      # slaveOk=true：开启副本节点读的功能，可实现读写分离
+#      # connect=replicaSet：自动到副本集中选择读写的主机。如果slaveOK是打开的，则实现了读写分离
+#      uri: mongodb://zs:123456@192.168.31.128:27017,192.168.31.129:27017,192.168.31.130:27017/db1?\
+#      replicaSet=myrs&slaveOk=true&connect=replicaSet&readPreference=secondaryPreferred&connectTimeoutMS=300000
+
+
+
+

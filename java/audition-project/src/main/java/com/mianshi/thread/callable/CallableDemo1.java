@@ -31,5 +31,6 @@ public class CallableDemo1 implements Callable<String> {
         thread.start();
         Object o = futureTask.get();
         System.out.println("o = " + o);
+
     }
 }
