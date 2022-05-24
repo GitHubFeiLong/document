@@ -1,4 +1,4 @@
-//package com.mianshi.thinking.in.java.object.exercises;
+package com.mianshi.thinking.in.java.object.exercises;
 
 import java.util.Date;
 
