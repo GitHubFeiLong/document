@@ -156,7 +156,7 @@ public class SystemDemo {
         f('a', 'b');
     }
 
-    static void f(Character... characters) {
+    static void f(int a, Character... characters) {
 
     }
     static void f(float i, Character...characters) {
