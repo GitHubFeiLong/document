@@ -96,6 +96,16 @@ $ git add -A
 
 
 
+## 删除暂存区的文件
+
+```bash
+$ git rm xxx --cached 
+```
+
+
+
+
+
 ## 提交
 
 ```bash
