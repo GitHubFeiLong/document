@@ -62,26 +62,26 @@ frp 采用 Golang 编写，支持跨平台，仅需下载对应平台的二进�
 
    ```properties
    [common]
-   bind_port = 7000
+   bind_port = 7000 # 这个是frps使用该端口和frpc进行通信
    ```
 
 2. 在需要暴露到外网的机器上部署 frpc，且配置如下：
 
    ```properties
    [common]
-   server_addr = 47.108.31.41
-   server_port = 7000
+   server_addr = 47.108.31.41 # frps所在的服务器
+   server_port = 7000 # frps使用的端口默认7000
    
-   [ssh]
+   [goudong-web-ui]
    type = tcp
-   local_ip = 127.0.0.1
-   local_port = 80
-   remote_port = 80
+   local_ip = 192.168.74.128 # 内网机器
+   local_port = 80 # 本地服务的端口号
+   remote_port = 80 # 访问 server_addr:remote_port时，映射到local_ip:local_port 上
    ```
 
 3. 分别启动
 
-   + 外网启动服务端
+   + 首先启动服务端
 
      ```bash
      [root@iZ2vc28obhvfh8zjqb9lc9Z frp]# ./frps -c frps.ini 
@@ -90,7 +90,7 @@ frp 采用 Golang 编写，支持跨平台，仅需下载对应平台的二进�
      2021/05/20 14:50:48 [I] [root.go:209] frps started successfully
      ```
 
-   + 内网启动客户端
+   + 然后再启动客户端
 
      ```bash
      D:\workspace\fs-workspaces\tools\frp_0.36.2_windows_386>frpc.exe -c frpc.ini
