@@ -125,3 +125,6 @@ ERASE [/P] [/F] [/S] [/Q] [/A[[:]attributes]] names
 删除的文件，而不显示找不到的文件。
 ```
 
+
+
+sc queryex servicename
