@@ -1,4 +1,6 @@
 #/bin/bash
+# 执行时间
+startSeconds=`date +%s`
 source ~/.bashrc
 progress=`ps -ef | grep 'app.jar' | grep -v 'grep' | head -1 | awk '{print $2}'`
 if [[ "$progress" -gt 0  ]]; then 
@@ -10,9 +12,16 @@ if [[ "$progress" -gt 0  ]]; then
 		progress=`ps -ef | grep 'app.jar' | grep -v 'grep' | head -1 | awk '{print $2}'`
 		sleep 0.5
 	done
-	echo -e "\n停止成功!"
-	exit 0
+	echo -e "\n"
 fi
-echo "停止成功!"
+
+# 结束时间
+endSeconds=`date +%s`
+totalSeconds=`echo "${endSeconds}-${startSeconds}" | bc`
+
+content="停止成功！停止花费：${totalSeconds} 秒"
+echo "${content}"
+./send-qw.sh ${content}
+
 exit 0
 

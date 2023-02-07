@@ -1,4 +1,7 @@
 #/bin/bash
+# 执行时间
+startSeconds=`date +%s`
+startTime=`date +%Y-%m-%d %H:%M:%S`
 source ~/.bashrc
 
 # 备份文件夹
@@ -16,7 +19,7 @@ fi
 # 将原app.jar备份，方便回滚
 cp app.jar "./${APP_BAK_DIR}/app-`date +%Y-%m-%d_%H:%M:%S`.jar"
 # 将原nohup.out 备份
-cat nohup.out >> "./${NOHUP_BAK_DIR}/nohup-`date +%Y-%m-%d`.out"
+#cat nohup.out >> "./${NOHUP_BAK_DIR}/nohup-`date +%Y-%m-%d`.out"
 echo > nohup.out
 
 # 将jar包修改名字再启动，上传jar包到服务器不会替换正在运行的程序
@@ -31,12 +34,20 @@ sleep 1
 #echo -e "\n"
 
 # 判断启动成功的条件(因为启动时，nohup.out会被我备份后清理)
-echo -n "启动中"
+echo -n "启动中(启动时间：`date +%Y-%m-%d_%H:%M:%S`)"
 started=""
 while [[ -z "$started" ]]; do
 	echo -n "."
 	sleep 1
 	started=`grep -w "LogApplicationStartup" ./nohup.out`
 done
-echo -e "\n启动成功！"
 
+# 启动结束时间
+endSeconds=`date +%s`
+totalSeconds=`echo "${endSeconds}-${startSeconds}" | bc`
+endMsg="启动成功(${startTime})！启动花费：${totalSeconds} 秒"
+
+echo -e "\n${endMsg}"
+./send-qw.sh "${endMsg}"
+
+exit 0
