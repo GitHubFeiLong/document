@@ -1,7 +1,7 @@
 #/bin/bash
 # 执行时间
 startSeconds=`date +%s`
-startTime=`date "+%Y-%m-%d %H:%M:%S"`
+startTime=`date +%Y-%m-%d %H:%M:%S`
 source ~/.bashrc
 
 # 备份文件夹
