@@ -28,7 +28,20 @@ if [ -f "./lottery-api.jar" ];then
 fi
 
 # start app
-nohup java -jar -Dspring.config.location=./spring-extend.yml -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5125  ./app.jar --server.port=12566 & 
+nohup java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5125  ./app.jar --server.port=12566 --spring.profiles.active=prod \
+-Xmx3584m -Xms3584m -Xmn1344m \
+-XX:SurvivorRatio=8 \
+-XX:MaxTenuringThreshold=10 \
+-XX:+UseConcMarkSweepGC \
+-XX:CMSInitiatingOccupancyFraction=70 \
+-XX:+UseCMSInitiatingOccupancyOnly \
+-XX:+AlwaysPreTouch \
+-XX:+HeapDumpOnOutOfMemoryError \
+-verbose:gc \
+-XX:+PrintGCDetails \
+-XX:+PrintGCDateStamps \
+-XX:+PrintGCTimeStamps \
+-Xloggc:gc.log &
 # 手动回车
 sleep 1
 #echo -e "\n"
